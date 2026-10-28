@@ -9,10 +9,12 @@
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
   <link rel="preload" href="assets/inter-tight-0.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="workspace.css">
   <script>try{if(localStorage.getItem('sozvon-theme')==='dark')document.documentElement.dataset.theme='dark'}catch{}</script>
   <script src="app.js" defer></script>
 </head>
 <body>
+  <div class="sky-background" aria-hidden="true"><span class="sky-halo"></span><span class="sky-ring ring-a"></span><span class="sky-ring ring-b"></span><svg viewBox="0 0 1440 1000" preserveAspectRatio="none"><path d="M-120 740C100 300 350 1100 780 660S1180 220 1560 390"/><path d="M-120 765C100 325 350 1125 780 685S1180 245 1560 415"/><path d="M-120 790C100 350 350 1150 780 710S1180 270 1560 440"/></svg><span class="sky-star">✳</span></div>
   <a class="skip" href="#main">Перейти к созданию встречи</a>
   <svg class="svg-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
     <symbol id="i-air" viewBox="0 0 32 32"><path d="M4 12h15c7 0 8-8 2-8-3 0-4 2-4 4M4 18h21c6 0 6 9 0 9-3 0-4-2-4-4M4 24h8M9 6h3"/></symbol>
@@ -36,52 +38,34 @@
   </svg>
 
   <header class="header page-width">
-    <a class="brand" href="./" aria-label="Созвон — главная"><span class="brand-mark"><svg aria-hidden="true" focusable="false"><use href="#i-air"/></svg></span><span>созвон<span class="brand-dot">.</span></span></a>
-    <nav class="nav" aria-label="Основная навигация"><a href="#possibilities">Возможности</a><a href="#how-it-works">Как это работает</a></nav>
-    <div class="header-actions"><button class="icon-button theme-button" id="theme-toggle" aria-label="Включить тёмную тему"><svg aria-hidden="true" focusable="false" class="moon"><use href="#i-moon"/></svg><svg aria-hidden="true" focusable="false" class="sun"><use href="#i-sun"/></svg></button><span class="header-divider"></span><button class="my-meetings" id="my-meetings"><svg aria-hidden="true" focusable="false"><use href="#i-calendar"/></svg>Мои встречи</button></div>
+    <a class="brand" href="./" aria-label="Созвон — главная"><span class="brand-mark"><svg aria-hidden="true"><use href="#i-air"/></svg></span><span>созвон<span class="brand-dot">.</span></span></a>
+    <nav class="header-center" aria-label="Основная навигация"><button class="my-meetings" id="my-meetings"><svg aria-hidden="true"><use href="#i-calendar"/></svg>Мои встречи</button></nav>
+    <div class="header-actions"><button class="icon-button theme-button" id="theme-toggle" aria-label="Включить тёмную тему"><svg aria-hidden="true" class="moon"><use href="#i-moon"/></svg><svg aria-hidden="true" class="sun"><use href="#i-sun"/></svg></button><a class="profile-link" href="profile.html" aria-label="Открыть профиль"><span class="profile-avatar" id="header-avatar">Я</span><span>Профиль</span></a></div>
   </header>
-
   <main id="main" class="page-width">
     <section class="hero" aria-label="Начать разговор">
       <div class="hero-art">
         <img class="air-image" src="assets/air-ribbon.webp" alt="" fetchpriority="high" width="1254" height="1254">
         <div class="art-content"><span class="eyebrow"><span class="small-spark">✳</span> Пространство для живого общения</span><h1>Ближе.<br>Где бы вы<br>ни были<span class="title-dot">.</span></h1><p class="hero-description">Меньше расстояний.<br>Больше настоящих разговоров.</p></div>
-        <div class="floating-note"><span class="note-icon"><svg aria-hidden="true" focusable="false"><use href="#i-air"/></svg></span><span>Общение на одном дыхании</span><span class="note-dot"></span></div>
         <div class="art-footer"><span>Вы, ваши люди и ничего лишнего.</span><span class="orbit" aria-hidden="true">↗</span></div>
       </div>
-
       <div class="meeting-panel">
-        <div class="mode-switch" role="tablist" aria-label="Действие со встречей"><button id="create-tab" role="tab" aria-selected="true" aria-controls="meeting-form-panel" tabindex="0">Создать встречу</button><button id="join-tab" role="tab" aria-selected="false" aria-controls="meeting-form-panel" tabindex="-1">Присоединиться</button></div>
+        <div class="mode-switch" role="tablist" aria-label="Действие со встречей"><button id="create-tab" role="tab" aria-selected="true" aria-controls="meeting-form-panel" tabindex="0">Новая встреча</button><button id="join-tab" role="tab" aria-selected="false" aria-controls="meeting-form-panel" tabindex="-1">По ссылке</button></div>
         <section id="meeting-form-panel" role="tabpanel" aria-labelledby="create-tab">
-          <div class="form-heading"><span class="section-kicker"><span></span> ЕСТЬ О ЧЁМ ПОГОВОРИТЬ</span><h2 id="form-title">Начнём<br>с простого «привет»</h2><p id="form-description">Соберите тех, кого хочется услышать.</p></div>
+          <div class="form-heading"><span class="meeting-emblem"><svg aria-hidden="true"><use href="#i-video"/></svg></span><h2 id="form-title">Начать встречу</h2><p id="form-description">Одна ссылка для всех, кого ждёте.</p></div>
           <form id="meeting-form" novalidate>
-            <label class="field" for="display-name">Как вас представить?<input id="display-name" name="displayName" autocomplete="nickname" placeholder="Ваше имя" maxlength="60" aria-describedby="name-error"><span id="name-error" class="field-error" hidden></span></label>
-            <label class="field" id="room-field" for="room-name"><span>Название встречи <span class="optional">необязательно</span></span><input id="room-name" name="roomName" placeholder="Например, планы на пятницу" maxlength="90"></label>
-            <label class="field" id="join-field" for="meeting-code" hidden>Ссылка или код встречи<input id="meeting-code" name="meetingCode" placeholder="Например, air-kite-482" aria-describedby="code-error" autocapitalize="none" spellcheck="false"><span id="code-error" class="field-error" hidden></span></label>
-            <button class="primary-button" type="submit"><svg aria-hidden="true" focusable="false"><use href="#i-video"/></svg><span id="submit-label">Создать встречу</span><svg aria-hidden="true" focusable="false" class="button-arrow"><use href="#i-arrow"/></svg></button>
+            <div class="field"><label for="display-name">Ваше имя</label><input id="display-name" name="displayName" autocomplete="nickname" placeholder="Как вас представить?" maxlength="60" aria-describedby="name-error"><span id="name-error" class="field-error" hidden></span></div>
+            <details class="meeting-options" id="room-field"><summary>Добавить название</summary><div class="field"><label for="room-name">Название встречи</label><input id="room-name" name="roomName" placeholder="Например, планы на пятницу" maxlength="90"></div></details>
+            <div class="field" id="join-field" hidden><label for="meeting-code">Ссылка или код встречи</label><input id="meeting-code" name="meetingCode" placeholder="Например, air-kite-482" aria-describedby="code-error" autocapitalize="none" spellcheck="false"><span id="code-error" class="field-error" hidden></span></div>
+            <button class="primary-button" type="submit"><span id="submit-label">Создать встречу</span><svg aria-hidden="true" class="button-arrow"><use href="#i-arrow"/></svg></button>
           </form>
-          <button class="schedule-button" id="schedule-button"><svg aria-hidden="true" focusable="false"><use href="#i-calendar"/></svg>Запланировать на потом<svg aria-hidden="true" focusable="false" class="chevron"><use href="#i-chevron"/></svg></button>
-          <p class="private-note"><svg aria-hidden="true" focusable="false"><use href="#i-link"/></svg>Одна ссылка — и вы рядом.</p>
+          <button class="schedule-button" id="schedule-button"><svg aria-hidden="true"><use href="#i-calendar"/></svg>Запланировать</button>
+          <p class="form-footnote">Камеру и микрофон можно настроить перед входом.</p>
         </section>
-        <div class="browser-note"><span class="browser-icon"><svg aria-hidden="true" focusable="false"><use href="#i-monitor"/></svg></span><div><b>Всё начинается в браузере</b><span>Без скачиваний. Без лишних шагов.</span></div><span class="browser-check"><svg aria-hidden="true" focusable="false"><use href="#i-check"/></svg></span></div>
       </div>
     </section>
-
-    <section id="possibilities" class="possibilities" aria-label="Больше места для общения">
-      <div class="feature-intro"><span class="tiny-air"><svg aria-hidden="true" focusable="false"><use href="#i-air"/></svg></span><p>Всё нужное.<br><span>Ничего лишнего.</span></p></div>
-      <div class="feature"><svg aria-hidden="true" focusable="false"><use href="#i-link"/></svg><div><h3>Ближе в один клик</h3><p>Отправьте ссылку своим людям</p></div></div>
-      <div class="feature"><svg aria-hidden="true" focusable="false"><use href="#i-monitor"/></svg><div><h3>На одной волне</h3><p>Покажите то, о чём говорите</p></div></div>
-      <div class="feature"><svg aria-hidden="true" focusable="false"><use href="#i-spark"/></svg><div><h3>В своём ритме</h3><p>Сейчас или в удобное время</p></div></div>
-    </section>
-
-    <section id="how-it-works" class="how-section">
-      <div class="how-title"><span class="section-kicker">ПРОЩЕ, ЧЕМ КАЖЕТСЯ</span><h2>От ссылки<br>до «привет».</h2><p>Оставьте сложности за кадром.</p></div>
-      <ol class="steps"><li><span class="step-number">01</span><div><h3>Создайте пространство</h3><p>Назовите встречу или просто начните разговор.</p></div></li><li><span class="step-number">02</span><div><h3>Позовите своих</h3><p>Скопируйте ссылку и отправьте её собеседникам.</p></div></li><li><span class="step-number">03</span><div><h3>Почувствуйте себя рядом</h3><p>Включите камеру, устройтесь поудобнее. Вы на месте.</p></div></li></ol>
-      <div class="small-question"><span class="question-mark"><svg aria-hidden="true" focusable="false"><use href="#i-help"/></svg></span><h3>Сначала осмотреться?</h3><p>Попробуйте комнату и посмотрите, как всё устроено.</p><button id="demo-button">Открыть демокомнату<svg aria-hidden="true" focusable="false"><use href="#i-arrow"/></svg></button><small>Камера и микрофон включаются только вами.</small></div>
-    </section>
   </main>
-
-  <footer class="footer page-width"><a class="footer-brand" href="./">созвон.</a><span>Больше воздуха между делами.</span><button id="help-button">Нужна помощь?<svg aria-hidden="true" focusable="false"><use href="#i-chevron"/></svg></button><span class="footer-year">© 2026 Созвон</span></footer>
+  <footer class="footer page-width"><span>© 2026 Созвон</span><button id="help-button">Помощь<svg aria-hidden="true"><use href="#i-help"/></svg></button></footer>
   <div class="toast" id="toast" role="status" aria-live="polite" popover="manual"></div>
 
   <dialog id="lobby-dialog" class="lobby-dialog" aria-labelledby="lobby-title">
@@ -94,7 +78,7 @@
 
   <dialog id="meetings-dialog" class="small-dialog" aria-labelledby="meetings-title"><button class="icon-button dialog-close" data-close aria-label="Закрыть список встреч"><svg aria-hidden="true" focusable="false"><use href="#i-close"/></svg></button><span class="section-kicker">ВАШЕ ПРОСТРАНСТВО</span><h2 id="meetings-title">Мои встречи</h2><div id="meetings-list"></div><button id="plan-from-list" class="primary-button"><svg aria-hidden="true" focusable="false"><use href="#i-plus"/></svg>Запланировать встречу</button></dialog>
 
-  <dialog id="help-dialog" class="small-dialog" aria-labelledby="help-title"><button class="icon-button dialog-close" data-close aria-label="Закрыть справку"><svg aria-hidden="true" focusable="false"><use href="#i-close"/></svg></button><span class="section-kicker">ВСЁ ПОД РУКОЙ</span><h2 id="help-title">Давайте разберёмся.</h2><details open><summary>Как начать встречу?</summary><p>Введите имя и создайте встречу. В открывшемся окне можно проверить устройства и скопировать ссылку.</p></details><details><summary>Почему камера не включается?</summary><p>Разрешите доступ к камере в настройках браузера. Если она занята другой программой, закройте программу и попробуйте снова.</p></details><details><summary>Можно ли позвонить другому человеку?</summary><p>Пока это интерактивный прототип. Доступны проверка устройств, демонстрация экрана и планирование. Для звонков между участниками потребуется подключение сервера связи.</p></details><details><summary>Где сохраняются встречи?</summary><p>Только в этом браузере на этом устройстве. Из списка встреч можно скачать приглашение для календаря.</p></details></dialog>
+  <dialog id="help-dialog" class="small-dialog" aria-labelledby="help-title"><button class="icon-button dialog-close" data-close aria-label="Закрыть справку"><svg aria-hidden="true" focusable="false"><use href="#i-close"/></svg></button><span class="section-kicker">ВСЁ ПОД РУКОЙ</span><h2 id="help-title">Давайте разберёмся.</h2><button class="text-button" id="demo-button">Открыть демокомнату <svg aria-hidden="true"><use href="#i-arrow"/></svg></button><details open><summary>Как начать встречу?</summary><p>Введите имя и создайте встречу. В открывшемся окне можно проверить устройства и скопировать ссылку.</p></details><details><summary>Почему камера не включается?</summary><p>Разрешите доступ к камере в настройках браузера. Если она занята другой программой, закройте программу и попробуйте снова.</p></details><details><summary>Можно ли позвонить другому человеку?</summary><p>Пока это интерактивный прототип. Доступны проверка устройств, демонстрация экрана и планирование. Для звонков между участниками потребуется подключение сервера связи.</p></details><details><summary>Где сохраняются встречи?</summary><p>Только в этом браузере на этом устройстве. Из списка встреч можно скачать приглашение для календаря.</p></details></dialog>
 
   <section id="call-room" class="call-room" aria-labelledby="call-title" hidden><header class="call-header"><span class="brand call-brand"><span class="brand-mark"><svg aria-hidden="true" focusable="false"><use href="#i-air"/></svg></span>созвон.</span><div><h1 id="call-title">Ваше пространство</h1><span class="call-status">Демокомната<span aria-hidden="true"> · </span><time id="call-timer">00:00</time></span></div><button class="call-invite" id="room-copy"><svg aria-hidden="true" focusable="false"><use href="#i-link"/></svg>Пригласить</button></header><main class="call-main"><div class="self-tile"><video id="room-video" autoplay muted playsinline></video><span class="avatar" id="room-avatar">В</span><span class="tile-name" id="tile-name">Вы</span><span class="tile-device-state" id="tile-device-state">Микрофон выключен</span></div><div class="empty-tile"><svg aria-hidden="true" focusable="false" class="empty-air"><use href="#i-air"/></svg><h2>Здесь есть место<br>для ваших людей.</h2><p>Это демокомната. Осмотритесь и проверьте устройства перед настоящими встречами.</p><button class="text-button" id="room-help">Что уже работает<svg aria-hidden="true" focusable="false"><use href="#i-arrow"/></svg></button></div><video id="screen-preview" autoplay muted playsinline hidden></video></main><footer class="call-controls"><div class="controls-group"><button class="device-button mic-toggle" aria-label="Включить микрофон" aria-pressed="false"><svg aria-hidden="true" focusable="false"><use href="#i-mic"/></svg><span class="off-slash"></span></button><button class="device-button camera-toggle" aria-label="Включить камеру" aria-pressed="false"><svg aria-hidden="true" focusable="false"><use href="#i-video"/></svg><span class="off-slash"></span></button><button class="device-button" id="share-screen" aria-label="Показать экран" aria-pressed="false"><svg aria-hidden="true" focusable="false"><use href="#i-monitor"/></svg></button></div><p id="room-device-error" role="status"></p><button class="leave-button" id="leave-room"><svg aria-hidden="true" focusable="false"><use href="#i-phone"/></svg><span>Выйти</span></button></footer></section>
 </body>

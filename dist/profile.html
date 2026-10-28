@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f8f9fc">
+  <title>Ваш профиль — Созвон</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="workspace.css">
+  <script>try{if(localStorage.getItem('sozvon-theme')==='dark')document.documentElement.dataset.theme='dark'}catch{}</script>
+  <script src="profile.js" defer></script>
+</head>
+<body class="profile-page">
+  <a class="skip" href="#profile-main">Перейти к профилю</a>
+  <div class="sky-background" aria-hidden="true"><span class="sky-halo"></span><span class="sky-ring ring-a"></span><span class="sky-ring ring-b"></span><svg viewBox="0 0 1440 1000" preserveAspectRatio="none"><path d="M-120 740C100 300 350 1100 780 660S1180 220 1560 390"/><path d="M-120 765C100 325 350 1125 780 685S1180 245 1560 415"/></svg><span class="sky-star">✳</span></div>
+  <svg class="svg-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><symbol id="i-air" viewBox="0 0 32 32"><path d="M4 12h15c7 0 8-8 2-8-3 0-4 2-4 4M4 18h21c6 0 6 9 0 9-3 0-4-2-4-4M4 24h8M9 6h3"/></symbol><symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M7 3v4m10-4v4M3 11h18m-13 5h2m4 0h2"/></symbol><symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></symbol><symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></symbol><symbol id="i-moon" viewBox="0 0 24 24"><path d="M20.5 13.2A8.7 8.7 0 0 1 10.8 3.5a8.7 8.7 0 1 0 9.7 9.7Z"/></symbol></svg>
+  <header class="header page-width">
+    <a class="brand" href="./" aria-label="Созвон — главная"><span class="brand-mark"><svg aria-hidden="true"><use href="#i-air"/></svg></span><span>созвон<span class="brand-dot">.</span></span></a>
+    <nav class="header-center" aria-label="Основная навигация"><a class="my-meetings" href="./?view=meetings"><svg aria-hidden="true"><use href="#i-calendar"/></svg>Мои встречи</a></nav>
+    <div class="header-actions"><button class="icon-button theme-button" id="theme-toggle" aria-label="Включить тёмную тему"><svg aria-hidden="true" class="moon"><use href="#i-moon"/></svg><svg aria-hidden="true" class="sun"><use href="#i-sun"/></svg></button><a class="profile-link" href="profile.html" aria-label="Открыть профиль" aria-current="page"><span class="profile-avatar" id="header-avatar">Я</span><span>Профиль</span></a></div>
+  </header>
+  <main class="profile-main" id="profile-main">
+    <a class="back-link" href="./"><svg aria-hidden="true"><use href="#i-arrow"/></svg>К встречам</a>
+    <div class="profile-heading"><h1>Ваш профиль</h1><p>Пара деталей, чтобы узнавать друг друга.</p></div>
+    <div class="profile-grid">
+      <section class="profile-preview" aria-label="Предпросмотр профиля"><span class="profile-avatar profile-large-avatar" id="profile-avatar">Я</span><h2 id="preview-name">Ваше имя</h2><p id="preview-bio">Рады быть рядом</p><small>Так будет выглядеть ваш профиль</small></section>
+      <section class="profile-panel" aria-labelledby="profile-details-title"><h2 id="profile-details-title">Личные данные</h2>
+        <form id="profile-form" novalidate>
+          <div class="field"><label for="profile-name">Имя</label><input id="profile-name" name="name" autocomplete="nickname" placeholder="Как вас представить?" maxlength="60" aria-describedby="profile-error"><span class="field-error" id="profile-error" hidden></span></div>
+          <div class="field"><label for="profile-bio">Пару слов о себе</label><input id="profile-bio" name="bio" placeholder="Например, дизайнер и любитель хороших разговоров" maxlength="100"><small>Необязательно. Короткая подпись для вашего профиля.</small></div>
+          <fieldset class="avatar-colors"><legend>Цвет аватара</legend><label><input type="radio" name="avatarColor" value="blue" checked><span class="color-swatch" aria-hidden="true"></span>Небо</label><label><input type="radio" name="avatarColor" value="mint"><span class="color-swatch mint" aria-hidden="true"></span>Мята</label><label><input type="radio" name="avatarColor" value="lavender"><span class="color-swatch lavender" aria-hidden="true"></span>Сирень</label></fieldset>
+          <div class="profile-save-row"><button type="submit" class="primary-button">Сохранить изменения</button><span class="save-status" id="profile-status" role="status"></span></div>
+        </form>
+        <p class="profile-storage-note">Профиль сохраняется в этом браузере на вашем устройстве.</p>
+      </section>
+    </div>
+  </main>
+</body>
+</html>

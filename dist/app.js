@@ -37,8 +37,8 @@ function setMode(nextMode, focus = false) {
     if (selected && focus) tab.focus();
   }
   $('#meeting-form-panel').setAttribute('aria-labelledby', join ? 'join-tab' : 'create-tab');
-  $('#form-title').replaceChildren(...(join ? ['Вы уже', 'почти рядом.'] : ['Начнём', 'с простого «привет»']).flatMap((line, i) => i ? [document.createElement('br'), document.createTextNode(line)] : [document.createTextNode(line)]));
-  $('#form-description').textContent = join ? 'Вставьте ссылку, которой с вами поделились.' : 'Соберите тех, кого хочется услышать.';
+  $('#form-title').textContent = join ? 'Войти во встречу' : 'Начать встречу';
+  $('#form-description').textContent = join ? 'Вставьте приглашение — и вы на месте.' : 'Одна ссылка для всех, кого ждёте.';
   $('#room-field').hidden = join; $('#join-field').hidden = !join;
   $('#submit-label').textContent = join ? 'Присоединиться' : 'Создать встречу';
   $('#schedule-button').hidden = join;
@@ -52,6 +52,9 @@ $('.mode-switch').addEventListener('keydown', (event) => {
 function fieldError(input, output, message) { input.setAttribute('aria-invalid', 'true'); output.textContent = message; output.hidden = false; }
 function clearErrors() { for (const id of ['display-name', 'meeting-code']) $(`#${id}`).removeAttribute('aria-invalid'); for (const id of ['name-error', 'code-error']) { $(`#${id}`).hidden = true; $(`#${id}`).textContent = ''; } }
 $('#display-name').value = storage.get('sozvon-name', '');
+$('#header-avatar').textContent = (storage.get('sozvon-name', '') || 'Я').slice(0, 1).toUpperCase();
+const avatarTone = storage.get('sozvon-avatar', 'blue');
+if (['blue','mint','lavender'].includes(avatarTone)) $('#header-avatar').dataset.tone = avatarTone;
 $('#display-name').addEventListener('input', () => { $('#display-name').removeAttribute('aria-invalid'); $('#name-error').hidden = true; });
 $('#meeting-code').addEventListener('input', () => { $('#meeting-code').removeAttribute('aria-invalid'); $('#code-error').hidden = true; });
 $('#meeting-form').addEventListener('submit', (event) => {
@@ -61,10 +64,13 @@ $('#meeting-form').addEventListener('submit', (event) => {
   const code = mode === 'join' ? getCode($('#meeting-code').value) : makeCode();
   if (!code) { fieldError($('#meeting-code'), $('#code-error'), 'Вставьте ссылку Созвона или код в формате air-kite-482.'); $('#meeting-code').focus(); return; }
   storage.set('sozvon-name', name);
+  $('#header-avatar').textContent = name.slice(0, 1).toUpperCase();
   openLobby({ name, code, title: mode === 'join' ? 'Встреча по приглашению' : $('#room-name').value.trim() || 'Наш созвон' });
 });
 function openLobby(meeting) {
   currentMeeting = meeting;
+  const tone = storage.get('sozvon-avatar', 'blue');
+  for (const id of ['lobby-avatar','room-avatar']) $(`#${id}`).dataset.tone = ['blue','mint','lavender'].includes(tone) ? tone : 'blue';
   $('#lobby-meeting-name').textContent = meeting.title;
   $('#share-link').value = meetingUrl(meeting.code);
   $('#lobby-avatar').textContent = meeting.name.slice(0, 1).toUpperCase();
@@ -151,7 +157,7 @@ $('#share-screen').addEventListener('click', async () => {
   } catch (error) { if (error.name !== 'NotAllowedError') deviceMessage('Не удалось показать экран. Выберите доступное окно и попробуйте снова.'); }
 });
 function finishSharing() { screenStream = null; $('#screen-preview').srcObject = null; $('#screen-preview').hidden = true; $('#share-screen').setAttribute('aria-pressed', 'false'); $('#share-screen').setAttribute('aria-label', 'Показать экран'); }
-$('#demo-button').addEventListener('click', () => openLobby({ code: makeCode(), title: 'Знакомство с Созвоном', name: $('#display-name').value.trim() || 'Гость' }));
+$('#demo-button').addEventListener('click', () => { $('#help-dialog').close(); openLobby({ code: makeCode(), title: 'Знакомство с Созвоном', name: $('#display-name').value.trim() || 'Гость' }); });
 $('#help-button').addEventListener('click', () => $('#help-dialog').showModal());
 $('#room-help').addEventListener('click', () => $('#help-dialog').showModal());
 $$('[data-close]').forEach(button => button.addEventListener('click', () => button.closest('dialog').close()));
@@ -210,5 +216,6 @@ $('#theme-toggle').addEventListener('click', () => {
 });
 const requestedCode = getCode(new URL(location.href).searchParams.get('room') || '');
 if (requestedCode) { setMode('join'); $('#meeting-code').value = requestedCode; $('#display-name').focus(); }
+if (!requestedCode && new URL(location.href).searchParams.get('view') === 'meetings') { renderMeetings(); $('#meetings-dialog').showModal(); }
 window.addEventListener('pagehide', stopDevices);
 refreshDevices();

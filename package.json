@@ -3,5 +3,5 @@
   "version": "1.0.0",
   "private": true,
   "description": "Созвон — интерактивный прототип сервиса видеовстреч",
-  "scripts": { "start": "node server.mjs", "check": "node --check dist/app.js" }
+  "scripts": { "start": "node server.mjs", "check": "node --check dist/app.js && node --check dist/profile.js" }
 }
