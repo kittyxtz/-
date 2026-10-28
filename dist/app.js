@@ -224,10 +224,37 @@ const scenarioStories = {
   ideas: { label: 'ПРИДУМАТЬ ЧТО-ТО НОВОЕ', number: '03', headline: ['А если…', 'сделать вместе?'], description: 'Набросать замысел, подхватить неожиданную мысль, найти единомышленников. Дайте идее голос — и посмотрите, что получится.', detail: 'Предложить. Подхватить. Придумать.' }
 };
 const scenarioTabs = $$('[data-scenario]');
-function selectScenario(key, focus = false) {
+const scenarioReducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+let scenarioAnimation = null;
+let scenarioGhostAnimation = null;
+let scenarioGhost = null;
+function clearScenarioAnimation() {
+  scenarioAnimation?.cancel(); scenarioGhostAnimation?.cancel(); scenarioGhost?.remove();
+  scenarioAnimation = null; scenarioGhostAnimation = null; scenarioGhost = null;
+}
+scenarioReducedMotion.addEventListener('change', () => { if (scenarioReducedMotion.matches) clearScenarioAnimation(); });
+function selectScenario(key, focus = false, directionHint = 0) {
   const story = scenarioStories[key];
   if (!story) return;
   const panel = $('#scenario-panel');
+  const page = $('#scenario-page');
+  const previous = scenarioTabs.findIndex(tab => tab.getAttribute('aria-selected') === 'true');
+  const next = scenarioTabs.findIndex(tab => tab.dataset.scenario === key);
+  if (previous === next) { if (focus) scenarioTabs[next].focus(); return; }
+  const animate = !scenarioReducedMotion.matches && typeof page.animate === 'function';
+  const currentStyle = getComputedStyle(page);
+  const previousTransform = currentStyle.transform;
+  const previousOpacity = currentStyle.opacity;
+  clearScenarioAnimation();
+  if (animate) {
+    scenarioGhost = page.cloneNode(true);
+    scenarioGhost.removeAttribute('id');
+    scenarioGhost.querySelectorAll('[id]').forEach(element => element.removeAttribute('id'));
+    scenarioGhost.classList.add('scenario-ghost');
+    scenarioGhost.setAttribute('aria-hidden', 'true'); scenarioGhost.inert = true;
+    Object.assign(scenarioGhost.style, { left: `${page.offsetLeft}px`, top: `${page.offsetTop}px`, width: `${page.offsetWidth}px`, height: `${page.offsetHeight}px` });
+    panel.append(scenarioGhost);
+  }
   for (const tab of scenarioTabs) {
     const selected = tab.dataset.scenario === key;
     tab.setAttribute('aria-selected', String(selected)); tab.tabIndex = selected ? 0 : -1;
@@ -239,7 +266,24 @@ function selectScenario(key, focus = false) {
   $('#scenario-headline').replaceChildren(document.createTextNode(story.headline[0]), document.createElement('br'), document.createTextNode(story.headline[1]));
   $('#scenario-description').textContent = story.description;
   $('#scenario-detail').textContent = story.detail;
-  panel.classList.remove('is-switching'); void panel.offsetHeight; panel.classList.add('is-switching');
+  if (animate) {
+    const direction = directionHint || Math.sign(next - previous);
+    const distance = panel.clientHeight + 16;
+    const easing = 'cubic-bezier(.22,.75,.2,1)';
+    const ghost = scenarioGhost;
+    const outgoing = ghost.animate([
+      { transform: previousTransform === 'none' ? 'translateY(0)' : previousTransform, opacity: Number(previousOpacity) },
+      { transform: `translateY(${-direction * distance}px)`, opacity: .15 }
+    ], { duration: 420, easing, fill: 'both' });
+    scenarioGhostAnimation = outgoing;
+    outgoing.finished.then(() => { ghost.remove(); if (scenarioGhost === ghost) { scenarioGhost = null; scenarioGhostAnimation = null; } }).catch(() => {});
+    const incoming = page.animate([
+      { transform: `translateY(${direction * distance}px)`, opacity: .3 },
+      { transform: 'translateY(0)', opacity: 1 }
+    ], { duration: 480, easing });
+    scenarioAnimation = incoming;
+    incoming.finished.then(() => { if (scenarioAnimation === incoming) scenarioAnimation = null; }).catch(() => {});
+  }
 }
 scenarioTabs.forEach(tab => tab.addEventListener('click', () => selectScenario(tab.dataset.scenario)));
 $('.scenario-tabs').addEventListener('keydown', event => {
@@ -247,7 +291,8 @@ $('.scenario-tabs').addEventListener('keydown', event => {
   event.preventDefault();
   const active = scenarioTabs.findIndex(tab => tab.getAttribute('aria-selected') === 'true');
   const next = event.key === 'Home' ? 0 : event.key === 'End' ? scenarioTabs.length - 1 : (active + (['ArrowUp','ArrowLeft'].includes(event.key) ? -1 : 1) + scenarioTabs.length) % scenarioTabs.length;
-  selectScenario(scenarioTabs[next].dataset.scenario, true);
+  const direction = event.key === 'Home' ? -1 : event.key === 'End' ? 1 : ['ArrowUp','ArrowLeft'].includes(event.key) ? -1 : 1;
+  selectScenario(scenarioTabs[next].dataset.scenario, true, direction);
 });
 const scenarioNarrow = matchMedia('(max-width: 760px)');
 const updateScenarioOrientation = () => $('.scenario-tabs').setAttribute('aria-orientation', scenarioNarrow.matches ? 'horizontal' : 'vertical');
