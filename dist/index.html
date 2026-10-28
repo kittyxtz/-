@@ -66,11 +66,20 @@
     </section>
 
     <section class="conversation-section" aria-labelledby="conversation-title">
-      <div class="landing-section-heading"><div><span class="section-kicker">ДЛЯ ВАШИХ РАЗГОВОРОВ</span><h2 id="conversation-title">Работа. Близкие.<br>И всё между.</h2></div><p>У каждого разговора свой повод.<br>Место для него — одно.</p></div>
-      <div class="conversation-grid">
-        <article class="conversation-card work-card"><div class="case-scene work-scene" aria-hidden="true"><div class="work-window"><span class="mock-window-top"><i></i><i></i><i></i></span><span class="mock-window-title">План на неделю</span><div class="mock-people"><span>✳</span><span>↗</span><span>+</span></div><div class="mock-line"></div><div class="mock-line short"></div></div><span class="work-caption">Идеи → решения</span></div><div class="case-copy"><span class="case-label">ДЛЯ ДЕЛА</span><h3>Быть одной командой.<br>Из разных точек.</h3><p>Обсудить проект, показать экран, договориться о следующем шаге. Соберите мысли в одном разговоре.</p></div></article>
-        <article class="conversation-card close-card"><div class="case-scene close-scene" aria-hidden="true"><span class="connection-loop"></span><span class="conversation-bubble bubble-a">Как ты?<span>♡</span></span><span class="conversation-bubble bubble-b">Рассказываю…</span><span class="close-star">✳</span></div><div class="case-copy"><span class="case-label">ДЛЯ СВОИХ</span><h3>Зайти на пять минут.<br>Остаться на весь вечер.</h3><p>Увидеть улыбку, поделиться новостями, просто побыть рядом. Даже когда между вами города.</p></div></article>
-        <article class="conversation-card idea-card"><div class="case-scene idea-scene" aria-hidden="true"><span class="idea-orbit"></span><div class="idea-note"><span>а если…</span><svg viewBox="0 0 100 50"><path d="M6 36C20 2 35 58 47 23S65 48 76 17L89 8M80 8h9v9"/></svg></div><span class="idea-asterisk">✳</span></div><div class="case-copy"><span class="case-label">ДЛЯ НОВОГО</span><h3>Дать идее голос.<br>И посмотреть, что выйдет.</h3><p>Набросать замысел, найти единомышленников, придумать что-то вместе. Иногда всё начинается с «а давай».</p></div></article>
+      <div class="scenario-layout">
+        <div class="scenario-intro"><span class="section-kicker">ТЫСЯЧА ПОВОДОВ БЫТЬ РЯДОМ</span><h2 id="conversation-title">Важен не повод.<br>Важен разговор.</h2><p>На другом конце — ваши люди.<br>Для остального есть Созвон.</p>
+          <div class="scenario-tabs" role="tablist" aria-label="Поводы для встречи" aria-orientation="vertical">
+            <button id="scenario-work-tab" role="tab" aria-selected="true" aria-controls="scenario-panel" tabindex="0" data-scenario="work"><span class="scenario-number" aria-hidden="true">01</span><span>По делу</span><svg aria-hidden="true"><use href="#i-arrow"/></svg></button>
+            <button id="scenario-close-tab" role="tab" aria-selected="false" aria-controls="scenario-panel" tabindex="-1" data-scenario="close"><span class="scenario-number" aria-hidden="true">02</span><span>По душам</span><svg aria-hidden="true"><use href="#i-arrow"/></svg></button>
+            <button id="scenario-ideas-tab" role="tab" aria-selected="false" aria-controls="scenario-panel" tabindex="-1" data-scenario="ideas"><span class="scenario-number" aria-hidden="true">03</span><span>За идеями</span><svg aria-hidden="true"><use href="#i-arrow"/></svg></button>
+          </div>
+        </div>
+        <div class="scenario-panel" id="scenario-panel" role="tabpanel" aria-labelledby="scenario-work-tab" tabindex="0" data-scene="work">
+          <div class="scenario-art" aria-hidden="true"><span class="scenario-sphere"></span><svg viewBox="0 0 700 500" preserveAspectRatio="xMidYMid slice"><path d="M420-100C100 60 760 165 470 350S230 620 780 460"/><path d="M448-100C128 60 788 165 498 350S258 620 808 460"/><path d="M476-100C156 60 816 165 526 350S286 620 836 460"/></svg><span class="scenario-star">✳</span></div>
+          <div class="scenario-topline"><span id="scenario-label">СОБРАТЬСЯ ПО ДЕЛУ</span><span id="scenario-counter" aria-hidden="true">01 / 03</span></div>
+          <div class="scenario-story"><h3 id="scenario-headline">Одна команда.<br>Разные координаты.</h3><p id="scenario-description">Сверить планы, показать проект, найти решение. Встретьтесь там, где удобно всем, — в разговоре.</p></div>
+          <div class="scenario-bottomline"><span class="scenario-wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><span id="scenario-detail">Обсудить. Показать. Договориться.</span></div>
+        </div>
       </div>
     </section>
 

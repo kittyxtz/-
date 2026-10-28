@@ -218,5 +218,39 @@ const requestedCode = getCode(new URL(location.href).searchParams.get('room') ||
 if (requestedCode) { setMode('join'); $('#meeting-code').value = requestedCode; $('#display-name').focus(); }
 if (!requestedCode && new URL(location.href).searchParams.get('view') === 'meetings') { renderMeetings(); $('#meetings-dialog').showModal(); }
 $$('[data-start-meeting]').forEach(link => link.addEventListener('click', () => { setMode('create'); requestAnimationFrame(() => $('#display-name').focus({ preventScroll: true })); }));
+const scenarioStories = {
+  work: { label: 'СОБРАТЬСЯ ПО ДЕЛУ', number: '01', headline: ['Одна команда.', 'Разные координаты.'], description: 'Сверить планы, показать проект, найти решение. Встретьтесь там, где удобно всем, — в разговоре.', detail: 'Обсудить. Показать. Договориться.' },
+  close: { label: 'ОСТАТЬСЯ РЯДОМ', number: '02', headline: ['Рядом.', 'Даже издалека.'], description: 'Увидеть улыбку, рассказать о своём дне, остаться ещё на чашку чая. Между вами города, а разговор — совсем близко.', detail: 'Услышать. Улыбнуться. Обнять голосом.' },
+  ideas: { label: 'ПРИДУМАТЬ ЧТО-ТО НОВОЕ', number: '03', headline: ['А если…', 'сделать вместе?'], description: 'Набросать замысел, подхватить неожиданную мысль, найти единомышленников. Дайте идее голос — и посмотрите, что получится.', detail: 'Предложить. Подхватить. Придумать.' }
+};
+const scenarioTabs = $$('[data-scenario]');
+function selectScenario(key, focus = false) {
+  const story = scenarioStories[key];
+  if (!story) return;
+  const panel = $('#scenario-panel');
+  for (const tab of scenarioTabs) {
+    const selected = tab.dataset.scenario === key;
+    tab.setAttribute('aria-selected', String(selected)); tab.tabIndex = selected ? 0 : -1;
+    if (selected) { panel.setAttribute('aria-labelledby', tab.id); if (focus) tab.focus(); }
+  }
+  panel.dataset.scene = key;
+  $('#scenario-label').textContent = story.label;
+  $('#scenario-counter').textContent = `${story.number} / 03`;
+  $('#scenario-headline').replaceChildren(document.createTextNode(story.headline[0]), document.createElement('br'), document.createTextNode(story.headline[1]));
+  $('#scenario-description').textContent = story.description;
+  $('#scenario-detail').textContent = story.detail;
+  panel.classList.remove('is-switching'); void panel.offsetHeight; panel.classList.add('is-switching');
+}
+scenarioTabs.forEach(tab => tab.addEventListener('click', () => selectScenario(tab.dataset.scenario)));
+$('.scenario-tabs').addEventListener('keydown', event => {
+  if (!['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Home','End'].includes(event.key)) return;
+  event.preventDefault();
+  const active = scenarioTabs.findIndex(tab => tab.getAttribute('aria-selected') === 'true');
+  const next = event.key === 'Home' ? 0 : event.key === 'End' ? scenarioTabs.length - 1 : (active + (['ArrowUp','ArrowLeft'].includes(event.key) ? -1 : 1) + scenarioTabs.length) % scenarioTabs.length;
+  selectScenario(scenarioTabs[next].dataset.scenario, true);
+});
+const scenarioNarrow = matchMedia('(max-width: 760px)');
+const updateScenarioOrientation = () => $('.scenario-tabs').setAttribute('aria-orientation', scenarioNarrow.matches ? 'horizontal' : 'vertical');
+scenarioNarrow.addEventListener('change', updateScenarioOrientation); updateScenarioOrientation();
 window.addEventListener('pagehide', stopDevices);
 refreshDevices();
