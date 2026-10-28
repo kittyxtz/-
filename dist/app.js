@@ -8,6 +8,7 @@ const storage = {
 let mode = 'create';
 const modeReducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 let modeAnimation = null;
+let scheduleReturnMode = 'create';
 let currentMeeting = null;
 let inCall = false;
 let cameraStream = null;
@@ -31,10 +32,15 @@ function notify(message) {
   toastTimer = setTimeout(() => { toast.classList.remove('visible'); if (toast.hidePopover && toast.matches(':popover-open')) toast.hidePopover(); toast.textContent = ''; }, 4200);
 }
 function setMode(nextMode, focus = false) {
+  const fromSchedule = mode === 'schedule';
   const direction = nextMode === 'join' ? 1 : -1;
   const changed = mode !== nextMode;
   modeAnimation?.cancel();
   mode = nextMode;
+  $('.meeting-panel').dataset.view = mode;
+  $('.mode-switch').hidden = false;
+  $('#meeting-form-panel').hidden = false;
+  $('#schedule-panel').hidden = true;
   const join = mode === 'join';
   $('.mode-switch').style.setProperty('--mode-position', join ? '100%' : '0%');
   for (const tab of [$('#create-tab'), $('#join-tab')]) {
@@ -51,7 +57,7 @@ function setMode(nextMode, focus = false) {
   clearErrors();
   if (changed && !modeReducedMotion.matches && typeof $('#meeting-form-panel').animate === 'function') {
     modeAnimation = $('#meeting-form-panel').animate([
-      { transform: `translateX(${direction * 24}px)`, opacity: .25 },
+      { transform: fromSchedule ? 'translateY(-24px)' : `translateX(${direction * 24}px)`, opacity: .25 },
       { transform: 'translateX(0)', opacity: 1 }
     ], { duration: 320, easing: 'cubic-bezier(.2,.8,.2,1)' });
   }
@@ -62,9 +68,44 @@ $('#join-tab').addEventListener('click', () => setMode('join'));
 $('.mode-switch').addEventListener('keydown', (event) => {
   if (['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) { event.preventDefault(); setMode(event.key === 'Home' ? 'create' : event.key === 'End' ? 'join' : mode === 'create' ? 'join' : 'create', true); }
 });
+let titleExpanded = $('#room-field').open;
+let titleAnimation = null;
+const titleSummary = $('#room-field summary');
+titleSummary.addEventListener('click', event => {
+  event.preventDefault();
+  const details = $('#room-field');
+  const reveal = $('.title-reveal');
+  const startHeight = details.open ? reveal.getBoundingClientRect().height : 0;
+  const startOpacity = details.open ? Number(getComputedStyle(reveal).opacity) : 0;
+  const startTransform = details.open ? getComputedStyle(reveal).transform : 'translateY(-12px)';
+  titleAnimation?.cancel();
+  titleExpanded = !titleExpanded;
+  const expanding = titleExpanded;
+  titleSummary.textContent = expanding ? 'Скрыть название' : 'Добавить название';
+  if (modeReducedMotion.matches || typeof reveal.animate !== 'function') { details.open = expanding; return; }
+  details.open = true;
+  const animation = reveal.animate([
+    { height: `${startHeight}px`, opacity: startOpacity, transform: startTransform === 'none' ? 'translateY(0)' : startTransform },
+    { height: `${expanding ? reveal.scrollHeight : 0}px`, opacity: expanding ? 1 : 0, transform: expanding ? 'translateY(0)' : 'translateY(-12px)' }
+  ], { duration: expanding ? 310 : 240, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'both' });
+  titleAnimation = animation;
+  animation.finished.then(() => {
+    if (titleAnimation !== animation) return;
+    details.open = expanding; animation.cancel(); titleAnimation = null;
+  }).catch(() => {});
+});
+modeReducedMotion.addEventListener('change', () => { if (modeReducedMotion.matches) { titleAnimation?.cancel(); titleAnimation = null; $('#room-field').open = titleExpanded; } });
 function fieldError(input, output, message) { input.setAttribute('aria-invalid', 'true'); output.textContent = message; output.hidden = false; }
 function clearErrors() { for (const id of ['display-name', 'meeting-code']) $(`#${id}`).removeAttribute('aria-invalid'); for (const id of ['name-error', 'code-error']) { $(`#${id}`).hidden = true; $(`#${id}`).textContent = ''; } }
 $('#display-name').value = storage.get('sozvon-name', '');
+function updateStudioIdentity() {
+  const name = $('#display-name').value.trim();
+  $('#studio-preview-name').textContent = name || 'Вы';
+  $('#studio-preview-avatar').textContent = (name || 'Я').slice(0, 1).toUpperCase();
+  const tone = storage.get('sozvon-avatar', 'blue');
+  if (['blue','mint','lavender'].includes(tone)) $('#studio-preview-avatar').dataset.tone = tone;
+}
+$('#display-name').addEventListener('input', updateStudioIdentity); updateStudioIdentity();
 $('#header-avatar').textContent = (storage.get('sozvon-name', '') || 'Я').slice(0, 1).toUpperCase();
 const avatarTone = storage.get('sozvon-avatar', 'blue');
 if (['blue','mint','lavender'].includes(avatarTone)) $('#header-avatar').dataset.tone = avatarTone;
@@ -156,7 +197,7 @@ $('#enter-room').addEventListener('click', () => {
 });
 $('#leave-room').addEventListener('click', () => {
   inCall = false; clearInterval(timer); stopDevices(); $('#call-room').hidden = true; setPageInert(false); document.body.style.overflow = ''; document.title = 'Созвон — ближе, где бы вы ни были';
-  $('#meeting-form button[type=submit]').focus(); notify('Вы вышли из демокомнаты');
+  (mode === 'schedule' ? $('#schedule-back') : $('#meeting-form button[type=submit]')).focus(); notify('Вы вышли из демокомнаты');
 });
 $('#share-screen').addEventListener('click', async () => {
   if (screenStream) { screenStream.getTracks().forEach(track => track.stop()); finishSharing(); return; }
@@ -173,6 +214,11 @@ function finishSharing() { screenStream = null; $('#screen-preview').srcObject =
 function openDemoRoom() { if ($('#help-dialog').open) $('#help-dialog').close(); openLobby({ code: makeCode(), title: 'Знакомство с Созвоном', name: $('#display-name').value.trim() || 'Гость' }); }
 $('#demo-button').addEventListener('click', openDemoRoom);
 $('#try-room').addEventListener('click', openDemoRoom);
+$$('[data-device-preview]').forEach(button => button.addEventListener('click', () => {
+  openDemoRoom();
+  const selector = button.dataset.devicePreview === 'mic' ? '#lobby-dialog .mic-toggle' : button.dataset.devicePreview === 'camera' ? '#lobby-dialog .camera-toggle' : '#enter-room';
+  $(selector).focus();
+}));
 $('#help-button').addEventListener('click', () => $('#help-dialog').showModal());
 $('#room-help').addEventListener('click', () => $('#help-dialog').showModal());
 $$('[data-close]').forEach(button => button.addEventListener('click', () => button.closest('dialog').close()));
@@ -180,12 +226,25 @@ $$('dialog').forEach(dialog => dialog.addEventListener('click', (event) => { if 
 function localDateTime(date) { const pad = n => String(n).padStart(2, '0'); return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`; }
 function openSchedule() {
   const next = new Date(Date.now() + 60 * 60 * 1000); next.setMinutes(Math.ceil(next.getMinutes() / 15) * 15, 0, 0);
-  $('#scheduled-time').min = localDateTime(new Date()); $('#scheduled-time').value = localDateTime(next);
-  $('#scheduled-name').value = $('#room-name').value.trim(); $('#schedule-error').hidden = true;
+  $('#scheduled-time').min = localDateTime(new Date());
+  if (!$('#scheduled-time').value || Date.parse($('#scheduled-time').value) <= Date.now()) $('#scheduled-time').value = localDateTime(next);
+  if (!$('#scheduled-name').value.trim()) $('#scheduled-name').value = $('#room-name').value.trim();
+  $('#schedule-error').hidden = true;
   $('#scheduled-name').removeAttribute('aria-invalid'); $('#scheduled-time').removeAttribute('aria-invalid');
-  $('#schedule-dialog').showModal();
+  if (mode !== 'schedule') scheduleReturnMode = mode;
+  modeAnimation?.cancel(); mode = 'schedule';
+  $('.meeting-panel').dataset.view = 'schedule';
+  $('.mode-switch').hidden = true; $('#meeting-form-panel').hidden = true; $('#schedule-panel').hidden = false;
+  if (!modeReducedMotion.matches && typeof $('#schedule-panel').animate === 'function') {
+    modeAnimation = $('#schedule-panel').animate([{ transform: 'translateY(70%)', opacity: .2 }, { transform: 'translateY(0)', opacity: 1 }], { duration: 420, easing: 'cubic-bezier(.2,.8,.2,1)' });
+  }
+  $('.meeting-panel').scrollIntoView({ block: 'center', behavior: modeReducedMotion.matches ? 'instant' : 'smooth' });
+  $('#schedule-title').focus({ preventScroll: true });
 }
 $('#schedule-button').addEventListener('click', openSchedule);
+function closeSchedule() { setMode(scheduleReturnMode); (scheduleReturnMode === 'create' ? $('#schedule-button') : $('#join-tab')).focus({ preventScroll: true }); }
+$('#schedule-back').addEventListener('click', closeSchedule);
+$('.meeting-panel').addEventListener('keydown', event => { if (event.key === 'Escape' && mode === 'schedule') { event.preventDefault(); closeSchedule(); } });
 $('#plan-from-list').addEventListener('click', () => { $('#meetings-dialog').close(); openSchedule(); });
 $('#schedule-form').addEventListener('submit', (event) => {
   event.preventDefault(); const title = $('#scheduled-name').value.trim(); const date = new Date($('#scheduled-time').value);
@@ -195,7 +254,9 @@ $('#schedule-form').addEventListener('submit', (event) => {
   const meetings = storage.get('sozvon-meetings', []);
   const meeting = { code: makeCode(), title, date: date.toISOString() };
   if (!storage.set('sozvon-meetings', [...(Array.isArray(meetings) ? meetings : []), meeting])) { $('#schedule-error').textContent = 'Не удалось сохранить встречу. Разрешите хранение данных в браузере и попробуйте снова.'; $('#schedule-error').hidden = false; return; }
-  $('#schedule-dialog').close(); renderMeetings(); $('#meetings-dialog').showModal(); notify('Встреча сохранена в этом браузере');
+  setMode(scheduleReturnMode);
+  (scheduleReturnMode === 'create' ? $('#schedule-button') : $('#join-tab')).focus({ preventScroll: true });
+  renderMeetings(); $('#meetings-dialog').showModal(); notify('Встреча сохранена в этом браузере');
 });
 function renderMeetings() {
   const list = $('#meetings-list'); list.replaceChildren();

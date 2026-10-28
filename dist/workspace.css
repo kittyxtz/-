@@ -134,3 +134,40 @@ svg{stroke-width:1.65}
 @media(max-width:1050px){.studio-section{gap:38px;padding-block:65px 60px}.studio-copy h2{font-size:2.45rem}.studio-preview{min-height:330px;padding-inline:20px}}
 @media(max-width:760px){.studio-section{grid-template-columns:1fr;gap:29px;padding-block:53px 40px}.studio-copy h2{font-size:2.2rem;margin-block:18px}.studio-copy p{font-size:.875rem;max-width:42ch}.studio-cta{margin-block-start:22px}.studio-caption{font-size:.625rem;margin-block-start:13px}.studio-scene{min-height:320px}.studio-preview{min-height:300px;padding:19px 20px;border-radius:22px}.studio-avatar{width:76px;height:76px}.studio-avatar svg{width:33px;height:33px}.studio-person{padding-block:30px}.studio-preview-caption{font-size:.5625rem}}
 @media(max-width:360px){.mode-switch button{font-size:.75rem;padding-inline:4px}.studio-copy h2{font-size:2rem}.studio-preview{padding-inline:17px}.studio-preview-top{font-size:.625rem}.studio-mock-controls>span{width:30px;height:30px;border-radius:10px}.studio-preview-caption{font-size:.5rem}}
+/* Three views share one glass surface. */
+.meeting-panel{overflow:hidden}
+.mode-switch{width:min(100%,270px);margin-inline:auto;align-self:center}
+.mode-switch button{min-height:42px;padding-block:10px 13px;font-size:.8125rem}
+.title-reveal{overflow:hidden;min-height:0}
+.meeting-options .title-reveal>.field{margin:0;padding-block:13px 3px}
+.meeting-panel .schedule-button{align-self:center;gap:9px;padding:5px 16px 5px 6px;min-height:42px;margin-block-start:17px;border:1px solid #ffffffa6;border-radius:999px;background:rgba(255,255,255,.4);box-shadow:inset 0 1px 0 #ffffff7a,0 3px 12px #31578806;color:var(--color-secondary);font-size:.75rem;font-weight:550}
+.schedule-symbol{display:grid;place-items:center;width:29px;height:29px;border-radius:50%;background:#f2f6ffba;color:#3e6191;box-shadow:inset 0 0 0 1px #ffffff80}
+.schedule-symbol svg{width:17px;height:17px}
+[data-theme=dark] .meeting-panel .schedule-button{background:#d0e2ff0d;border-color:#d0e2ff24;box-shadow:inset 0 1px 0 #d0e2ff0a;color:var(--color-secondary)}
+[data-theme=dark] .schedule-symbol{background:#d0e2ff12;color:#b5cef2;box-shadow:inset 0 0 0 1px #d0e2ff0c}
+.schedule-panel{display:flex;flex-direction:column;justify-content:center;flex:1;min-height:0;width:100%;max-width:390px;margin-inline:auto;padding-block:5px 0}
+.plan-back{display:inline-flex;align-items:center;gap:5px;align-self:start;padding:8px 4px 8px 0;min-height:35px;margin-block-end:20px;background:transparent;color:var(--color-secondary);font-size:.75rem;border-radius:5px}
+.plan-back svg{width:15px;height:15px;transform:rotate(180deg)}
+.schedule-panel .form-heading{margin-block-end:24px}.schedule-panel .form-heading h2{font-size:1.95rem}
+.schedule-panel .meeting-emblem{margin-block-end:17px}
+.schedule-panel form{gap:18px}.schedule-panel .primary-button{margin-block-start:3px;gap:9px}
+.plan-storage-note{font-size:.625rem;line-height:1.6;text-align:center;color:var(--color-secondary);margin-block-start:17px}
+/* The preview now carries a name, a framed view and useful device actions. */
+.studio-preview{padding:20px 22px;min-height:365px}
+.studio-room-line{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-block:19px 0}.studio-room-line>span:first-child{font-size:.875rem;font-weight:500}.studio-room-line>span:last-child{font-size:.625rem;color:#536d91}
+.studio-person{padding-block:16px 17px}
+.studio-self-view{position:relative;width:100%;min-height:190px;border-radius:17px;display:grid;place-items:center;overflow:hidden;background:radial-gradient(ellipse at 35% 30%,#e4f0ff,#c9dcf5);border:1px solid #ffffff8c}
+.studio-self-view::after{content:'';position:absolute;width:230px;height:230px;border:1px solid #ffffff4d;border-radius:50%;inset-inline-end:-100px;inset-block-start:-125px;pointer-events:none}
+.studio-self-status{position:absolute;inset-inline-start:13px;inset-block-start:12px;display:flex;align-items:center;gap:6px;font-size:.5625rem;color:#3e5b82}.studio-self-status>span{width:4px;height:4px;border-radius:50%;background:#547fb5}
+.studio-self-view .studio-avatar{width:66px;height:66px;box-shadow:0 0 0 9px #ffffff2b,0 0 0 10px #ffffff38;font-size:1.75rem;font-weight:450;color:#476fa9;position:relative}
+.studio-self-view .studio-avatar[data-tone=mint]{background:#e6f4ee;color:#38685b}.studio-self-view .studio-avatar[data-tone=lavender]{background:#f0eafa;color:#736094}
+.studio-self-footer{position:absolute;inset-inline:13px;inset-block-end:12px;display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:.625rem;color:#35557e}
+.studio-self-footer>span:first-child{min-width:0;max-width:80%;overflow-wrap:anywhere}
+.studio-mic-off{position:relative;display:grid;place-items:center;width:22px;height:22px;border-radius:7px;background:#f4f8ff94;flex-shrink:0}.studio-mic-off svg{width:13px;height:13px}.studio-mic-off::after{content:'';position:absolute;width:15px;height:1px;background:currentColor;rotate:45deg}
+.studio-preview-bottom{gap:12px;align-items:center}.studio-preview-controls{display:flex;gap:7px;flex-wrap:wrap}
+.studio-preview-controls button{display:inline-flex;align-items:center;justify-content:center;gap:5px;min-height:33px;padding:7px 10px;border:1px solid #ffffff7a;border-radius:10px;background:#f7faffb3;color:#3e5b82;font-size:.625rem}
+.studio-preview-controls svg{width:15px;height:15px}.studio-preview-caption{max-width:15ch;font-size:.5625rem;color:#4e678a}
+@media(hover:hover){.meeting-panel .schedule-button:hover{background:#ffffff85}.plan-back:hover{color:var(--color-accent)}.studio-preview-controls button:hover{background:#fff;color:#315bd8}[data-theme=dark] .meeting-panel .schedule-button:hover{background:#d0e2ff1c}}
+@media(max-width:1050px){.studio-preview-bottom{flex-wrap:wrap}.studio-preview-caption{max-width:none}}
+@media(max-width:760px){.schedule-panel{padding-block:4px 0}.schedule-panel .form-heading h2{font-size:1.8rem}.schedule-panel .form-heading{margin-block-end:22px}.plan-back{margin-block-end:15px}.mode-switch{width:min(100%,265px)}.meeting-panel[data-view=schedule]{min-height:565px}.studio-preview{padding:19px 20px}.studio-room-line{align-items:start;flex-direction:column;gap:4px;margin-block-start:16px}.studio-person{padding-block:14px}.studio-self-view{min-height:180px}.studio-preview-bottom{gap:10px}.studio-preview-caption{font-size:.5625rem;max-width:none}.studio-preview-controls button{min-height:34px;padding:7px 10px;font-size:.625rem}}
+@media(max-width:360px){.studio-preview{padding-inline:16px}.studio-preview-controls{gap:6px}.studio-preview-controls button{padding-inline:9px;font-size:.5625rem}.studio-preview-controls svg{width:14px;height:14px}.studio-self-view{min-height:175px}.studio-room-line>span:first-child{font-size:.8125rem}.schedule-panel .form-heading h2{font-size:1.65rem}}
