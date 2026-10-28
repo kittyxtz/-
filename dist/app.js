@@ -217,5 +217,6 @@ $('#theme-toggle').addEventListener('click', () => {
 const requestedCode = getCode(new URL(location.href).searchParams.get('room') || '');
 if (requestedCode) { setMode('join'); $('#meeting-code').value = requestedCode; $('#display-name').focus(); }
 if (!requestedCode && new URL(location.href).searchParams.get('view') === 'meetings') { renderMeetings(); $('#meetings-dialog').showModal(); }
+$$('[data-start-meeting]').forEach(link => link.addEventListener('click', () => { setMode('create'); requestAnimationFrame(() => $('#display-name').focus({ preventScroll: true })); }));
 window.addEventListener('pagehide', stopDevices);
 refreshDevices();
