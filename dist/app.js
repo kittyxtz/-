@@ -6,6 +6,8 @@ const storage = {
   set(key, value) { try { localStorage.setItem(key, JSON.stringify(value)); return true; } catch { return false; } }
 };
 let mode = 'create';
+const modeReducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+let modeAnimation = null;
 let currentMeeting = null;
 let inCall = false;
 let cameraStream = null;
@@ -29,8 +31,12 @@ function notify(message) {
   toastTimer = setTimeout(() => { toast.classList.remove('visible'); if (toast.hidePopover && toast.matches(':popover-open')) toast.hidePopover(); toast.textContent = ''; }, 4200);
 }
 function setMode(nextMode, focus = false) {
+  const direction = nextMode === 'join' ? 1 : -1;
+  const changed = mode !== nextMode;
+  modeAnimation?.cancel();
   mode = nextMode;
   const join = mode === 'join';
+  $('.mode-switch').style.setProperty('--mode-position', join ? '100%' : '0%');
   for (const tab of [$('#create-tab'), $('#join-tab')]) {
     const selected = tab.id === (join ? 'join-tab' : 'create-tab');
     tab.setAttribute('aria-selected', String(selected)); tab.tabIndex = selected ? 0 : -1;
@@ -43,7 +49,14 @@ function setMode(nextMode, focus = false) {
   $('#submit-label').textContent = join ? 'Присоединиться' : 'Создать встречу';
   $('#schedule-button').hidden = join;
   clearErrors();
+  if (changed && !modeReducedMotion.matches && typeof $('#meeting-form-panel').animate === 'function') {
+    modeAnimation = $('#meeting-form-panel').animate([
+      { transform: `translateX(${direction * 24}px)`, opacity: .25 },
+      { transform: 'translateX(0)', opacity: 1 }
+    ], { duration: 320, easing: 'cubic-bezier(.2,.8,.2,1)' });
+  }
 }
+modeReducedMotion.addEventListener('change', () => { if (modeReducedMotion.matches) modeAnimation?.cancel(); });
 $('#create-tab').addEventListener('click', () => setMode('create'));
 $('#join-tab').addEventListener('click', () => setMode('join'));
 $('.mode-switch').addEventListener('keydown', (event) => {
@@ -157,7 +170,9 @@ $('#share-screen').addEventListener('click', async () => {
   } catch (error) { if (error.name !== 'NotAllowedError') deviceMessage('Не удалось показать экран. Выберите доступное окно и попробуйте снова.'); }
 });
 function finishSharing() { screenStream = null; $('#screen-preview').srcObject = null; $('#screen-preview').hidden = true; $('#share-screen').setAttribute('aria-pressed', 'false'); $('#share-screen').setAttribute('aria-label', 'Показать экран'); }
-$('#demo-button').addEventListener('click', () => { $('#help-dialog').close(); openLobby({ code: makeCode(), title: 'Знакомство с Созвоном', name: $('#display-name').value.trim() || 'Гость' }); });
+function openDemoRoom() { if ($('#help-dialog').open) $('#help-dialog').close(); openLobby({ code: makeCode(), title: 'Знакомство с Созвоном', name: $('#display-name').value.trim() || 'Гость' }); }
+$('#demo-button').addEventListener('click', openDemoRoom);
+$('#try-room').addEventListener('click', openDemoRoom);
 $('#help-button').addEventListener('click', () => $('#help-dialog').showModal());
 $('#room-help').addEventListener('click', () => $('#help-dialog').showModal());
 $$('[data-close]').forEach(button => button.addEventListener('click', () => button.closest('dialog').close()));
