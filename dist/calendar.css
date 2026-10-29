@@ -150,3 +150,98 @@ body.calendar-open{overflow:hidden}
 @keyframes picker-enter{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 
 .month-day:focus-visible{outline:2px solid var(--color-focus);outline-offset:-2px}
+
+/* The marker sits in the list's lowest layer; digits never travel with it. */
+.scenario-tabs .scenario-marker{z-index:0;width:var(--scenario-size);height:var(--scenario-size)}
+.scenario-tabs button{z-index:1}
+.scenario-tabs .scenario-number{z-index:auto}
+.scenario-tabs .scenario-number>span{display:grid;place-items:center;width:100%;height:100%;text-box-trim:none;line-height:1}
+.date-picker-dialog[popover]{position:fixed;inset:auto;margin:0;padding:16px;border:1px solid var(--color-border);border-radius:18px;background:var(--color-surface);color:var(--color-text);box-shadow:0 14px 48px #11244528;overflow:auto;overscroll-behavior:contain}
+.date-picker-dialog[popover]::backdrop{display:none}
+.date-picker-dialog[popover] .date-picker-heading{margin-block-end:12px}
+.date-picker-dialog[popover] .month-stage{overflow:clip}
+.month-day{display:grid;grid-template-rows:27px 14px;align-content:start;justify-items:start;height:66px;min-height:66px;gap:4px}
+.month-day-events{height:14px;line-height:14px;white-space:nowrap}
+.meetings-modal .month-day{height:58px;min-height:58px}
+.month-calendar.is-compact .month-day{height:36px;min-height:36px;grid-template-rows:28px;justify-items:center;align-content:center;gap:0}
+.month-stage{isolation:isolate}
+.time-wheel button[hidden]{display:none!important}
+.time-presets button:disabled{opacity:.35;cursor:default}
+.agenda-add:disabled{opacity:.5;cursor:default}
+.calendar-page-heading p.is-saved{display:flex;align-items:center;gap:8px;color:var(--color-success);font-weight:500;min-height:21px}
+.is-saved svg{width:19px;height:19px;flex-shrink:0;stroke-width:1.6}
+.is-saved .saved-check{stroke-dasharray:12;stroke-dashoffset:0}
+@media(prefers-reduced-motion:no-preference){.date-picker-dialog:popover-open{animation:picker-enter 200ms cubic-bezier(.2,.8,.2,1)}.is-saved .saved-check{animation:saved-check-in 550ms ease-out both}.month-day{transition:background-color 200ms ease,border-color 200ms ease}.month-arrow,.month-today{transition:background-color 180ms ease,color 180ms ease}}
+@keyframes saved-check-in{from{stroke-dashoffset:12}to{stroke-dashoffset:0}}
+@media(max-width:760px){.month-day{height:54px;min-height:54px;grid-template-rows:24px 5px}.month-day-events{height:5px;line-height:5px}.meetings-modal .month-day{height:50px;min-height:50px}.month-calendar.is-compact .month-day{height:36px;min-height:36px;grid-template-rows:28px}}
+
+.date-picker-dialog[popover] .month-calendar.is-compact .month-day{height:34px;min-height:34px;padding-block:2px}
+
+.time-picker-dialog[popover]{position:fixed;inset:auto;margin:0;padding:14px;border:1px solid var(--color-border);border-radius:18px;background:var(--color-surface);color:var(--color-text);box-shadow:0 14px 48px #11244528;overflow:auto;overscroll-behavior:contain}
+.time-picker-dialog[popover]::backdrop{display:none}
+.time-picker-dialog[popover] .date-picker-heading{margin-block-end:10px}
+.time-picker-dialog[popover] .date-picker-heading h2{font-size:.9375rem}
+.time-picker-dialog[popover] .time-picker-preview{display:none}
+.time-picker-dialog[popover] .time-wheel{height:110px;padding-block:35px}
+.time-picker-dialog[popover] .time-wheels>div>p{margin-block-end:6px}
+.time-picker-dialog[popover] .time-presets{margin-block:10px}
+.time-picker-dialog[popover] .time-presets button{min-height:28px;font-size:.6875rem;padding-block:4px}
+.time-picker-dialog[popover] .time-picker-done{min-height:40px;font-size:.8125rem;position:sticky;bottom:0}
+.studio-preview-bottom{display:block}
+.studio-preview-controls{width:max-content;max-width:100%}
+.studio-preview-caption{display:block;margin-block-start:13px;line-height:1.4;text-align:start}
+.agenda-meeting{row-gap:10px}
+.agenda-meeting-actions{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin:0}
+.agenda-meeting-actions a,.agenda-meeting-actions button{display:flex;align-items:center;justify-content:center;width:100%;height:34px;min-height:34px;padding:6px 5px;border:1px solid var(--color-border);border-radius:9px;background:var(--color-surface);font-size:.625rem;line-height:1;font-weight:500;text-decoration:none;white-space:nowrap}
+.agenda-meeting-actions a{background:var(--color-accent);border-color:var(--color-accent);color:var(--color-on-accent)}
+.agenda-meeting-actions .agenda-cancel{color:var(--color-danger)}
+.agenda-meeting-actions button:disabled{opacity:.5;cursor:default}
+.calendar-board{position:relative}
+.calendar-success{position:absolute;inset:0;z-index:5;border-radius:inherit;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:var(--color-surface);color:var(--color-text);text-align:center;padding:20px;cursor:pointer}
+.calendar-success-symbol{width:96px;height:96px;margin-block-end:8px;color:var(--calendar-ink)}
+.calendar-success-symbol svg{width:100%;height:100%;fill:none;stroke:currentColor}
+.success-track{stroke-width:2;opacity:.15}
+.success-ring{stroke-width:2.5;stroke-linecap:round;stroke-dasharray:226.2;stroke-dashoffset:0;transform:rotate(-90deg);transform-origin:48px 48px}
+.success-check{stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:44;stroke-dashoffset:0}
+.calendar-success strong{font-size:1.15rem;font-weight:550;letter-spacing:-.015em}
+.calendar-success>span{font-size:.8125rem;color:var(--color-secondary)}
+.calendar-undo{position:fixed;z-index:8;inset-inline-start:50%;transform:translateX(-50%);inset-block-end:18px;display:flex;align-items:center;gap:18px;max-width:calc(100% - 32px);border:1px solid var(--color-border);border-radius:13px;padding:12px 16px;background:var(--color-text);color:var(--color-bg);box-shadow:0 7px 30px #11244522;font-size:.8125rem;line-height:1.4}
+.calendar-undo>span{min-width:0}
+.calendar-undo button{flex-shrink:0;background:transparent;color:inherit;text-decoration:underline;text-underline-offset:3px;font-weight:600;padding:5px 0;min-height:30px}
+@media(hover:hover){.agenda-meeting-actions a:hover{background:var(--color-accent-hover);color:var(--color-on-accent);text-decoration:none}.agenda-meeting-actions button:hover{background:var(--color-accent-soft);text-decoration:none}.agenda-meeting-actions .agenda-cancel:hover{background:var(--color-subtle)}}
+@media(prefers-reduced-motion:no-preference){.time-picker-dialog:popover-open{animation:picker-enter 180ms cubic-bezier(.2,.8,.2,1)}.agenda-meeting-actions a,.agenda-meeting-actions button{transition:background-color 180ms ease,border-color 180ms ease}.calendar-success{animation:confirmation-in 180ms ease-out,confirmation-out 250ms 1600ms ease-in forwards}.success-ring{animation:success-ring-in 650ms 150ms cubic-bezier(.22,.75,.2,1) both}.success-check{animation:success-check-in 450ms 650ms cubic-bezier(.2,.8,.2,1) both}.calendar-success-symbol{animation:success-symbol-in 400ms 650ms cubic-bezier(.2,.8,.2,1) both}.calendar-undo{animation:picker-enter 200ms ease-out}}
+@keyframes confirmation-in{from{opacity:0}to{opacity:1}}
+@keyframes confirmation-out{to{opacity:0}}
+@keyframes success-ring-in{from{stroke-dashoffset:226.2}to{stroke-dashoffset:0}}
+@keyframes success-check-in{from{stroke-dashoffset:44;opacity:0}to{stroke-dashoffset:0;opacity:1}}
+@keyframes success-symbol-in{from{transform:scale(.92)}to{transform:scale(1)}}
+.calendar-undo .undo-dismiss{display:grid;place-items:center;width:28px;height:28px;min-height:28px;padding:4px;border-radius:7px;background:transparent;text-decoration:none}
+.undo-dismiss svg{width:18px;height:18px}
+.time-wheel{touch-action:none;scroll-snap-type:none;scrollbar-width:none}
+.time-wheel::-webkit-scrollbar{display:none}
+.agenda-meeting{position:relative;align-items:start}
+.agenda-meeting-info{padding-inline-end:30px;min-height:22px}
+.agenda-meeting-actions{display:flex;gap:8px}
+.agenda-meeting-actions .agenda-open{flex:1;gap:8px;height:36px;min-height:36px;border-radius:10px;font-size:.6875rem}
+.agenda-meeting-actions .agenda-copy{flex:0 0 36px;width:36px;height:36px;min-height:36px;padding:9px;border-radius:10px}
+.agenda-meeting-actions svg{width:16px;height:16px;flex-shrink:0}
+.agenda-delete{position:absolute;inset-inline-end:0;inset-block-start:16px;width:28px;height:28px;display:grid;place-items:center;border-radius:8px;border:1px solid transparent;background:transparent;color:var(--color-danger)}
+.agenda-delete svg{width:16px;height:16px;stroke-width:1.6}
+.agenda-meeting:first-child .agenda-delete{inset-block-start:-2px}
+.agenda-delete:disabled{opacity:.5;cursor:default}
+.agenda-past-divider{display:flex;align-items:center;gap:10px;color:var(--color-secondary);font-size:.625rem;font-weight:500;letter-spacing:.02em;margin-block:23px 12px}
+.agenda-past-divider::after{content:'';height:1px;background:var(--color-input-border);opacity:.35;flex:1}
+.agenda-meeting.is-past{padding:13px 11px;margin-block:7px;border:1px solid var(--color-border);border-radius:13px;background:var(--color-subtle);opacity:.67}
+.is-past .agenda-meeting-info h3,.is-past .agenda-time{color:var(--color-secondary);filter:blur(.25px)}
+.agenda-meeting.is-past .agenda-delete{inset-inline-end:8px;inset-block-start:10px}
+.agenda-meeting.is-past .agenda-open{background:var(--color-surface);border-color:var(--color-border);color:var(--color-secondary)}
+.agenda-meeting.is-past .agenda-copy{color:var(--color-secondary)}
+@media(hover:hover){.agenda-delete:hover{background:color-mix(in srgb,var(--color-danger) 10%,transparent);border-color:color-mix(in srgb,var(--color-danger) 16%,transparent)}.agenda-meeting.is-past .agenda-open:hover{background:var(--color-subtle);color:var(--color-text)}}
+@media(prefers-reduced-motion:no-preference){.agenda-delete{transition:background-color 180ms ease,border-color 180ms ease}}
+
+.form-heading h2{font-weight:600}
+.meeting-actions .footer-ghost{grid-area:1/1;pointer-events:none}
+.agenda-scroll{padding:8px 8px 8px 5px;margin-block:15px}
+.agenda-meeting:first-child .agenda-delete{inset-block-start:0}
+.agenda-meeting-actions .agenda-open{flex:0 1 auto;width:auto;min-width:104px;padding-inline:13px}
+@media(max-width:400px){.meetings-modal .month-title{font-size:.8125rem;white-space:nowrap;line-height:1.4}.meetings-modal .month-today{font-size:.5rem;padding-inline:5px}.meetings-modal .month-arrow{width:24px}}

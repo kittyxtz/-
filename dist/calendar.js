@@ -42,9 +42,10 @@
       if(ghost){ghost.classList.add('month-ghost');ghost.setAttribute('aria-hidden','true');ghost.inert=true;this.stage.append(ghost);this.ghost=ghost;}
       this.month=addMonths(this.month,offset);this.month.setDate(1);this.focused=dayKey(this.month);this.render();
       if(ghost){
-        const options={duration:280,easing:'cubic-bezier(.2,.8,.2,1)'};
-        this.monthAnimation=this.grid.animate([{opacity:0,transform:`translateX(${offset*18}px)`},{opacity:1,transform:'translateX(0)'}],options);
-        const animation=ghost.animate([{opacity:1,transform:'translateX(0)'},{opacity:0,transform:`translateX(${-offset*18}px)`}],options);this.oldAnimation=animation;
+        const options={duration:400,easing:'cubic-bezier(.22,.75,.2,1)'};
+        const direction=offset>0?1:-1;
+        this.monthAnimation=this.grid.animate([{transform:`translateX(${direction*105}%)`},{transform:'translateX(0)'}],options);
+        const animation=ghost.animate([{transform:'translateX(0)'},{transform:`translateX(${-direction*105}%)`}],options);this.oldAnimation=animation;
         animation.finished.then(()=>{ghost.remove();if(this.ghost===ghost)this.ghost=null;}).catch(()=>ghost.remove());
       }
     }
@@ -92,5 +93,6 @@
       let key=dayKey(next);if(!this.allowed(key)){key=this.options.minDate;next=parseDay(key);}this.focused=key;this.month=new Date(next.getFullYear(),next.getMonth(),1,12);this.render();this.focusDay(key);
     }
   }
-  window.SozvonCalendar={mount:(root,options)=>new Calendar(root,options),dayKey,parseDay,formatDay,plural};
+  function conflict(items,date){const stamp=Math.floor(new Date(date).getTime()/60000);return items.find(m=>Math.floor(Date.parse(m.date)/60000)===stamp);}
+  window.SozvonCalendar={mount:(root,options)=>new Calendar(root,options),dayKey,parseDay,formatDay,plural,conflict};
 })();

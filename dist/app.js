@@ -8,6 +8,16 @@ const storage = {
 let mode = 'create';
 const modeReducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 let modeAnimation = null;
+let footerAnimations=[],footerGhost=null;
+function clearFooterMotion(){footerAnimations.forEach(animation=>animation.cancel());footerAnimations=[];footerGhost?.remove();footerGhost=null;}
+function animateFooter(previous,next,direction,duration){
+  clearFooterMotion();if(modeReducedMotion.matches)return;
+  const ghost=previous.cloneNode(true);ghost.removeAttribute('id');ghost.hidden=false;ghost.inert=true;ghost.setAttribute('aria-hidden','true');ghost.classList.add('footer-ghost');$('.meeting-actions').append(ghost);footerGhost=ghost;
+  const options={duration,easing:'cubic-bezier(.2,.8,.2,1)'};
+  const outgoing=ghost.animate([{transform:'translateY(0)',opacity:1},{transform:`translateY(${-direction*24}px)`,opacity:0}],options);footerAnimations.push(outgoing);
+  if(next)footerAnimations.push(next.animate([{transform:`translateY(${direction*24}px)`,opacity:0},{transform:'translateY(0)',opacity:1}],options));
+  outgoing.finished.then(()=>{ghost.remove();if(footerGhost===ghost)footerGhost=null;}).catch(()=>ghost.remove());
+}
 let scheduleReturnMode = 'create';
 let currentMeeting = null;
 let inCall = false;
@@ -53,11 +63,12 @@ function setMode(nextMode, focus = false) {
     if (selected && focus) tab.focus();
   }
   $('#meeting-form-panel').setAttribute('aria-labelledby', join ? 'join-tab' : 'create-tab');
-  $('#form-title').textContent = join ? 'Войти во встречу' : 'Начать встречу';
+  $('#form-title').textContent = join ? 'Присоединиться ко встрече' : 'Начать встречу';
   $('#form-description').textContent = join ? 'Вставьте приглашение — и вы на месте.' : 'Одна ссылка для всех, кого ждёте.';
   $('#room-field').hidden = join; $('#join-field').hidden = !join;
   $('#submit-label').textContent = join ? 'Присоединиться' : 'Создать встречу';
   $('#schedule-button').hidden = join;
+  if(fromSchedule)animateFooter($('#schedule-back'),join?null:$('#schedule-button'),-1,320);else clearFooterMotion();
   clearErrors();
   if (changed && !modeReducedMotion.matches && typeof $('#meeting-form-panel').animate === 'function') {
     modeAnimation = $('#meeting-form-panel').animate([
@@ -66,7 +77,7 @@ function setMode(nextMode, focus = false) {
     ], { duration: 320, easing: 'cubic-bezier(.2,.8,.2,1)' });
   }
 }
-modeReducedMotion.addEventListener('change', () => { if (modeReducedMotion.matches) modeAnimation?.cancel(); });
+modeReducedMotion.addEventListener('change', () => { if (modeReducedMotion.matches) {modeAnimation?.cancel();clearFooterMotion();} });
 $('#create-tab').addEventListener('click', () => setMode('create'));
 $('#join-tab').addEventListener('click', () => setMode('join'));
 $('.mode-switch').addEventListener('keydown', (event) => {
@@ -235,7 +246,7 @@ const planningCalendar = SozvonCalendar.mount($('#plan-date-calendar'), {
   selectedDate: SozvonCalendar.dayKey(new Date()),
   onSelect(key) {
     $('#scheduled-time').value = `${key}T${$('#scheduled-clock').value || '10:00'}`;
-    syncPlanningControls(); $('#plan-date-dialog').close();
+    syncPlanningControls(); $('#plan-date-dialog').hidePopover(); dateTrigger.focus({preventScroll:true});
   }
 });
 function syncPlanningControls() {
@@ -243,10 +254,18 @@ function syncPlanningControls() {
   if (!SozvonCalendar.parseDay(key)) return;
   $('#schedule-date-label').textContent = new Intl.DateTimeFormat('ru-RU',{day:'numeric',month:'short'}).format(SozvonCalendar.parseDay(key));
   $('#scheduled-clock').value = time?.slice(0,5) || '';
-  window.SozvonTime?.refresh($('#scheduled-clock'));
+  window.SozvonTime?.setDate($('#scheduled-clock'),key);
+  const actualTime=$('#scheduled-clock').value;
+  $('#scheduled-time').value = `${key}T${actualTime}`;
   planningCalendar.setSelected(key);
 }
-$('#schedule-date-trigger').addEventListener('click', () => { syncPlanningControls(); $('#plan-date-dialog').showModal(); planningCalendar.focusDay(planningCalendar.selected); });
+const datePopover=$('#plan-date-dialog'),dateTrigger=$('#schedule-date-trigger');
+function placeDatePopover(){if(!datePopover.matches(':popover-open'))return;const rect=dateTrigger.getBoundingClientRect(),width=Math.min(320,innerWidth-24);datePopover.style.width=`${width}px`;datePopover.style.left=`${Math.max(12,Math.min(rect.left,innerWidth-width-12))}px`;datePopover.style.top=`${rect.bottom+8}px`;datePopover.style.maxHeight=`${Math.max(160,innerHeight-rect.bottom-20)}px`;}
+dateTrigger.setAttribute('aria-controls','plan-date-dialog');dateTrigger.setAttribute('aria-expanded','false');
+dateTrigger.addEventListener('click',()=>{if(datePopover.matches(':popover-open')){datePopover.hidePopover();return;}syncPlanningControls();datePopover.showPopover();placeDatePopover();planningCalendar.focusDay(planningCalendar.selected);});
+datePopover.addEventListener('toggle',()=>{dateTrigger.setAttribute('aria-expanded',String(datePopover.matches(':popover-open')));});
+$('#close-plan-date').addEventListener('click',()=>{datePopover.hidePopover();dateTrigger.focus({preventScroll:true});});
+addEventListener('resize',placeDatePopover);addEventListener('scroll',placeDatePopover,{passive:true});
 $('#scheduled-clock').addEventListener('input', () => {
   const key = $('#scheduled-time').value.split('T')[0] || SozvonCalendar.dayKey(new Date());
   $('#scheduled-time').value = `${key}T${$('#scheduled-clock').value}`;
@@ -267,6 +286,7 @@ function openSchedule(event) {
   $('#meeting-form-panel').hidden = true; $('#meeting-form-panel').inert = true;
   $('#schedule-panel').hidden = false; $('#schedule-panel').inert = false;
   $('#schedule-button').hidden = true; $('#schedule-back').hidden = false;
+  animateFooter($('#schedule-button'),$('#schedule-back'),1,420);
   if (!modeReducedMotion.matches && typeof $('#schedule-panel').animate === 'function') {
     modeAnimation = $('#schedule-panel').animate([{ transform: 'translateY(70%)', opacity: .2 }, { transform: 'translateY(0)', opacity: 1 }], { duration: 420, easing: 'cubic-bezier(.2,.8,.2,1)' });
   }
@@ -283,9 +303,11 @@ $('#schedule-form').addEventListener('submit', (event) => {
   const invalid = !title ? $('#scheduled-name') : !Number.isFinite(date.getTime()) || date.getTime() <= Date.now() ? $('#scheduled-clock') : null;
   if (invalid) { $('#schedule-error').textContent = !title ? 'Введите название, чтобы найти встречу в списке.' : 'Выберите дату и время в будущем.'; $('#schedule-error').hidden = false; invalid.setAttribute('aria-invalid', 'true'); invalid.setAttribute('aria-describedby', 'schedule-error'); window.SozvonTime.focus(invalid); return; }
   const meetings = storage.get('sozvon-meetings', []);
+  const existing = SozvonCalendar.conflict(Array.isArray(meetings)?meetings:[],date);
+  if(existing){$('#schedule-error').textContent='На это время уже запланирована встреча. Выберите другое время.';$('#schedule-error').hidden=false;$('#scheduled-clock').setAttribute('aria-invalid','true');window.SozvonTime.focus($('#scheduled-clock'));return;}
   const meeting = { code: makeCode(), title, date: date.toISOString() };
   if (!storage.set('sozvon-meetings', [...(Array.isArray(meetings) ? meetings : []), meeting])) { $('#schedule-error').textContent = 'Не удалось сохранить встречу. Разрешите хранение данных в браузере и попробуйте снова.'; $('#schedule-error').hidden = false; return; }
-  window.SozvonMeetings.open(SozvonCalendar.dayKey(date));
+  window.SozvonMeetings.open(SozvonCalendar.dayKey(date), {created:meeting.code});
 });
 
 function themeLabel() { $('#theme-toggle').setAttribute('aria-label', document.documentElement.dataset.theme === 'dark' ? 'Включить светлую тему' : 'Включить тёмную тему'); }
@@ -320,6 +342,12 @@ function positionScenarioMarker(animate = true) {
   if (!animate) { void marker.offsetWidth; list.classList.add('marker-motion'); }
 }
 const scenarioReducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+const wavePatterns={work:[5,14,9,23,16,7,20,12,5],close:[4,8,16,24,19,13,8,5,3],ideas:[12,5,20,9,25,7,16,22,10]};
+let waveAnimations=[];
+function updateScenarioWave(key,animate=true){
+  const bars=[...$('#scenario-page').querySelectorAll('.scenario-wave i')],heights=bars.map(bar=>getComputedStyle(bar).height);waveAnimations.forEach(animation=>animation.cancel());waveAnimations=[];
+  bars.forEach((bar,index)=>{const height=wavePatterns[key][index];bar.style.height=`${height}px`;if(animate&&!scenarioReducedMotion.matches)waveAnimations.push(bar.animate([{height:heights[index]},{height:`${Math.max(3,height*.4)}px`,offset:.2},{height:`${Math.min(26,height*1.15)}px`,offset:.48},{height:`${height*.5}px`,offset:.72},{height:`${height}px`}],{duration:560,delay:index*30,easing:'ease-in-out'}));});
+}
 let scenarioAnimation = null;
 let scenarioGhostAnimation = null;
 let scenarioGhost = null;
@@ -327,7 +355,7 @@ function clearScenarioAnimation() {
   scenarioAnimation?.cancel(); scenarioGhostAnimation?.cancel(); scenarioGhost?.remove();
   scenarioAnimation = null; scenarioGhostAnimation = null; scenarioGhost = null;
 }
-scenarioReducedMotion.addEventListener('change', () => { if (scenarioReducedMotion.matches) clearScenarioAnimation(); });
+scenarioReducedMotion.addEventListener('change', () => { if (scenarioReducedMotion.matches) {clearScenarioAnimation();waveAnimations.forEach(animation=>animation.cancel());} });
 function selectScenario(key, focus = false, directionHint = 0) {
   const story = scenarioStories[key];
   if (!story) return;
@@ -357,11 +385,10 @@ function selectScenario(key, focus = false, directionHint = 0) {
   }
   positionScenarioMarker();
   panel.dataset.scene = key;
-  $('#scenario-label').textContent = story.label;
-  $('#scenario-counter').textContent = `${story.number} / 03`;
   $('#scenario-headline').replaceChildren(document.createTextNode(story.headline[0]), document.createElement('br'), document.createTextNode(story.headline[1]));
   $('#scenario-description').textContent = story.description;
   $('#scenario-detail').textContent = story.detail;
+  updateScenarioWave(key);
   if (animate) {
     const direction = directionHint || Math.sign(next - previous);
     const distance = panel.clientHeight + 16;
@@ -394,6 +421,7 @@ const scenarioNarrow = matchMedia('(max-width: 760px)');
 const updateScenarioOrientation = () => { $('.scenario-tabs').setAttribute('aria-orientation', scenarioNarrow.matches ? 'horizontal' : 'vertical'); positionScenarioMarker(false); };
 scenarioNarrow.addEventListener('change', updateScenarioOrientation); updateScenarioOrientation();
 new ResizeObserver(() => positionScenarioMarker(false)).observe($('.scenario-tabs'));
+updateScenarioWave('work',false);
 document.fonts.ready.then(() => positionScenarioMarker(false));
 window.addEventListener('pagehide', stopDevices);
 refreshDevices();
