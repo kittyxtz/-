@@ -39,8 +39,12 @@ function setMode(nextMode, focus = false) {
   mode = nextMode;
   $('.meeting-panel').dataset.view = mode;
   $('.mode-switch').hidden = false;
+  $('.mode-switch').inert = false;
   $('#meeting-form-panel').hidden = false;
+  $('#meeting-form-panel').inert = false;
   $('#schedule-panel').hidden = true;
+  $('#schedule-panel').inert = true;
+  $('#schedule-back').hidden = true;
   const join = mode === 'join';
   $('.mode-switch').style.setProperty('--mode-position', join ? '100%' : '0%');
   for (const tab of [$('#create-tab'), $('#join-tab')]) {
@@ -224,7 +228,7 @@ $('#room-help').addEventListener('click', () => $('#help-dialog').showModal());
 $$('[data-close]').forEach(button => button.addEventListener('click', () => button.closest('dialog').close()));
 $$('dialog').forEach(dialog => dialog.addEventListener('click', (event) => { if (event.target === dialog) { const rect = dialog.getBoundingClientRect(); if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) dialog.close(); } }));
 function localDateTime(date) { const pad = n => String(n).padStart(2, '0'); return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`; }
-function openSchedule() {
+function openSchedule(event) {
   const next = new Date(Date.now() + 60 * 60 * 1000); next.setMinutes(Math.ceil(next.getMinutes() / 15) * 15, 0, 0);
   $('#scheduled-time').min = localDateTime(new Date());
   if (!$('#scheduled-time').value || Date.parse($('#scheduled-time').value) <= Date.now()) $('#scheduled-time').value = localDateTime(next);
@@ -234,11 +238,14 @@ function openSchedule() {
   if (mode !== 'schedule') scheduleReturnMode = mode;
   modeAnimation?.cancel(); mode = 'schedule';
   $('.meeting-panel').dataset.view = 'schedule';
-  $('.mode-switch').hidden = true; $('#meeting-form-panel').hidden = true; $('#schedule-panel').hidden = false;
+  $('.mode-switch').hidden = true; $('.mode-switch').inert = true;
+  $('#meeting-form-panel').hidden = true; $('#meeting-form-panel').inert = true;
+  $('#schedule-panel').hidden = false; $('#schedule-panel').inert = false;
+  $('#schedule-button').hidden = true; $('#schedule-back').hidden = false;
   if (!modeReducedMotion.matches && typeof $('#schedule-panel').animate === 'function') {
     modeAnimation = $('#schedule-panel').animate([{ transform: 'translateY(70%)', opacity: .2 }, { transform: 'translateY(0)', opacity: 1 }], { duration: 420, easing: 'cubic-bezier(.2,.8,.2,1)' });
   }
-  $('.meeting-panel').scrollIntoView({ block: 'center', behavior: modeReducedMotion.matches ? 'instant' : 'smooth' });
+  if (event?.currentTarget !== $('#schedule-button')) $('.meeting-panel').scrollIntoView({ block: 'center', behavior: modeReducedMotion.matches ? 'instant' : 'smooth' });
   $('#schedule-title').focus({ preventScroll: true });
 }
 $('#schedule-button').addEventListener('click', openSchedule);
@@ -300,6 +307,19 @@ const scenarioStories = {
   ideas: { label: 'ПРИДУМАТЬ ЧТО-ТО НОВОЕ', number: '03', headline: ['А если…', 'сделать вместе?'], description: 'Набросать замысел, подхватить неожиданную мысль, найти единомышленников. Дайте идее голос — и посмотрите, что получится.', detail: 'Предложить. Подхватить. Придумать.' }
 };
 const scenarioTabs = $$('[data-scenario]');
+function positionScenarioMarker(animate = true) {
+  const list = $('.scenario-tabs');
+  const marker = $('.scenario-marker');
+  const active = scenarioTabs.find(tab => tab.getAttribute('aria-selected') === 'true');
+  if (!active) return;
+  const origin = list.getBoundingClientRect();
+  const number = active.querySelector('.scenario-number').getBoundingClientRect();
+  if (!animate) list.classList.remove('marker-motion');
+  marker.firstElementChild.textContent = active.querySelector('.scenario-number').textContent.trim();
+  marker.style.transform = `translate3d(${number.left - origin.left}px, ${number.top - origin.top}px, 0)`;
+  marker.style.opacity = '1';
+  if (!animate) { void marker.offsetWidth; list.classList.add('marker-motion'); }
+}
 const scenarioReducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 let scenarioAnimation = null;
 let scenarioGhostAnimation = null;
@@ -336,6 +356,7 @@ function selectScenario(key, focus = false, directionHint = 0) {
     tab.setAttribute('aria-selected', String(selected)); tab.tabIndex = selected ? 0 : -1;
     if (selected) { panel.setAttribute('aria-labelledby', tab.id); if (focus) tab.focus(); }
   }
+  positionScenarioMarker();
   panel.dataset.scene = key;
   $('#scenario-label').textContent = story.label;
   $('#scenario-counter').textContent = `${story.number} / 03`;
@@ -371,7 +392,9 @@ $('.scenario-tabs').addEventListener('keydown', event => {
   selectScenario(scenarioTabs[next].dataset.scenario, true, direction);
 });
 const scenarioNarrow = matchMedia('(max-width: 760px)');
-const updateScenarioOrientation = () => $('.scenario-tabs').setAttribute('aria-orientation', scenarioNarrow.matches ? 'horizontal' : 'vertical');
+const updateScenarioOrientation = () => { $('.scenario-tabs').setAttribute('aria-orientation', scenarioNarrow.matches ? 'horizontal' : 'vertical'); positionScenarioMarker(false); };
 scenarioNarrow.addEventListener('change', updateScenarioOrientation); updateScenarioOrientation();
+new ResizeObserver(() => positionScenarioMarker(false)).observe($('.scenario-tabs'));
+document.fonts.ready.then(() => positionScenarioMarker(false));
 window.addEventListener('pagehide', stopDevices);
 refreshDevices();

@@ -52,6 +52,7 @@
       </div>
       <div class="meeting-panel">
         <div class="mode-switch" role="tablist" aria-label="Действие со встречей"><button id="create-tab" role="tab" aria-selected="true" aria-controls="meeting-form-panel" tabindex="0">Новая встреча</button><button id="join-tab" role="tab" aria-selected="false" aria-controls="meeting-form-panel" tabindex="-1">По ссылке</button><span class="mode-indicator" aria-hidden="true"></span></div>
+        <div class="meeting-view-stack">
         <section id="meeting-form-panel" role="tabpanel" aria-labelledby="create-tab">
           <div class="form-heading"><span class="meeting-emblem"><svg aria-hidden="true"><use href="#i-video"/></svg></span><h2 id="form-title">Начать встречу</h2><p id="form-description">Одна ссылка для всех, кого ждёте.</p></div>
           <form id="meeting-form" novalidate>
@@ -60,25 +61,26 @@
             <div class="field" id="join-field" hidden><label for="meeting-code">Ссылка или код встречи</label><input id="meeting-code" name="meetingCode" placeholder="Например, air-kite-482" aria-describedby="code-error" autocapitalize="none" spellcheck="false"><span id="code-error" class="field-error" hidden></span></div>
             <button class="primary-button" type="submit"><span id="submit-label">Создать встречу</span></button>
           </form>
-          <button class="schedule-button" id="schedule-button"><span class="schedule-symbol"><svg aria-hidden="true"><use href="#i-calendar"/></svg></span><span>Запланировать</span></button>
+
           
         </section>
-        <section id="schedule-panel" class="schedule-panel" aria-labelledby="schedule-title" hidden>
-          <button class="plan-back" id="schedule-back"><svg aria-hidden="true"><use href="#i-chevron"/></svg>Назад</button>
-          <div class="form-heading"><span class="meeting-emblem"><svg aria-hidden="true"><use href="#i-calendar"/></svg></span><h2 id="schedule-title" tabindex="-1">Встретимся позже.</h2><p>Выберите время для вашего разговора.</p></div>
+        <section id="schedule-panel" class="schedule-panel" aria-labelledby="schedule-title" hidden inert>
+          <div class="form-heading"><span class="meeting-emblem"><svg aria-hidden="true"><use href="#i-calendar"/></svg></span><h2 id="schedule-title" tabindex="-1">Встретимся позже.</h2><p>Выберите удобное время.</p></div>
           <form id="schedule-form" novalidate><label class="field" for="scheduled-name">Название встречи<input id="scheduled-name" name="title" placeholder="Например, встреча команды" maxlength="90" required></label><label class="field" for="scheduled-time">Дата и время<input id="scheduled-time" name="date" type="datetime-local" required></label><p class="field-error" id="schedule-error" role="alert" hidden></p><button type="submit" class="primary-button">Сохранить встречу<svg aria-hidden="true" focusable="false"><use href="#i-check"/></svg></button></form>
           <p class="plan-storage-note">Сохраним встречу в этом браузере.</p>
         </section>
+        </div>
+        <div class="meeting-actions"><button class="schedule-button" id="schedule-button"><span class="schedule-symbol"><svg aria-hidden="true"><use href="#i-calendar"/></svg></span><span>Запланировать</span></button><button class="schedule-button plan-back" id="schedule-back" hidden><span class="schedule-symbol"><svg aria-hidden="true"><use href="#i-chevron"/></svg></span><span>Назад</span></button></div>
       </div>
     </section>
 
     <section class="conversation-section" aria-labelledby="conversation-title">
       <div class="scenario-layout">
         <div class="scenario-intro"><span class="section-kicker">ТЫСЯЧА ПОВОДОВ БЫТЬ РЯДОМ</span><h2 id="conversation-title">Важен не повод.<br>Важен разговор.</h2><p>На другом конце — ваши люди.<br>Для остального есть Созвон.</p>
-          <div class="scenario-tabs" role="tablist" aria-label="Поводы для встречи" aria-orientation="vertical">
-            <button id="scenario-work-tab" role="tab" aria-selected="true" aria-controls="scenario-panel" tabindex="0" data-scenario="work"><span class="scenario-number" aria-hidden="true">01</span><span>По делу</span></button>
-            <button id="scenario-close-tab" role="tab" aria-selected="false" aria-controls="scenario-panel" tabindex="-1" data-scenario="close"><span class="scenario-number" aria-hidden="true">02</span><span>По душам</span></button>
-            <button id="scenario-ideas-tab" role="tab" aria-selected="false" aria-controls="scenario-panel" tabindex="-1" data-scenario="ideas"><span class="scenario-number" aria-hidden="true">03</span><span>За идеями</span></button>
+          <div class="scenario-tabs" role="tablist" aria-label="Поводы для встречи" aria-orientation="vertical"><span class="scenario-marker" aria-hidden="true"><span>01</span></span>
+            <button id="scenario-work-tab" role="tab" aria-selected="true" aria-controls="scenario-panel" tabindex="0" data-scenario="work"><span class="scenario-number" aria-hidden="true"><span>01</span></span><span>По делу</span></button>
+            <button id="scenario-close-tab" role="tab" aria-selected="false" aria-controls="scenario-panel" tabindex="-1" data-scenario="close"><span class="scenario-number" aria-hidden="true"><span>02</span></span><span>По душам</span></button>
+            <button id="scenario-ideas-tab" role="tab" aria-selected="false" aria-controls="scenario-panel" tabindex="-1" data-scenario="ideas"><span class="scenario-number" aria-hidden="true"><span>03</span></span><span>За идеями</span></button>
           </div>
         </div>
         <div class="scenario-panel" id="scenario-panel" role="tabpanel" aria-labelledby="scenario-work-tab" tabindex="0" data-scene="work">

@@ -171,3 +171,25 @@ svg{stroke-width:1.65}
 @media(max-width:1050px){.studio-preview-bottom{flex-wrap:wrap}.studio-preview-caption{max-width:none}}
 @media(max-width:760px){.schedule-panel{padding-block:4px 0}.schedule-panel .form-heading h2{font-size:1.8rem}.schedule-panel .form-heading{margin-block-end:22px}.plan-back{margin-block-end:15px}.mode-switch{width:min(100%,265px)}.meeting-panel[data-view=schedule]{min-height:565px}.studio-preview{padding:19px 20px}.studio-room-line{align-items:start;flex-direction:column;gap:4px;margin-block-start:16px}.studio-person{padding-block:14px}.studio-self-view{min-height:180px}.studio-preview-bottom{gap:10px}.studio-preview-caption{font-size:.5625rem;max-width:none}.studio-preview-controls button{min-height:34px;padding:7px 10px;font-size:.625rem}}
 @media(max-width:360px){.studio-preview{padding-inline:16px}.studio-preview-controls{gap:6px}.studio-preview-controls button{padding-inline:9px;font-size:.5625rem}.studio-preview-controls svg{width:14px;height:14px}.studio-self-view{min-height:175px}.studio-room-line>span:first-child{font-size:.8125rem}.schedule-panel .form-heading h2{font-size:1.65rem}}
+/* All views share their title baseline and a stationary action slot. */
+.meeting-view-stack{display:grid;grid-template-columns:minmax(0,1fr);flex:1;min-height:0}
+.meeting-view-stack>#meeting-form-panel,.meeting-view-stack>#schedule-panel{grid-area:1/1;display:flex;flex-direction:column;justify-content:flex-start;min-height:0;margin-inline:auto;padding-block:48px 0;align-self:stretch}
+.meeting-view-stack>#meeting-form-panel[hidden],.meeting-view-stack>#schedule-panel[hidden]{display:flex!important;visibility:hidden;pointer-events:none}
+.meeting-panel>.mode-switch[hidden]{display:grid!important;visibility:hidden;pointer-events:none}
+.meeting-actions{display:grid;place-items:center;flex-shrink:0;min-height:58px;padding-block-start:16px}
+.meeting-panel .meeting-actions>.schedule-button{grid-area:1/1;align-self:center;justify-self:center;margin:0;width:176px;min-height:42px;height:42px;padding:5px 16px 5px 6px;gap:9px;border-radius:999px;white-space:nowrap}
+.meeting-actions .schedule-button>span:last-child{flex:1;text-align:center}
+.meeting-actions .plan-back svg{transform:rotate(90deg);width:17px;height:17px}
+.schedule-panel .meeting-emblem{width:36px;height:36px;margin-block-end:14px}
+.schedule-panel .form-heading{margin-block-end:22px}
+.schedule-panel .form-heading>p{font-size:.8125rem}
+/* One marker travels across the fixed number positions. */
+.scenario-tabs{position:relative;isolation:isolate;--scenario-size:25px;--scenario-digit-size:.625rem}
+.scenario-tabs button{position:relative;z-index:1}
+.scenario-tabs .scenario-number,.scenario-tabs button[aria-selected=true] .scenario-number{width:var(--scenario-size);height:var(--scenario-size);display:grid;place-items:center;flex-shrink:0;line-height:1;font-size:var(--scenario-digit-size);font-weight:500;background:transparent;color:var(--color-secondary)}
+.scenario-number>span,.scenario-marker>span{display:block;line-height:1;font-size:var(--scenario-digit-size);font-weight:500;font-variant-numeric:tabular-nums}
+.scenario-marker{position:absolute;inset-block-start:0;inset-inline-start:0;z-index:2;display:grid;place-items:center;width:var(--scenario-size);height:var(--scenario-size);border-radius:50%;background:var(--color-accent);color:var(--color-on-accent);pointer-events:none;opacity:0}
+@supports(text-box-trim:trim-both){.scenario-number>span,.scenario-marker>span{text-box-trim:trim-both;text-box-edge:cap alphabetic}}
+@media(prefers-reduced-motion:no-preference){.scenario-tabs.marker-motion .scenario-marker{transition:transform 480ms cubic-bezier(.22,.75,.2,1)}}
+@media(max-width:760px){.meeting-view-stack>#meeting-form-panel,.meeting-view-stack>#schedule-panel{padding-block-start:26px}.meeting-panel,.meeting-panel[data-view=schedule]{min-height:565px}.scenario-tabs{--scenario-size:20px;--scenario-digit-size:.5rem;gap:clamp(9px,2.5vw,18px)}.scenario-tabs button{gap:5px;font-size:.8125rem}.scenario-tabs button[aria-selected=true]::after{content:none}.scenario-tabs .scenario-number{display:grid}}
+@media(max-width:360px){.scenario-tabs{gap:9px}.scenario-tabs button{font-size:.75rem;gap:5px}}
