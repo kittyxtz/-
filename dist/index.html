@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <script src="ui.js"></script>
+  <script src="ui.js?v=20261029-3"></script>
   <meta name="theme-color" content="#f8f9fc">
   <meta name="description" content="Созвон — больше воздуха для ваших разговоров. Создайте встречу или присоединитесь по ссылке.">
   <title>Созвон — ближе, где бы вы ни были</title>
@@ -11,12 +11,12 @@
   <link rel="preload" href="assets/inter-tight-0.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="workspace.css">
-  <link rel="stylesheet" href="calendar.css">
+  <link rel="stylesheet" href="calendar.css?v=20261029-3">
   <script>try{if(localStorage.getItem('sozvon-theme')==='dark')document.documentElement.dataset.theme='dark'}catch{}</script>
-  <script src="calendar.js" defer></script>
-  <script src="calendar-page.js" defer></script>
+  <script src="calendar.js?v=20261029-3" defer></script>
+  <script src="calendar-page.js?v=20261029-3" defer></script>
   <script src="time-picker.js" defer></script>
-  <script src="app.js" defer></script>
+  <script src="app.js?v=20261029-3" defer></script>
 </head>
 <body>
   <div class="sky-background" aria-hidden="true"><span class="sky-halo"></span><span class="sky-ring ring-a"></span><span class="sky-ring ring-b"></span><svg viewBox="0 0 1440 1000" preserveAspectRatio="none"><path d="M-120 740C100 300 350 1100 780 660S1180 220 1560 390"/><path d="M-120 765C100 325 350 1125 780 685S1180 245 1560 415"/><path d="M-120 790C100 350 350 1150 780 710S1180 270 1560 440"/></svg><span class="sky-star">✳</span></div>
@@ -100,7 +100,7 @@
 
     <section class="studio-section" aria-labelledby="studio-title"><div class="studio-copy"><span class="section-kicker">СНАЧАЛА — ВАШ КОМФОРТ</span><h2 id="studio-title">Встречайте людей.<br>Не настройки.</h2><p>Осмотритесь в комнате до начала разговора. Проверьте свой кадр, включите звук и почувствуйте себя на месте.</p><button class="studio-cta" id="try-room"><svg aria-hidden="true"><use href="#i-video"/></svg>Осмотреть комнату</button></div><div class="studio-scene"><div class="studio-orbit" aria-hidden="true"></div><div class="studio-preview"><div class="studio-preview-top"><svg aria-hidden="true"><use href="#i-air"/></svg><span>Ваше пространство</span></div><div class="studio-room-line"><span>Рады вас видеть.</span><span>Сначала найдите свой кадр.</span></div><div class="studio-person"><div class="studio-self-view"><span class="studio-self-status"><span></span>Только вы</span><span class="studio-avatar" id="studio-preview-avatar" aria-hidden="true">Я</span><div class="studio-self-footer"><span id="studio-preview-name">Вы</span><span class="studio-mic-off" role="img" aria-label="Микрофон выключен"><svg aria-hidden="true"><use href="#i-mic"/></svg></span></div></div></div><div class="studio-preview-bottom"><div class="studio-preview-controls"><button data-device-preview="mic" aria-label="Проверить звук в демокомнате"><svg aria-hidden="true"><use href="#i-mic"/></svg><span>Звук</span></button><button data-device-preview="camera" aria-label="Проверить камеру в демокомнате"><svg aria-hidden="true"><use href="#i-video"/></svg><span>Камера</span></button><button data-device-preview="screen" aria-label="Проверить экран в демокомнате"><svg aria-hidden="true"><use href="#i-monitor"/></svg><span>Экран</span></button></div><span class="studio-preview-caption">Выберите, с чего начать</span></div></div></div></section>
 
-    <section class="landing-invitation" aria-labelledby="invitation-title"><span class="invitation-air" aria-hidden="true"><svg><use href="#i-air"/></svg></span><div><h2 id="invitation-title">На кого у вас сегодня есть время?</h2><p>Позовите тех, с кем давно хотели поговорить.</p></div><a class="primary-button" href="#main" data-start-meeting>Начать встречу<svg aria-hidden="true"><use href="#i-arrow"/></svg></a></section>
+    <section class="landing-invitation" aria-labelledby="invitation-title"><span class="invitation-air" aria-hidden="true"><svg><use href="#i-air"/></svg></span><div><h2 id="invitation-title">На кого у вас сегодня есть время?</h2><p>Позовите тех, с кем давно хотели поговорить.</p></div><a class="primary-button" href="#main" data-start-meeting>Начать встречу</a></section>
   </main>
   <footer class="footer site-footer page-width"><div class="footer-main"><div class="footer-identity"><a class="brand" href="./" aria-label="Созвон — главная"><span class="brand-mark"><svg aria-hidden="true"><use href="#i-air"/></svg></span><span>созвон<span class="brand-dot">.</span></span></a><p>Время быть на связи.</p></div><nav class="footer-nav" aria-label="Навигация внизу страницы"><a href="#main" data-start-meeting>Начать встречу</a><a href="meetings.html" data-open-meetings aria-haspopup="dialog" aria-controls="meetings-modal">Мои встречи</a><a href="profile.html">Профиль</a><button id="help-button" type="button">Помощь</button></nav></div><div class="footer-base"><p>© <span data-copyright-year>2026</span> Созвон. Все права защищены.</p></div></footer>
   <div class="toast" id="toast" role="status" aria-live="polite" popover="manual"></div>

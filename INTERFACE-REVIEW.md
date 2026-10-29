@@ -109,3 +109,8 @@ Approve — в пределах перечисленных проверенны�
 Последнее состояние уведомления: отдельный зарезервированный слот в контейнере «Мои встречи», за пределами сетки дат. Таймер 2800 мс и затухание 120 мс; hover меняет поверхность/тень и приостанавливает исчезновение, после ухода указателя — 900 мс. Закрытие окна скрывает сообщение, отменяет таймер и повышает номер сессии: позднее завершение отмены из старой сессии не показывает плашку. Повторное открытие не воспроизводит прошлую отмену. Прошедшие дни в календаре серые, но остаются доступны для просмотра истории. Повторный браузерный тест отмены сохранённой записи отклонён автоматической проверкой; последняя логика уведомления проверена по коду без изменения записей.
 
 Финальное размещение уведомления по уточнению: абсолютный слой справа снизу в окне «Мои встречи», без резервирования высоты. Размеры окна и положения календаря от появления сообщения не меняются.
+
+
+## 29 October — controls and calendar navigation
+
+Aligned scenario glyphs using cap-height text trimming and fractional marker coordinates, with fixed digit positions. Refined the title disclosure, input surfaces, focus/error rings, and surface-only button feedback. Validation messages now animate measured height without moving upward. Removed the invitation button arrow. Replaced long form/scenario travel with shorter eased transitions. Added wheel month navigation (one month per gesture, with animation lock), month/year selection inside the calendar, arrow-key navigation, Escape return, and focus restoration. Kept compact planning calendars unchanged. Verified syntax, desktop and narrow layouts, validation, month/year selection, and mouse-wheel navigation; no existing meeting records changed during this verification.

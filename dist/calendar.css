@@ -282,3 +282,64 @@ body.calendar-open{overflow:hidden}
 @media(hover:hover){.footer-nav a:hover,.site-footer .footer-nav button:hover{color:var(--calendar-ink)}}
 @media(prefers-reduced-motion:no-preference){.footer-nav a,.site-footer .footer-nav button{transition:color 160ms ease}}
 @media(max-width:760px){.footer.site-footer{padding-block:27px 24px}.footer-main{display:block}.footer-nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 20px;margin-block-start:23px}.footer-nav a,.site-footer .footer-nav button{justify-self:start;min-height:34px}.footer-base{margin-block-start:22px}.footer-base p{max-width:32ch}}
+
+/* Fixed digit positions; trim the font's empty ascent and descent, not the circle. */
+.scenario-tabs .scenario-number>span{display:block;width:auto;height:auto;line-height:1;font-variant-numeric:tabular-nums;text-box-trim:trim-both;text-box-edge:cap alphabetic}
+.scenario-tabs .scenario-number{align-items:center;justify-items:center}
+@media(prefers-reduced-motion:no-preference){.scenario-tabs.marker-motion .scenario-marker{transition:transform 320ms var(--ease)}}
+@supports not (text-box-trim:trim-both){.scenario-tabs .scenario-number>span{position:relative;top:.035em}}
+
+.meeting-options summary{gap:9px;min-height:34px;border-radius:9px;padding:3px 6px 3px 0;font-weight:500}
+.title-toggle-icon{width:24px;height:24px;border:1px solid color-mix(in srgb,var(--color-input-border) 40%,var(--color-border));border-radius:8px;background:color-mix(in srgb,var(--color-surface) 70%,transparent);color:var(--calendar-ink)}
+.title-toggle-icon::before,.title-toggle-icon::after{width:10px;height:1.5px;inset-inline-start:6px;inset-block-start:10.25px;transform-origin:center}
+.title-toggle-icon::after{transform:rotate(90deg)}
+.meeting-options[data-expanded=true] .title-toggle-icon::after{transform:rotate(0);opacity:0}
+
+.field input,.meeting-panel .field input,.date-field-button{border-radius:13px;background:color-mix(in srgb,var(--color-surface) 82%,var(--color-bg));border-color:var(--color-input-border);box-shadow:inset 0 1px 2px #15263f04;font-size:.9375rem}
+.field input::placeholder{color:var(--color-secondary);opacity:.8;font-size:.875rem}
+.field input:focus-visible,.date-field-button:focus-visible{outline:none;border-color:var(--color-focus);box-shadow:0 0 0 3px color-mix(in srgb,var(--color-focus) 13%,transparent),inset 0 1px 2px #15263f04}
+.field input[aria-invalid=true],.date-field-button[aria-invalid=true]{border-color:var(--color-danger);box-shadow:0 0 0 3px color-mix(in srgb,var(--color-danger) 8%,transparent)}
+.date-field-button svg{color:var(--calendar-ink);opacity:.8}
+.field-error-slot{min-width:0;overflow:clip;pointer-events:none;font-size:.75rem;line-height:1.5}
+.field-error-slot>.field-error{display:block!important;margin:0}
+
+/* Feedback stays on the surface: no lift, stretch or bounce on hover/press. */
+button:not(:disabled):active,a.primary-button:active{scale:1}
+.primary-button{border:1px solid transparent;border-radius:13px;font-weight:600;letter-spacing:.005em;box-shadow:inset 0 1px 0 #ffffff19,0 2px 5px #1c2b4309}
+.meeting-panel .primary-button{box-shadow:inset 0 1px 0 #ffffff19,0 2px 5px #1c2b4309}
+.primary-button:active{background:var(--color-accent-hover);box-shadow:inset 0 2px 5px #12244922}
+.meeting-panel .meeting-actions .schedule-button{border:1px solid color-mix(in srgb,var(--color-input-border) 35%,var(--color-border));background:color-mix(in srgb,var(--color-surface) 68%,transparent);color:var(--color-text);border-radius:12px;min-height:42px}
+.meeting-actions .schedule-symbol{background:transparent;border:0;box-shadow:none;color:var(--calendar-ink)}
+.icon-button,.month-arrow,.month-today,.agenda-copy,.agenda-delete,.studio-preview-controls button{translate:none;transform:none}
+.month-arrow.previous svg{transform:rotate(180deg)}
+.month-title-button{display:inline-flex;align-items:center;gap:9px;padding:6px 8px;margin:-6px -8px;border:1px solid transparent;border-radius:10px;background:transparent;color:var(--color-text);text-align:start;white-space:nowrap;font:inherit;font-size:1.25rem;font-weight:550;letter-spacing:-.025em}
+.month-title-button::after{content:'';width:6px;height:6px;border-inline-end:1.5px solid currentColor;border-block-end:1.5px solid currentColor;transform:rotate(45deg);opacity:.5;margin:0 2px 4px 0}
+.month-title-button[aria-expanded=true]::after{transform:rotate(225deg);margin-block:3px 0}
+.month-chooser{position:absolute;inset:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(4,minmax(0,1fr));gap:8px;padding:8px 0}
+.month-choice{min-width:0;border:1px solid transparent;border-radius:14px;background:transparent;color:var(--color-text);font-size:.9375rem;font-weight:500;font-variant-numeric:tabular-nums}
+.month-choice[aria-pressed=true]{background:var(--color-accent-soft);border-color:color-mix(in srgb,var(--color-accent) 20%,transparent);color:var(--calendar-ink)}
+.month-calendar:not(.is-compact) .month-stage{touch-action:pan-y}
+@media(hover:hover){
+  .field input:not(:focus-visible):not([aria-invalid=true]):hover,.date-field-button:not(:focus-visible):hover{border-color:color-mix(in srgb,var(--color-accent) 48%,var(--color-input-border));background:var(--color-surface)}
+  .meeting-options summary:hover .title-toggle-icon{background:var(--color-accent-soft);border-color:color-mix(in srgb,var(--color-accent) 28%,var(--color-border))}
+  .primary-button:hover{background:var(--color-accent-hover);box-shadow:inset 0 1px 0 #ffffff19,0 2px 5px #1c2b4309}
+  .meeting-panel .meeting-actions .schedule-button:hover{background:var(--color-accent-soft);border-color:color-mix(in srgb,var(--color-accent) 25%,var(--color-border))}
+  .month-title-button:hover{background:var(--color-subtle);border-color:var(--color-border)}
+  .month-choice:hover{background:var(--color-subtle)}
+  .month-choice[aria-pressed=true]:hover{background:var(--color-accent-soft)}
+}
+@media(prefers-reduced-motion:no-preference){
+  button,a.primary-button{transition:background-color 150ms var(--ease),border-color 150ms var(--ease),color 150ms var(--ease),box-shadow 150ms var(--ease)}
+  .field input,.date-field-button{transition:background-color 180ms var(--ease),border-color 180ms var(--ease),box-shadow 180ms var(--ease)}
+  .title-toggle-icon{transition:background-color 150ms var(--ease),border-color 150ms var(--ease)}
+  .title-toggle-icon::after{transition:transform 220ms var(--ease),opacity 150ms var(--ease)}
+  .field-error-slot.is-ready{transition:height 220ms var(--ease),margin-block-start 220ms var(--ease),opacity 160ms var(--ease)}
+  .hero,dialog[open]{animation:surface-appear 220ms var(--ease) both}
+  .meeting-panel{animation:none}
+  .date-picker-dialog:popover-open,.time-picker-dialog:popover-open{animation:surface-appear 160ms var(--ease)}
+  .month-title-button::after{transition:transform 180ms var(--ease)}
+}
+@keyframes surface-appear{from{opacity:0}to{opacity:1}}
+@media(max-width:760px){.meetings-modal .month-title-button{font-size:1rem;gap:6px}.month-chooser{gap:5px}.month-choice{font-size:.8125rem}}
+@media(max-width:400px){.meetings-modal .month-title-button{font-size:.8125rem;gap:5px;padding-inline:5px;margin-inline:-5px}}
+@media(forced-colors:active){.field input:focus-visible,.date-field-button:focus-visible{outline:2px solid Highlight;outline-offset:2px}}

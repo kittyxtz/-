@@ -13,7 +13,7 @@ function clearFooterMotion(){footerAnimations.forEach(animation=>animation.cance
 function animateFooter(previous,next,direction,duration){
   clearFooterMotion();if(modeReducedMotion.matches)return;
   const ghost=previous.cloneNode(true);ghost.removeAttribute('id');ghost.hidden=false;ghost.inert=true;ghost.setAttribute('aria-hidden','true');ghost.classList.add('footer-ghost');$('.meeting-actions').append(ghost);footerGhost=ghost;
-  const options={duration,easing:'cubic-bezier(.2,.8,.2,1)'};
+  const options={duration,easing:'cubic-bezier(.2,0,0,1)'};
   const outgoing=ghost.animate([{transform:'translateY(0)',opacity:1},{transform:`translateY(${-direction*24}px)`,opacity:0}],options);footerAnimations.push(outgoing);
   if(next)footerAnimations.push(next.animate([{transform:`translateY(${direction*24}px)`,opacity:0},{transform:'translateY(0)',opacity:1}],options));
   outgoing.finished.then(()=>{ghost.remove();if(footerGhost===ghost)footerGhost=null;}).catch(()=>ghost.remove());
@@ -74,7 +74,7 @@ function setMode(nextMode, focus = false) {
     modeAnimation = $('#meeting-form-panel').animate([
       { transform: fromSchedule ? 'translateY(-24px)' : `translateX(${direction * 24}px)`, opacity: .25 },
       { transform: 'translateX(0)', opacity: 1 }
-    ], { duration: 320, easing: 'cubic-bezier(.2,.8,.2,1)' });
+    ], { duration: 240, easing: 'cubic-bezier(.2,0,0,1)' });
   }
 }
 modeReducedMotion.addEventListener('change', () => { if (modeReducedMotion.matches) {modeAnimation?.cancel();clearFooterMotion();} });
@@ -286,9 +286,9 @@ function openSchedule(event) {
   $('#meeting-form-panel').hidden = true; $('#meeting-form-panel').inert = true;
   $('#schedule-panel').hidden = false; $('#schedule-panel').inert = false;
   $('#schedule-button').hidden = true; $('#schedule-back').hidden = false;
-  animateFooter($('#schedule-button'),$('#schedule-back'),1,420);
+  animateFooter($('#schedule-button'),$('#schedule-back'),1,280);
   if (!modeReducedMotion.matches && typeof $('#schedule-panel').animate === 'function') {
-    modeAnimation = $('#schedule-panel').animate([{ transform: 'translateY(70%)', opacity: .2 }, { transform: 'translateY(0)', opacity: 1 }], { duration: 420, easing: 'cubic-bezier(.2,.8,.2,1)' });
+    modeAnimation = $('#schedule-panel').animate([{ transform: 'translateY(24px)', opacity: 0 }, { transform: 'translateY(0)', opacity: 1 }], { duration: 280, easing: 'cubic-bezier(.2,0,0,1)' });
   }
   if (event?.currentTarget !== $('#schedule-button')) $('.meeting-panel').scrollIntoView({ block: 'center', behavior: modeReducedMotion.matches ? 'instant' : 'smooth' });
   $('#schedule-title').focus({ preventScroll: true });
@@ -335,10 +335,11 @@ function positionScenarioMarker(animate = true) {
   const active = scenarioTabs.find(tab => tab.getAttribute('aria-selected') === 'true');
   if (!active) return;
   const number = active.querySelector('.scenario-number');
-  let x=number.offsetLeft,y=number.offsetTop,parent=number.offsetParent;
-  while(parent&&parent!==list){x+=parent.offsetLeft;y+=parent.offsetTop;parent=parent.offsetParent;}
+  const bounds=number.getBoundingClientRect(),origin=list.getBoundingClientRect();
+  const x=bounds.left-origin.left-list.clientLeft+list.scrollLeft;
+  const y=bounds.top-origin.top-list.clientTop+list.scrollTop;
   if (!animate) list.classList.remove('marker-motion');
-  marker.style.transform = `translate3d(${x + (number.offsetWidth - marker.offsetWidth)/2}px, ${y + (number.offsetHeight - marker.offsetHeight)/2}px, 0)`;
+  marker.style.transform = `translate3d(${x + (bounds.width - marker.offsetWidth)/2}px, ${y + (bounds.height - marker.offsetHeight)/2}px, 0)`;
   marker.style.opacity = '1';
   if (!animate) { void marker.offsetWidth; list.classList.add('marker-motion'); }
 }
@@ -392,19 +393,19 @@ function selectScenario(key, focus = false, directionHint = 0) {
   updateScenarioWave(key);
   if (animate) {
     const direction = directionHint || Math.sign(next - previous);
-    const distance = panel.clientHeight + 16;
-    const easing = 'cubic-bezier(.22,.75,.2,1)';
+    const distance = Math.min(100,panel.clientHeight*.25);
+    const easing = 'cubic-bezier(.2,0,0,1)';
     const ghost = scenarioGhost;
     const outgoing = ghost.animate([
       { transform: previousTransform === 'none' ? 'translateY(0)' : previousTransform, opacity: Number(previousOpacity) },
-      { transform: `translateY(${-direction * distance}px)`, opacity: .15 }
-    ], { duration: 420, easing, fill: 'both' });
+      { transform: `translateY(${-direction * distance}px)`, opacity: 0 }
+    ], { duration: 260, easing, fill: 'both' });
     scenarioGhostAnimation = outgoing;
     outgoing.finished.then(() => { ghost.remove(); if (scenarioGhost === ghost) { scenarioGhost = null; scenarioGhostAnimation = null; } }).catch(() => {});
     const incoming = page.animate([
-      { transform: `translateY(${direction * distance}px)`, opacity: .3 },
+      { transform: `translateY(${direction * distance}px)`, opacity: 0 },
       { transform: 'translateY(0)', opacity: 1 }
-    ], { duration: 480, easing });
+    ], { duration: 320, easing });
     scenarioAnimation = incoming;
     incoming.finished.then(() => { if (scenarioAnimation === incoming) scenarioAnimation = null; }).catch(() => {});
   }
