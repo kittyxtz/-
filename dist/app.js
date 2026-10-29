@@ -85,7 +85,8 @@ titleSummary.addEventListener('click', event => {
   titleAnimation?.cancel();
   titleExpanded = !titleExpanded;
   const expanding = titleExpanded;
-  titleSummary.textContent = expanding ? 'Скрыть название' : 'Добавить название';
+  titleSummary.querySelector('.title-toggle-label').textContent = expanding ? 'Скрыть название' : 'Добавить название';
+  $('#room-field').dataset.expanded = String(expanding);
   if (modeReducedMotion.matches || typeof reveal.animate !== 'function') { details.open = expanding; return; }
   details.open = true;
   const animation = reveal.animate([
@@ -226,15 +227,39 @@ $$('[data-device-preview]').forEach(button => button.addEventListener('click', (
 $('#help-button').addEventListener('click', () => $('#help-dialog').showModal());
 $('#room-help').addEventListener('click', () => $('#help-dialog').showModal());
 $$('[data-close]').forEach(button => button.addEventListener('click', () => button.closest('dialog').close()));
-$$('dialog').forEach(dialog => dialog.addEventListener('click', (event) => { if (event.target === dialog) { const rect = dialog.getBoundingClientRect(); if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) dialog.close(); } }));
+$$('dialog:not(#meetings-modal)').forEach(dialog => dialog.addEventListener('click', (event) => { if (event.target === dialog) { const rect = dialog.getBoundingClientRect(); if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) dialog.close(); } }));
 function localDateTime(date) { const pad = n => String(n).padStart(2, '0'); return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`; }
+const planningCalendar = SozvonCalendar.mount($('#plan-date-calendar'), {
+  compact: true,
+  minDate: SozvonCalendar.dayKey(new Date()),
+  selectedDate: SozvonCalendar.dayKey(new Date()),
+  onSelect(key) {
+    $('#scheduled-time').value = `${key}T${$('#scheduled-clock').value || '10:00'}`;
+    syncPlanningControls(); $('#plan-date-dialog').close();
+  }
+});
+function syncPlanningControls() {
+  const [key,time] = $('#scheduled-time').value.split('T');
+  if (!SozvonCalendar.parseDay(key)) return;
+  $('#schedule-date-label').textContent = new Intl.DateTimeFormat('ru-RU',{day:'numeric',month:'short'}).format(SozvonCalendar.parseDay(key));
+  $('#scheduled-clock').value = time?.slice(0,5) || '';
+  window.SozvonTime?.refresh($('#scheduled-clock'));
+  planningCalendar.setSelected(key);
+}
+$('#schedule-date-trigger').addEventListener('click', () => { syncPlanningControls(); $('#plan-date-dialog').showModal(); planningCalendar.focusDay(planningCalendar.selected); });
+$('#scheduled-clock').addEventListener('input', () => {
+  const key = $('#scheduled-time').value.split('T')[0] || SozvonCalendar.dayKey(new Date());
+  $('#scheduled-time').value = `${key}T${$('#scheduled-clock').value}`;
+  $('#scheduled-clock').removeAttribute('aria-invalid'); $('#schedule-error').hidden = true;
+});
 function openSchedule(event) {
   const next = new Date(Date.now() + 60 * 60 * 1000); next.setMinutes(Math.ceil(next.getMinutes() / 15) * 15, 0, 0);
-  $('#scheduled-time').min = localDateTime(new Date());
-  if (!$('#scheduled-time').value || Date.parse($('#scheduled-time').value) <= Date.now()) $('#scheduled-time').value = localDateTime(next);
+
+  if (!Number.isFinite(Date.parse($('#scheduled-time').value)) || Date.parse($('#scheduled-time').value) <= Date.now()) $('#scheduled-time').value = localDateTime(next);
   if (!$('#scheduled-name').value.trim()) $('#scheduled-name').value = $('#room-name').value.trim();
   $('#schedule-error').hidden = true;
-  $('#scheduled-name').removeAttribute('aria-invalid'); $('#scheduled-time').removeAttribute('aria-invalid');
+  $('#scheduled-name').removeAttribute('aria-invalid'); $('#scheduled-clock').removeAttribute('aria-invalid'); $('#schedule-date-trigger').removeAttribute('aria-invalid');
+  syncPlanningControls();
   if (mode !== 'schedule') scheduleReturnMode = mode;
   modeAnimation?.cancel(); mode = 'schedule';
   $('.meeting-panel').dataset.view = 'schedule';
@@ -252,42 +277,17 @@ $('#schedule-button').addEventListener('click', openSchedule);
 function closeSchedule() { setMode(scheduleReturnMode); (scheduleReturnMode === 'create' ? $('#schedule-button') : $('#join-tab')).focus({ preventScroll: true }); }
 $('#schedule-back').addEventListener('click', closeSchedule);
 $('.meeting-panel').addEventListener('keydown', event => { if (event.key === 'Escape' && mode === 'schedule') { event.preventDefault(); closeSchedule(); } });
-$('#plan-from-list').addEventListener('click', () => { $('#meetings-dialog').close(); openSchedule(); });
 $('#schedule-form').addEventListener('submit', (event) => {
   event.preventDefault(); const title = $('#scheduled-name').value.trim(); const date = new Date($('#scheduled-time').value);
-  $('#scheduled-name').removeAttribute('aria-invalid'); $('#scheduled-time').removeAttribute('aria-invalid');
-  const invalid = !title ? $('#scheduled-name') : !Number.isFinite(date.getTime()) || date.getTime() <= Date.now() ? $('#scheduled-time') : null;
-  if (invalid) { $('#schedule-error').textContent = !title ? 'Введите название, чтобы найти встречу в списке.' : 'Выберите дату и время в будущем.'; $('#schedule-error').hidden = false; invalid.setAttribute('aria-invalid', 'true'); invalid.setAttribute('aria-describedby', 'schedule-error'); invalid.focus(); return; }
+  $('#scheduled-name').removeAttribute('aria-invalid'); $('#scheduled-clock').removeAttribute('aria-invalid'); $('#schedule-date-trigger').removeAttribute('aria-invalid');
+  const invalid = !title ? $('#scheduled-name') : !Number.isFinite(date.getTime()) || date.getTime() <= Date.now() ? $('#scheduled-clock') : null;
+  if (invalid) { $('#schedule-error').textContent = !title ? 'Введите название, чтобы найти встречу в списке.' : 'Выберите дату и время в будущем.'; $('#schedule-error').hidden = false; invalid.setAttribute('aria-invalid', 'true'); invalid.setAttribute('aria-describedby', 'schedule-error'); window.SozvonTime.focus(invalid); return; }
   const meetings = storage.get('sozvon-meetings', []);
   const meeting = { code: makeCode(), title, date: date.toISOString() };
   if (!storage.set('sozvon-meetings', [...(Array.isArray(meetings) ? meetings : []), meeting])) { $('#schedule-error').textContent = 'Не удалось сохранить встречу. Разрешите хранение данных в браузере и попробуйте снова.'; $('#schedule-error').hidden = false; return; }
-  setMode(scheduleReturnMode);
-  (scheduleReturnMode === 'create' ? $('#schedule-button') : $('#join-tab')).focus({ preventScroll: true });
-  renderMeetings(); $('#meetings-dialog').showModal(); notify('Встреча сохранена в этом браузере');
+  window.SozvonMeetings.open(SozvonCalendar.dayKey(date));
 });
-function renderMeetings() {
-  const list = $('#meetings-list'); list.replaceChildren();
-  const data = storage.get('sozvon-meetings', []);
-  const meetings = (Array.isArray(data) ? data : []).filter(meeting => meeting && typeof meeting.title === 'string' && codePattern.test(meeting.code) && Number.isFinite(Date.parse(meeting.date))).sort((a,b) => Date.parse(a.date) - Date.parse(b.date));
-  if (!meetings.length) { const p = document.createElement('p'); p.className = 'empty-list'; p.textContent = 'Здесь будут ваши планы на разговор. Создайте первую встречу — и она появится в списке.'; list.append(p); return; }
-  for (const meeting of meetings) {
-    const item = document.createElement('article'); item.className = 'saved-meeting';
-    const title = document.createElement('h3'); title.textContent = meeting.title;
-    const date = document.createElement('p'); date.textContent = new Intl.DateTimeFormat('ru-RU', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' }).format(new Date(meeting.date));
-    const actions = document.createElement('div'); actions.className = 'saved-actions';
-    const open = document.createElement('button'); open.textContent = 'Открыть'; open.addEventListener('click', () => { $('#meetings-dialog').close(); openLobby({ ...meeting, name: $('#display-name').value.trim() || storage.get('sozvon-name', '') || 'Гость' }); });
-    const download = document.createElement('button'); download.textContent = 'В календарь'; download.addEventListener('click', () => downloadCalendar(meeting));
-    actions.append(open, download); item.append(title, date, actions); list.append(item);
-  }
-}
-function downloadCalendar(meeting) {
-  const escape = value => value.replace(/\\/g, '\\\\').replace(/\r?\n/g, '\\n').replace(/,/g, '\\,').replace(/;/g, '\\;');
-  const stamp = date => new Date(date).toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
-  const ics = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Sozvon//Meetings//RU', 'BEGIN:VEVENT', `UID:${meeting.code}@sozvon`, `DTSTAMP:${stamp(Date.now())}`, `DTSTART:${stamp(meeting.date)}`, `DTEND:${stamp(Date.parse(meeting.date) + 3600000)}`, `SUMMARY:${escape(meeting.title)}`, `DESCRIPTION:${escape('Демонстрационная встреча в Созвоне. ' + meetingUrl(meeting.code))}`, `URL:${meetingUrl(meeting.code)}`, 'END:VEVENT', 'END:VCALENDAR'].join('\r\n');
-  const url = URL.createObjectURL(new Blob([ics], { type: 'text/calendar;charset=utf-8' }));
-  const a = document.createElement('a'); a.href = url; a.download = `sozvon-${meeting.code}.ics`; a.click(); setTimeout(() => URL.revokeObjectURL(url), 1000);
-}
-$('#my-meetings').addEventListener('click', () => { renderMeetings(); $('#meetings-dialog').showModal(); });
+
 function themeLabel() { $('#theme-toggle').setAttribute('aria-label', document.documentElement.dataset.theme === 'dark' ? 'Включить светлую тему' : 'Включить тёмную тему'); }
 themeLabel();
 $('#theme-toggle').addEventListener('click', () => {
@@ -298,8 +298,8 @@ $('#theme-toggle').addEventListener('click', () => {
   themeLabel(); void root.offsetHeight; requestAnimationFrame(() => requestAnimationFrame(() => root.classList.remove('theme-changing')));
 });
 const requestedCode = getCode(new URL(location.href).searchParams.get('room') || '');
-if (requestedCode) { setMode('join'); $('#meeting-code').value = requestedCode; $('#display-name').focus(); }
-if (!requestedCode && new URL(location.href).searchParams.get('view') === 'meetings') { renderMeetings(); $('#meetings-dialog').showModal(); }
+if (requestedCode) { setMode('join'); $('#meeting-code').value = requestedCode; $('#display-name').focus({preventScroll:true}); }
+if (!requestedCode && new URL(location.href).searchParams.get('view') === 'meetings') window.SozvonMeetings.open();
 $$('[data-start-meeting]').forEach(link => link.addEventListener('click', () => { setMode('create'); requestAnimationFrame(() => $('#display-name').focus({ preventScroll: true })); }));
 const scenarioStories = {
   work: { label: 'СОБРАТЬСЯ ПО ДЕЛУ', number: '01', headline: ['Одна команда.', 'Разные координаты.'], description: 'Сверить планы, показать проект, найти решение. Встретьтесь там, где удобно всем, — в разговоре.', detail: 'Обсудить. Показать. Договориться.' },
@@ -315,8 +315,7 @@ function positionScenarioMarker(animate = true) {
   const origin = list.getBoundingClientRect();
   const number = active.querySelector('.scenario-number').getBoundingClientRect();
   if (!animate) list.classList.remove('marker-motion');
-  marker.firstElementChild.textContent = active.querySelector('.scenario-number').textContent.trim();
-  marker.style.transform = `translate3d(${number.left - origin.left}px, ${number.top - origin.top}px, 0)`;
+  marker.style.transform = `translate3d(${number.left - origin.left + (number.width - marker.offsetWidth)/2}px, ${number.top - origin.top + (number.height - marker.offsetHeight)/2}px, 0)`;
   marker.style.opacity = '1';
   if (!animate) { void marker.offsetWidth; list.classList.add('marker-motion'); }
 }

@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <script src="ui.js"></script>
   <meta name="theme-color" content="#f8f9fc">
   <meta name="description" content="Созвон — больше воздуха для ваших разговоров. Создайте встречу или присоединитесь по ссылке.">
   <title>Созвон — ближе, где бы вы ни были</title>
@@ -10,7 +11,11 @@
   <link rel="preload" href="assets/inter-tight-0.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="workspace.css">
+  <link rel="stylesheet" href="calendar.css">
   <script>try{if(localStorage.getItem('sozvon-theme')==='dark')document.documentElement.dataset.theme='dark'}catch{}</script>
+  <script src="calendar.js" defer></script>
+  <script src="calendar-page.js" defer></script>
+  <script src="time-picker.js" defer></script>
   <script src="app.js" defer></script>
 </head>
 <body>
@@ -39,7 +44,7 @@
 
   <header class="header page-width">
     <a class="brand" href="./" aria-label="Созвон — главная"><span class="brand-mark"><svg aria-hidden="true"><use href="#i-air"/></svg></span><span>созвон<span class="brand-dot">.</span></span></a>
-    <nav class="header-center" aria-label="Основная навигация"><button class="my-meetings" id="my-meetings"><svg aria-hidden="true"><use href="#i-calendar"/></svg>Мои встречи</button></nav>
+    <nav class="header-center" aria-label="Основная навигация"><a class="my-meetings calendar-nav-link" id="my-meetings" href="meetings.html" aria-haspopup="dialog" aria-controls="meetings-modal"><span class="nav-calendar-icon"><svg aria-hidden="true"><use href="#i-calendar"/></svg></span><span>Мои встречи</span></a></nav>
     <div class="header-actions"><button class="icon-button theme-button" id="theme-toggle" aria-label="Включить тёмную тему"><svg aria-hidden="true" class="moon"><use href="#i-moon"/></svg><svg aria-hidden="true" class="sun"><use href="#i-sun"/></svg></button><a class="profile-link" href="profile.html" aria-label="Открыть профиль"><span class="profile-avatar" id="header-avatar">Я</span><span>Профиль</span></a></div>
   </header>
   <main id="main" class="page-width">
@@ -57,17 +62,17 @@
           <div class="form-heading"><span class="meeting-emblem"><svg aria-hidden="true"><use href="#i-video"/></svg></span><h2 id="form-title">Начать встречу</h2><p id="form-description">Одна ссылка для всех, кого ждёте.</p></div>
           <form id="meeting-form" novalidate>
             <div class="field"><label for="display-name">Ваше имя</label><input id="display-name" name="displayName" autocomplete="nickname" placeholder="Как вас представить?" maxlength="60" aria-describedby="name-error"><span id="name-error" class="field-error" hidden></span></div>
-            <details class="meeting-options" id="room-field"><summary>Добавить название</summary><div class="title-reveal"><div class="field"><label for="room-name">Название встречи</label><input id="room-name" name="roomName" placeholder="Например, планы на пятницу" maxlength="90"></div></div></details>
+            <details class="meeting-options" id="room-field"><summary><span class="title-toggle-icon" aria-hidden="true"></span><span class="title-toggle-label">Добавить название</span></summary><div class="title-reveal"><div class="field"><label for="room-name">Название встречи</label><input id="room-name" name="roomName" placeholder="Например, планы на пятницу" maxlength="90"></div></div></details>
             <div class="field" id="join-field" hidden><label for="meeting-code">Ссылка или код встречи</label><input id="meeting-code" name="meetingCode" placeholder="Например, air-kite-482" aria-describedby="code-error" autocapitalize="none" spellcheck="false"><span id="code-error" class="field-error" hidden></span></div>
             <button class="primary-button" type="submit"><span id="submit-label">Создать встречу</span></button>
           </form>
 
-          
+
         </section>
         <section id="schedule-panel" class="schedule-panel" aria-labelledby="schedule-title" hidden inert>
           <div class="form-heading"><span class="meeting-emblem"><svg aria-hidden="true"><use href="#i-calendar"/></svg></span><h2 id="schedule-title" tabindex="-1">Встретимся позже.</h2><p>Выберите удобное время.</p></div>
-          <form id="schedule-form" novalidate><label class="field" for="scheduled-name">Название встречи<input id="scheduled-name" name="title" placeholder="Например, встреча команды" maxlength="90" required></label><label class="field" for="scheduled-time">Дата и время<input id="scheduled-time" name="date" type="datetime-local" required></label><p class="field-error" id="schedule-error" role="alert" hidden></p><button type="submit" class="primary-button">Сохранить встречу<svg aria-hidden="true" focusable="false"><use href="#i-check"/></svg></button></form>
-          <p class="plan-storage-note">Сохраним встречу в этом браузере.</p>
+          <form id="schedule-form" novalidate><label class="field" for="scheduled-name">Название встречи<input id="scheduled-name" name="title" placeholder="Например, встреча команды" maxlength="90" required></label><input id="scheduled-time" name="date" type="hidden"><div class="planning-date-row"><div class="field"><label for="schedule-date-trigger" id="schedule-date-field-label">Дата</label><button type="button" class="date-field-button" id="schedule-date-trigger" aria-labelledby="schedule-date-field-label schedule-date-label" aria-haspopup="dialog" aria-describedby="schedule-error"><svg aria-hidden="true"><use href="#i-calendar"/></svg><span id="schedule-date-label">Выбрать дату</span></button></div><div class="field"><label for="scheduled-clock">Время</label><input id="scheduled-clock" name="time" type="time" required aria-describedby="schedule-error"></div></div><p class="field-error" id="schedule-error" role="alert" hidden></p><button type="submit" class="primary-button">Сохранить встречу</button></form>
+
         </section>
         </div>
         <div class="meeting-actions"><button class="schedule-button" id="schedule-button"><span class="schedule-symbol"><svg aria-hidden="true"><use href="#i-calendar"/></svg></span><span>Запланировать</span></button><button class="schedule-button plan-back" id="schedule-back" hidden><span class="schedule-symbol"><svg aria-hidden="true"><use href="#i-chevron"/></svg></span><span>Назад</span></button></div>
@@ -77,7 +82,7 @@
     <section class="conversation-section" aria-labelledby="conversation-title">
       <div class="scenario-layout">
         <div class="scenario-intro"><span class="section-kicker">ТЫСЯЧА ПОВОДОВ БЫТЬ РЯДОМ</span><h2 id="conversation-title">Важен не повод.<br>Важен разговор.</h2><p>На другом конце — ваши люди.<br>Для остального есть Созвон.</p>
-          <div class="scenario-tabs" role="tablist" aria-label="Поводы для встречи" aria-orientation="vertical"><span class="scenario-marker" aria-hidden="true"><span>01</span></span>
+          <div class="scenario-tabs" role="tablist" aria-label="Поводы для встречи" aria-orientation="vertical"><span class="scenario-marker" aria-hidden="true"></span>
             <button id="scenario-work-tab" role="tab" aria-selected="true" aria-controls="scenario-panel" tabindex="0" data-scenario="work"><span class="scenario-number" aria-hidden="true"><span>01</span></span><span>По делу</span></button>
             <button id="scenario-close-tab" role="tab" aria-selected="false" aria-controls="scenario-panel" tabindex="-1" data-scenario="close"><span class="scenario-number" aria-hidden="true"><span>02</span></span><span>По душам</span></button>
             <button id="scenario-ideas-tab" role="tab" aria-selected="false" aria-controls="scenario-panel" tabindex="-1" data-scenario="ideas"><span class="scenario-number" aria-hidden="true"><span>03</span></span><span>За идеями</span></button>
@@ -109,7 +114,7 @@
 
 
 
-  <dialog id="meetings-dialog" class="small-dialog" aria-labelledby="meetings-title"><button class="icon-button dialog-close" data-close aria-label="Закрыть список встреч"><svg aria-hidden="true" focusable="false"><use href="#i-close"/></svg></button><span class="section-kicker">ВАШЕ ПРОСТРАНСТВО</span><h2 id="meetings-title">Мои встречи</h2><div id="meetings-list"></div><button id="plan-from-list" class="primary-button"><svg aria-hidden="true" focusable="false"><use href="#i-plus"/></svg>Запланировать встречу</button></dialog>
+  <dialog id="plan-date-dialog" class="date-picker-dialog" aria-labelledby="date-picker-title"><div class="date-picker-heading"><h2 id="date-picker-title">Выберите дату</h2><button class="icon-button" data-close aria-label="Закрыть выбор даты"><svg aria-hidden="true"><use href="#i-close"/></svg></button></div><div id="plan-date-calendar"></div></dialog>
 
   <dialog id="help-dialog" class="small-dialog" aria-labelledby="help-title"><button class="icon-button dialog-close" data-close aria-label="Закрыть справку"><svg aria-hidden="true" focusable="false"><use href="#i-close"/></svg></button><span class="section-kicker">ВСЁ ПОД РУКОЙ</span><h2 id="help-title">Давайте разберёмся.</h2><button class="text-button" id="demo-button">Открыть демокомнату <svg aria-hidden="true"><use href="#i-arrow"/></svg></button><details open><summary>Как начать встречу?</summary><p>Введите имя и создайте встречу. В открывшемся окне можно проверить устройства и скопировать ссылку.</p></details><details><summary>Почему камера не включается?</summary><p>Разрешите доступ к камере в настройках браузера. Если она занята другой программой, закройте программу и попробуйте снова.</p></details><details><summary>Можно ли позвонить другому человеку?</summary><p>Пока это интерактивный прототип. Доступны проверка устройств, демонстрация экрана и планирование. Для звонков между участниками потребуется подключение сервера связи.</p></details><details><summary>Где сохраняются встречи?</summary><p>Только в этом браузере на этом устройстве. Из списка встреч можно скачать приглашение для календаря.</p></details></dialog>
 
