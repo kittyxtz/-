@@ -35,12 +35,12 @@
       b.innerHTML='<svg aria-hidden="true" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg>'; b.addEventListener('click',handler); return b;
     }
     allowed(key) { return !this.options.minDate || key>=this.options.minDate; }
-    moveMonth(offset) {
+    moveMonth(offset,selectedKey=null) {
       this.monthAnimation?.cancel();this.oldAnimation?.cancel();this.ghost?.remove();
       const motion=!matchMedia('(prefers-reduced-motion: reduce)').matches;
       const ghost=motion?this.grid.cloneNode(true):null;
       if(ghost){ghost.classList.add('month-ghost');ghost.setAttribute('aria-hidden','true');ghost.inert=true;this.stage.append(ghost);this.ghost=ghost;}
-      this.month=addMonths(this.month,offset);this.month.setDate(1);this.focused=dayKey(this.month);this.render();
+      this.month=addMonths(this.month,offset);this.month.setDate(1);this.focused=selectedKey||dayKey(this.month);if(selectedKey)this.selected=selectedKey;this.render();
       if(ghost){
         const options={duration:400,easing:'cubic-bezier(.22,.75,.2,1)'};
         const direction=offset>0?1:-1;
@@ -54,7 +54,12 @@
       this.selected=key; this.focused=key;
       if(navigate){this.month=parseDay(key);this.month.setDate(1);} this.render();
     }
-    select(key,focus=false) { if(!this.allowed(key))return;this.setSelected(key); if(focus)this.focusDay(key); this.options.onSelect?.(key); }
+    select(key,focus=false) {
+      const target=parseDay(key);if(!target||!this.allowed(key))return;
+      const offset=(target.getFullYear()-this.month.getFullYear())*12+target.getMonth()-this.month.getMonth();
+      if(offset)this.moveMonth(offset,key);else this.setSelected(key,{navigate:false});
+      if(focus)this.focusDay(key);this.options.onSelect?.(key);
+    }
     refresh() { this.render(); }
     focusDay(key) { this.grid.querySelector(`[data-day="${key}"]`)?.focus({preventScroll:true}); }
     render() {
