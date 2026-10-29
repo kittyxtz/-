@@ -268,3 +268,5 @@ body.calendar-open{overflow:hidden}
 .calendar-main{position:relative}
 .calendar-notice-slot .calendar-undo{border-color:color-mix(in srgb,var(--color-accent) 8%,var(--color-border))}
 @media(hover:hover){.calendar-notice-slot .calendar-undo:hover{translate:none;border-color:color-mix(in srgb,var(--color-accent) 12%,var(--color-border));box-shadow:0 4px 14px #1124450c}}
+.calendar-notice-slot .calendar-undo>button:not(.undo-dismiss){padding:5px 9px;border:1px solid transparent;scale:1;translate:none;color:var(--calendar-ink);transition:background-color 150ms ease,border-color 150ms ease}
+@media(hover:hover){.calendar-notice-slot .calendar-undo:hover{background:var(--color-surface)}.calendar-notice-slot .calendar-undo>button:not(.undo-dismiss):hover{background:color-mix(in srgb,var(--color-accent) 7%,var(--color-accent-soft));color:var(--calendar-ink);border-color:color-mix(in srgb,var(--color-accent) 14%,var(--color-border))}}
