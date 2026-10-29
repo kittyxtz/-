@@ -266,3 +266,5 @@ body.calendar-open{overflow:hidden}
 .month-calendar:not(.is-compact) .is-past-day.is-selected .month-day-number{background:var(--color-border);color:var(--color-text);opacity:.8}
 .calendar-notice-slot{position:absolute;inset-inline-end:18px;inset-block-end:18px;min-height:0;margin:0;width:auto;max-width:calc(100% - 36px);justify-content:flex-end}
 .calendar-main{position:relative}
+.calendar-notice-slot .calendar-undo{border-color:color-mix(in srgb,var(--color-accent) 8%,var(--color-border))}
+@media(hover:hover){.calendar-notice-slot .calendar-undo:hover{translate:none;border-color:color-mix(in srgb,var(--color-accent) 12%,var(--color-border));box-shadow:0 4px 14px #1124450c}}
