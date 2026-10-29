@@ -20,9 +20,9 @@
       this.focused=this.selected; this.month=parseDay(this.selected); this.month.setDate(1);
       root.classList.add('month-calendar'); if(options.compact)root.classList.add('is-compact');
       this.header=element('div','month-toolbar');
-      this.title=element(options.compact?'h2':'button','month-title'); this.title.setAttribute('aria-live','polite');
+      this.title=element('button','month-title'); this.title.setAttribute('aria-live','polite');
       this.view='days';this.pickerYear=this.month.getFullYear();
-      if(!options.compact){this.title.type='button';this.title.classList.add('month-title-button');this.title.setAttribute('aria-expanded','false');this.title.addEventListener('click',()=>this.changeView(this.view==='days'?'months':this.view==='months'?'years':'months'));}
+      this.title.type='button';this.title.classList.add('month-title-button');this.title.setAttribute('aria-expanded','false');this.title.addEventListener('click',()=>this.changeView(this.view==='days'?'months':this.view==='months'?'years':'months'));
       this.nav=element('div','month-nav');
       this.previous=this.navButton('Предыдущий месяц','previous',()=>this.navigate(-1));
       this.next=this.navButton('Следующий месяц','next',()=>this.navigate(1));
@@ -32,10 +32,8 @@
       this.stage=element('div','month-stage');this.stage.append(this.grid);
       this.picker=element('div','month-chooser');this.picker.hidden=true;this.stage.append(this.picker);
       root.replaceChildren(this.header,this.stage); this.render();
-      if(!options.compact){
-        root.addEventListener('wheel',event=>this.wheel(event),{passive:false});
-        root.addEventListener('keydown',event=>{if(event.key==='Escape'&&this.view!=='days'){event.preventDefault();event.stopPropagation();this.changeView('days');this.title.focus({preventScroll:true});}});
-      }
+      root.addEventListener('wheel',event=>this.wheel(event),{passive:false});
+      root.addEventListener('keydown',event=>{if(event.key==='Escape'&&this.view!=='days'){event.preventDefault();event.stopPropagation();this.changeView('days');this.title.focus({preventScroll:true});}});
     }
     navButton(label,cls,handler) {
       const b=element('button',`month-arrow ${cls}`); b.type='button'; b.setAttribute('aria-label',label);
@@ -43,19 +41,22 @@
     }
     allowed(key) { return !this.options.minDate || key>=this.options.minDate; }
     navigate(direction){
+      if(direction<0&&this.previous.disabled)return;
       if(this.view==='days')this.moveMonth(direction);
       else{this.pickerYear+=direction*(this.view==='years'?12:1);this.renderChooser(direction);}
     }
     wheel(event){
       if(event.ctrlKey||Math.abs(event.deltaX)+Math.abs(event.deltaY)<2)return;
       event.preventDefault();
-      const now=performance.now(),quiet=now-(this.lastWheel||0);this.lastWheel=now;
-      if(now<(this.wheelLockedUntil||0)||quiet<160)return;
-      this.wheelLockedUntil=now+360;
-      this.navigate((Math.abs(event.deltaX)>Math.abs(event.deltaY)?event.deltaX:event.deltaY)>0?1:-1);
+      const delta=(Math.abs(event.deltaX)>Math.abs(event.deltaY)?event.deltaX:event.deltaY)*(event.deltaMode===1?16:event.deltaMode===2?120:1);
+      const now=performance.now(),direction=Math.sign(delta);
+      if(now-(this.lastWheel||0)>140||direction!==this.wheelDirection)this.wheelDistance=0;
+      this.lastWheel=now;this.wheelDirection=direction;this.wheelDistance=(this.wheelDistance||0)+delta;
+      if(Math.abs(this.wheelDistance)<55)return;
+      this.wheelDistance=0;this.navigate(direction);
     }
     changeView(view){
-      this.monthAnimation?.cancel();this.oldAnimation?.cancel();this.ghost?.remove();this.ghost=null;
+      this.monthAnimation?.cancel();this.clearGhosts();
       const previous=this.view;this.view=view;
       if(previous==='days')this.pickerYear=this.month.getFullYear();
       this.root.dataset.calendarView=view;this.title.setAttribute('aria-expanded',String(view!=='days'));
@@ -72,35 +73,40 @@
       const firstYear=Math.floor(this.pickerYear/12)*12;
       this.title.textContent=this.view==='years'?`${firstYear} — ${firstYear+11}`:String(this.pickerYear);
       this.title.setAttribute('aria-label',this.view==='years'?`Выбрать месяц, годы ${firstYear} — ${firstYear+11}`:`Выбрать год: ${this.pickerYear}`);
-      this.previous.disabled=false;this.previous.setAttribute('aria-label',this.view==='years'?'Предыдущие годы':'Предыдущий год');this.next.setAttribute('aria-label',this.view==='years'?'Следующие годы':'Следующий год');
+      const minimum=parseDay(this.options.minDate);
+      this.previous.disabled=!!minimum&&(this.view==='years'?firstYear<=minimum.getFullYear():this.pickerYear<=minimum.getFullYear());this.previous.setAttribute('aria-label',this.view==='years'?'Предыдущие годы':'Предыдущий год');this.next.setAttribute('aria-label',this.view==='years'?'Следующие годы':'Следующий год');
       this.picker.replaceChildren();this.picker.setAttribute('role','group');this.picker.setAttribute('aria-label',this.view==='years'?'Выбор года':'Выбор месяца');
       for(let i=0;i<12;i++){
         const year=this.view==='years'?firstYear+i:this.pickerYear;
         const text=this.view==='years'?String(year):new Intl.DateTimeFormat('ru-RU',{month:'short'}).format(new Date(year,i,1)).replace('.','');
         const b=element('button','month-choice',text[0].toUpperCase()+text.slice(1));b.type='button';
+        b.disabled=!!minimum&&(this.view==='years'?year<minimum.getFullYear():year*12+i<minimum.getFullYear()*12+minimum.getMonth());
         const current=year===this.month.getFullYear()&&(this.view==='years'||i===this.month.getMonth());b.setAttribute('aria-pressed',String(current));
         b.addEventListener('click',()=>{
           if(this.view==='years'){this.pickerYear=year;this.changeView('months');this.title.focus({preventScroll:true});}
           else{this.month=new Date(year,i,1,12);this.focused=dayKey(this.month);this.changeView('days');this.title.focus({preventScroll:true});}
         });
-        b.addEventListener('keydown',event=>{const offset={ArrowLeft:-1,ArrowRight:1,ArrowUp:-3,ArrowDown:3,Home:-i,End:11-i}[event.key];if(offset===undefined)return;event.preventDefault();this.picker.children[Math.max(0,Math.min(11,i+offset))]?.focus();});this.picker.append(b);
+        b.addEventListener('keydown',event=>{const offset={ArrowLeft:-1,ArrowRight:1,ArrowUp:-3,ArrowDown:3,Home:-i,End:11-i}[event.key];if(offset===undefined)return;event.preventDefault();let index=Math.max(0,Math.min(11,i+offset));while(this.picker.children[index]?.disabled&&index>=0&&index<12)index+=Math.sign(offset)||1;this.picker.children[index]?.focus();});this.picker.append(b);
       }
       this.animateSurface(this.picker,direction);
     }
     moveMonth(offset,selectedKey=null) {
-      this.monthAnimation?.cancel();this.oldAnimation?.cancel();this.ghost?.remove();
+      const current=getComputedStyle(this.grid),fromTransform=current.transform,fromOpacity=current.opacity;
+      this.monthAnimation?.cancel();
       const motion=!matchMedia('(prefers-reduced-motion: reduce)').matches;
       const ghost=motion?this.grid.cloneNode(true):null;
-      if(ghost){ghost.classList.add('month-ghost');ghost.setAttribute('aria-hidden','true');ghost.inert=true;this.stage.append(ghost);this.ghost=ghost;}
+      if(ghost){ghost.classList.add('month-ghost');ghost.setAttribute('aria-hidden','true');ghost.inert=true;this.stage.append(ghost);}
       this.month=addMonths(this.month,offset);this.month.setDate(1);this.focused=selectedKey||dayKey(this.month);if(selectedKey)this.selected=selectedKey;this.render();
       if(ghost){
-        const options={duration:320,easing:'cubic-bezier(.2,0,0,1)'};
+        const options={duration:240,easing:'cubic-bezier(.2,0,0,1)'};
         const direction=offset>0?1:-1;
         this.monthAnimation=this.grid.animate([{transform:`translateX(${direction*22}%)`,opacity:0},{transform:'translateX(0)',opacity:1}],options);
-        const animation=ghost.animate([{transform:'translateX(0)',opacity:1},{transform:`translateX(${-direction*22}%)`,opacity:0}],options);this.oldAnimation=animation;
-        animation.finished.then(()=>{ghost.remove();if(this.ghost===ghost)this.ghost=null;}).catch(()=>ghost.remove());
+        const animation=ghost.animate([{transform:fromTransform==='none'?'translateX(0)':fromTransform,opacity:Number(fromOpacity)},{transform:`translateX(${-direction*22}%)`,opacity:0}],options);
+        this.ghosts??=new Map();this.ghosts.set(ghost,animation);
+        animation.finished.then(()=>{ghost.remove();this.ghosts.delete(ghost);}).catch(()=>{ghost.remove();this.ghosts.delete(ghost);});
       }
     }
+    clearGhosts(){for(const [ghost,animation] of this.ghosts||[]){animation.cancel();ghost.remove();}this.ghosts?.clear();}
     setSelected(key,{navigate=true}={}) {
       if(!parseDay(key)||!this.allowed(key))return;
       if(this.view!=='days')this.changeView('days');this.selected=key; this.focused=key;
@@ -119,7 +125,7 @@
       const active=this.root.contains(document.activeElement)?document.activeElement.getAttribute('data-day'):null;
       const label=new Intl.DateTimeFormat('ru-RU',{month:'long',year:'numeric'}).format(this.month).replace(' г.','');
       this.title.textContent=label[0].toUpperCase()+label.slice(1); this.grid.setAttribute('aria-label',this.title.textContent);
-      if(!this.options.compact){this.title.setAttribute('aria-label',`Выбрать месяц: ${this.title.textContent}`);this.previous.setAttribute('aria-label','Предыдущий месяц');this.next.setAttribute('aria-label','Следующий месяц');}
+      this.title.setAttribute('aria-label',`Выбрать месяц: ${this.title.textContent}`);this.previous.setAttribute('aria-label','Предыдущий месяц');this.next.setAttribute('aria-label','Следующий месяц');
       const minimum=parseDay(this.options.minDate); this.previous.disabled=!!minimum&&this.month.getFullYear()*12+this.month.getMonth()<=minimum.getFullYear()*12+minimum.getMonth();
       this.today.disabled=!this.allowed(dayKey(new Date())); this.grid.replaceChildren();
       const headings=element('div','month-weekdays'); headings.setAttribute('role','row');

@@ -20,9 +20,9 @@ function renderAgenda(announce=false) {
   $('#agenda-title').textContent=new Intl.DateTimeFormat('ru-RU',{day:'numeric',month:'long'}).format(date);
   const weekday=new Intl.DateTimeFormat('ru-RU',{weekday:'long'}).format(date);
   $('#agenda-weekday').textContent=`${weekday[0].toUpperCase()+weekday.slice(1)} · ${date.getFullYear()}`;
-  $('#agenda-count').textContent=C.plural(items.length);const list=$('#agenda-list');list.replaceChildren();
+  $('#agenda-count').textContent=items.length?C.plural(items.length):'Свободно';$('#day-agenda').classList.toggle('is-empty',!items.length);const list=$('#agenda-list');list.replaceChildren();
   $('#agenda-add').disabled=selectedDay<C.dayKey(new Date());
-  if(!items.length){const empty=node('div','agenda-empty');empty.innerHTML='<svg aria-hidden="true" viewBox="0 0 32 32"><path d="M4 11h16a4.5 4.5 0 1 0-4.5-4.5M4 17h21a4.5 4.5 0 1 1-4.5 4.5M4 24h8"/></svg>';empty.append(node('h3','','День открыт для разговора'),node('p','','Добавьте встречу — и здесь появятся ваши планы.'));list.append(empty);}
+  if(!items.length){const past=selectedDay<C.dayKey(new Date()),empty=node('div','agenda-empty');empty.innerHTML='<div class="agenda-empty-symbol" aria-hidden="true"><svg viewBox="0 0 40 40"><rect x="8" y="9" width="24" height="25" rx="6"/><path d="M14 6v7m12-7v7M8 18h24m-16 8h8m-4-4v8"/></svg></div>';empty.append(node('h3','',past?'Встреч не было':'Место для разговора'),node('p','',past?'Выберите другой день в календаре.':'Добавьте встречу, и мы сохраним для неё время и ссылку.'));list.append(empty);}
   for(const meeting of items){
     const past=Date.parse(meeting.date)<now;if(past&&!pastLabel){const divider=node('div','agenda-past-divider','Уже прошли');list.append(divider);pastLabel=true;}
     const item=node('article',`agenda-meeting${past?' is-past':''}`);item.dataset.code=meeting.code;const time=node('time','agenda-time',new Intl.DateTimeFormat('ru-RU',{hour:'2-digit',minute:'2-digit'}).format(new Date(meeting.date)));time.dateTime=meeting.date;

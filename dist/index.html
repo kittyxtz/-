@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <script src="ui.js?v=20261029-3"></script>
+  <script src="ui.js?v=20261029-5"></script>
   <meta name="theme-color" content="#f8f9fc">
   <meta name="description" content="Созвон — больше воздуха для ваших разговоров. Создайте встречу или присоединитесь по ссылке.">
   <title>Созвон — ближе, где бы вы ни были</title>
@@ -11,12 +11,12 @@
   <link rel="preload" href="assets/inter-tight-0.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="workspace.css">
-  <link rel="stylesheet" href="calendar.css?v=20261029-3">
+  <link rel="stylesheet" href="calendar.css?v=20261029-5">
   <script>try{if(localStorage.getItem('sozvon-theme')==='dark')document.documentElement.dataset.theme='dark'}catch{}</script>
-  <script src="calendar.js?v=20261029-3" defer></script>
-  <script src="calendar-page.js?v=20261029-3" defer></script>
+  <script src="calendar.js?v=20261029-5" defer></script>
+  <script src="calendar-page.js?v=20261029-5" defer></script>
   <script src="time-picker.js" defer></script>
-  <script src="app.js?v=20261029-3" defer></script>
+  <script src="app.js?v=20261029-5" defer></script>
 </head>
 <body>
   <div class="sky-background" aria-hidden="true"><span class="sky-halo"></span><span class="sky-ring ring-a"></span><span class="sky-ring ring-b"></span><svg viewBox="0 0 1440 1000" preserveAspectRatio="none"><path d="M-120 740C100 300 350 1100 780 660S1180 220 1560 390"/><path d="M-120 765C100 325 350 1125 780 685S1180 245 1560 415"/><path d="M-120 790C100 350 350 1150 780 710S1180 270 1560 440"/></svg><span class="sky-star">✳</span></div>
@@ -62,7 +62,7 @@
           <div class="form-heading"><span class="meeting-emblem"><svg aria-hidden="true"><use href="#i-video"/></svg></span><h2 id="form-title">Начать встречу</h2><p id="form-description">Одна ссылка для всех, кого ждёте.</p></div>
           <form id="meeting-form" novalidate>
             <div class="field"><label for="display-name">Ваше имя</label><input id="display-name" name="displayName" autocomplete="nickname" placeholder="Как вас представить?" maxlength="60" aria-describedby="name-error"><span id="name-error" class="field-error" hidden></span></div>
-            <details class="meeting-options" id="room-field"><summary><span class="title-toggle-icon" aria-hidden="true"></span><span class="title-toggle-label">Добавить название</span></summary><div class="title-reveal"><div class="field"><label for="room-name">Название встречи</label><input id="room-name" name="roomName" placeholder="Например, планы на пятницу" maxlength="90"></div></div></details>
+            <details class="meeting-options" id="room-field"><summary><span class="title-toggle-icon" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M5 10h10"/><path class="title-toggle-stem" d="M10 5v10"/></svg></span><span class="title-toggle-label">Добавить название</span></summary><div class="title-reveal"><div class="field"><label for="room-name">Название встречи</label><input id="room-name" name="roomName" placeholder="Например, планы на пятницу" maxlength="90"></div></div></details>
             <div class="field" id="join-field" hidden><label for="meeting-code">Ссылка или код встречи</label><input id="meeting-code" name="meetingCode" placeholder="Например, air-kite-482" aria-describedby="code-error" autocapitalize="none" spellcheck="false"><span id="code-error" class="field-error" hidden></span></div>
             <button class="primary-button" type="submit"><span id="submit-label">Создать встречу</span></button>
           </form>
@@ -98,7 +98,28 @@
       </div>
     </section>
 
-    <section class="studio-section" aria-labelledby="studio-title"><div class="studio-copy"><span class="section-kicker">СНАЧАЛА — ВАШ КОМФОРТ</span><h2 id="studio-title">Встречайте людей.<br>Не настройки.</h2><p>Осмотритесь в комнате до начала разговора. Проверьте свой кадр, включите звук и почувствуйте себя на месте.</p><button class="studio-cta" id="try-room"><svg aria-hidden="true"><use href="#i-video"/></svg>Осмотреть комнату</button></div><div class="studio-scene"><div class="studio-orbit" aria-hidden="true"></div><div class="studio-preview"><div class="studio-preview-top"><svg aria-hidden="true"><use href="#i-air"/></svg><span>Ваше пространство</span></div><div class="studio-room-line"><span>Рады вас видеть.</span><span>Сначала найдите свой кадр.</span></div><div class="studio-person"><div class="studio-self-view"><span class="studio-self-status"><span></span>Только вы</span><span class="studio-avatar" id="studio-preview-avatar" aria-hidden="true">Я</span><div class="studio-self-footer"><span id="studio-preview-name">Вы</span><span class="studio-mic-off" role="img" aria-label="Микрофон выключен"><svg aria-hidden="true"><use href="#i-mic"/></svg></span></div></div></div><div class="studio-preview-bottom"><div class="studio-preview-controls"><button data-device-preview="mic" aria-label="Проверить звук в демокомнате"><svg aria-hidden="true"><use href="#i-mic"/></svg><span>Звук</span></button><button data-device-preview="camera" aria-label="Проверить камеру в демокомнате"><svg aria-hidden="true"><use href="#i-video"/></svg><span>Камера</span></button><button data-device-preview="screen" aria-label="Проверить экран в демокомнате"><svg aria-hidden="true"><use href="#i-monitor"/></svg><span>Экран</span></button></div><span class="studio-preview-caption">Выберите, с чего начать</span></div></div></div></section>
+    <section class="studio-section device-section" aria-labelledby="studio-title">
+      <div class="studio-copy">
+        <span class="section-kicker">ДО ПЕРВОГО «ПРИВЕТ»</span>
+        <h2 id="studio-title">Камера и звук.<br>Без сюрпризов.</h2>
+        <p>Откройте предпросмотр перед встречей: посмотрите на себя в кадре и проверьте доступ к микрофону. Включайте устройства, когда будете готовы.</p>
+        <button class="studio-cta" id="try-room"><svg aria-hidden="true"><use href="#i-video"/></svg>Открыть предпросмотр</button>
+      </div>
+      <div class="device-preview-window">
+        <div class="device-window-bar"><span><svg aria-hidden="true"><use href="#i-video"/></svg>Предпросмотр</span><span class="device-private"><svg aria-hidden="true" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="3"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>Только для вас</span></div>
+        <div class="device-preview-stage">
+          <span class="device-preview-status"><svg aria-hidden="true"><use href="#i-video"/></svg>Камера выключена</span>
+          <div class="device-camera-frame" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+          <span class="studio-avatar" id="studio-preview-avatar" aria-hidden="true">Я</span>
+          <div class="device-preview-person"><span id="studio-preview-name">Вы</span><span class="studio-mic-off" role="img" aria-label="Микрофон выключен"><svg aria-hidden="true"><use href="#i-mic"/></svg></span></div>
+        </div>
+        <div class="device-window-tools" aria-label="Проверка устройств">
+          <button data-device-preview="camera" aria-label="Проверить камеру в предпросмотре"><svg aria-hidden="true"><use href="#i-video"/></svg><span>Камера</span></button>
+          <button data-device-preview="mic" aria-label="Проверить микрофон в предпросмотре"><svg aria-hidden="true"><use href="#i-mic"/></svg><span>Звук</span></button>
+          <button data-device-preview="screen" aria-label="Проверить экран в предпросмотре"><svg aria-hidden="true"><use href="#i-monitor"/></svg><span>Экран</span></button>
+        </div>
+      </div>
+    </section>
 
     <section class="landing-invitation" aria-labelledby="invitation-title"><span class="invitation-air" aria-hidden="true"><svg><use href="#i-air"/></svg></span><div><h2 id="invitation-title">На кого у вас сегодня есть время?</h2><p>Позовите тех, с кем давно хотели поговорить.</p></div><a class="primary-button" href="#main" data-start-meeting>Начать встречу</a></section>
   </main>

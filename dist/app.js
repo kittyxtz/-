@@ -92,7 +92,6 @@ titleSummary.addEventListener('click', event => {
   const reveal = $('.title-reveal');
   const startHeight = details.open ? reveal.getBoundingClientRect().height : 0;
   const startOpacity = details.open ? Number(getComputedStyle(reveal).opacity) : 0;
-  const startTransform = details.open ? getComputedStyle(reveal).transform : 'translateY(-12px)';
   titleAnimation?.cancel();
   titleExpanded = !titleExpanded;
   const expanding = titleExpanded;
@@ -101,9 +100,9 @@ titleSummary.addEventListener('click', event => {
   if (modeReducedMotion.matches || typeof reveal.animate !== 'function') { details.open = expanding; return; }
   details.open = true;
   const animation = reveal.animate([
-    { height: `${startHeight}px`, opacity: startOpacity, transform: startTransform === 'none' ? 'translateY(0)' : startTransform },
-    { height: `${expanding ? reveal.scrollHeight : 0}px`, opacity: expanding ? 1 : 0, transform: expanding ? 'translateY(0)' : 'translateY(-12px)' }
-  ], { duration: expanding ? 310 : 240, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'both' });
+    { height: `${startHeight}px`, opacity: startOpacity },
+    { height: `${expanding ? reveal.scrollHeight : 0}px`, opacity: expanding ? 1 : 0 }
+  ], { duration: 220, easing: 'cubic-bezier(.2,0,0,1)', fill: 'both' });
   titleAnimation = animation;
   animation.finished.then(() => {
     if (titleAnimation !== animation) return;
