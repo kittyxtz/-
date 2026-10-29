@@ -72,10 +72,18 @@ function showSaved(code){
   celebration.addEventListener('click',()=>celebration.remove());$('#calendar-board').append(celebration);setTimeout(()=>celebration.remove(),1900);
   if(!matchMedia('(prefers-reduced-motion: reduce)').matches){subtitle.animate([{opacity:0,transform:'translateY(-6px)'},{opacity:1,transform:'translateY(0)'}],{duration:400,easing:'cubic-bezier(.2,.8,.2,1)'});const item=[...document.querySelectorAll('.agenda-meeting')].find(e=>e.dataset.code===code);item?.animate([{opacity:.3,transform:'translateY(10px)',backgroundColor:'rgba(80,135,230,.24)'},{opacity:1,transform:'translateY(0)',backgroundColor:'rgba(80,135,230,.15)',offset:.35},{opacity:1,transform:'translateY(0)',backgroundColor:'transparent'}],{duration:1500,easing:'cubic-bezier(.2,.8,.2,1)'});$('#meetings-calendar .month-day.is-selected')?.animate([{boxShadow:'inset 0 0 0 2px rgba(49,91,216,.6)'},{boxShadow:'inset 0 0 0 2px transparent'}],{duration:1500});}
 }
-const undoBar=node('div','calendar-undo');undoBar.hidden=true;undoBar.setAttribute('role','status');const undoText=node('span'),undoButton=node('button','','Вернуть');undoButton.type='button';undoBar.append(undoText,undoButton);($('.calendar-modal-content')||$('#calendar-main')).append(undoBar);
+const undoBar=node('div','calendar-undo');undoBar.hidden=true;undoBar.setAttribute('role','status');const undoText=node('span'),undoButton=node('button','','Вернуть');undoButton.type='button';undoBar.append(undoText,undoButton);$('#calendar-board').append(undoBar);
 const dismissUndo=node('button','undo-dismiss');dismissUndo.type='button';dismissUndo.setAttribute('aria-label','Скрыть уведомление');dismissUndo.innerHTML='<svg aria-hidden="true" viewBox="0 0 24 24"><path d="m8 8 8 8m-8 0 8-8"/></svg>';dismissUndo.addEventListener('click',()=>{undoBar.hidden=true;$('#agenda-add').focus({preventScroll:true});});undoBar.append(dismissUndo);
+let cancellationTimer=null,noticeVersion=0;
 let cancelled=read('sozvon-last-cancelled',null);if(cancelled&&typeof cancelled.title==='string'&&Number.isFinite(Date.parse(cancelled.date)))cancellationNotice('Встреча отменена',true);else cancelled=null;
-function cancellationNotice(text,canUndo=false){undoText.textContent=text;undoButton.hidden=!canUndo;undoBar.hidden=false;}
+function cancellationNotice(text,canUndo=false){
+  clearTimeout(cancellationTimer);const version=++noticeVersion;undoText.textContent=text;undoButton.hidden=!canUndo;undoBar.hidden=false;
+  cancellationTimer=setTimeout(()=>{
+    const hide=()=>{if(version!==noticeVersion)return;if(undoBar.contains(document.activeElement))$('#agenda-add').focus({preventScroll:true});undoBar.hidden=true;};
+    if(matchMedia('(prefers-reduced-motion: reduce)').matches){hide();return;}
+    undoBar.animate([{opacity:1,transform:'translateY(0)'},{opacity:0,transform:'translateY(5px)'}],{duration:180,easing:'ease-in'}).finished.then(hide).catch(()=>{});
+  },5000);
+}
 async function cancelMeeting(meeting,item,button){
   button.disabled=true;
   try{localStorage.setItem('sozvon-last-cancelled',JSON.stringify(meeting));localStorage.setItem('sozvon-meetings',JSON.stringify(meetings().filter(m=>m.code!==meeting.code)));}catch{button.disabled=false;cancellationNotice('Не удалось отменить встречу. Попробуйте ещё раз.');return;}
@@ -96,7 +104,7 @@ function themeLabel(){$('#theme-toggle').setAttribute('aria-label',document.docu
 $('#theme-toggle').addEventListener('click',()=>{const root=document.documentElement;root.classList.add('theme-changing');const dark=root.dataset.theme!=='dark';root.dataset.theme=dark?'dark':'light';try{localStorage.setItem('sozvon-theme',dark?'dark':'light');}catch{}themeLabel();void root.offsetHeight;requestAnimationFrame(()=>requestAnimationFrame(()=>root.classList.remove('theme-changing')));});
 }
 const narrow=matchMedia('(max-width:850px)');const layout=$('.calendar-layout'),board=$('#calendar-board'),agenda=$('#day-agenda');
-function arrange(){const active=document.activeElement,restore=layout.contains(active);if(narrow.matches)layout.append(board,agenda);else layout.append(agenda,board);if(restore)active.focus({preventScroll:true});}narrow.addEventListener('change',arrange);arrange();renderAgenda();
+function arrange(){const active=document.activeElement,restore=layout.contains(active);if(narrow.matches)layout.append(board,agenda);else layout.append(agenda,board);(narrow.matches?agenda:board).append(undoBar);if(restore)active.focus({preventScroll:true});}narrow.addEventListener('change',arrange);arrange();renderAgenda();
 window.addEventListener('storage',event=>{if(event.key==='sozvon-meetings'){calendar.refresh();renderAgenda();}});
 
 if(!standalone){

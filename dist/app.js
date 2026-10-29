@@ -334,10 +334,11 @@ function positionScenarioMarker(animate = true) {
   const marker = $('.scenario-marker');
   const active = scenarioTabs.find(tab => tab.getAttribute('aria-selected') === 'true');
   if (!active) return;
-  const origin = list.getBoundingClientRect();
-  const number = active.querySelector('.scenario-number').getBoundingClientRect();
+  const number = active.querySelector('.scenario-number');
+  let x=number.offsetLeft,y=number.offsetTop,parent=number.offsetParent;
+  while(parent&&parent!==list){x+=parent.offsetLeft;y+=parent.offsetTop;parent=parent.offsetParent;}
   if (!animate) list.classList.remove('marker-motion');
-  marker.style.transform = `translate3d(${number.left - origin.left + (number.width - marker.offsetWidth)/2}px, ${number.top - origin.top + (number.height - marker.offsetHeight)/2}px, 0)`;
+  marker.style.transform = `translate3d(${x + (number.offsetWidth - marker.offsetWidth)/2}px, ${y + (number.offsetHeight - marker.offsetHeight)/2}px, 0)`;
   marker.style.opacity = '1';
   if (!animate) { void marker.offsetWidth; list.classList.add('marker-motion'); }
 }

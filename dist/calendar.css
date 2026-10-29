@@ -245,3 +245,13 @@ body.calendar-open{overflow:hidden}
 .agenda-meeting:first-child .agenda-delete{inset-block-start:0}
 .agenda-meeting-actions .agenda-open{flex:0 1 auto;width:auto;min-width:104px;padding-inline:13px}
 @media(max-width:400px){.meetings-modal .month-title{font-size:.8125rem;white-space:nowrap;line-height:1.4}.meetings-modal .month-today{font-size:.5rem;padding-inline:5px}.meetings-modal .month-arrow{width:24px}}
+.agenda-scroll{overflow-x:hidden}
+.calendar-undo{position:absolute;inset-inline-start:auto;inset-inline-end:18px;inset-block-end:62px;transform:none;gap:10px;padding:10px 12px;max-width:calc(100% - 36px);background:var(--color-surface);color:var(--color-text);border-color:color-mix(in srgb,var(--color-accent) 20%,var(--color-border));box-shadow:0 8px 24px #11244514;font-size:.75rem}
+.calendar-undo::before{content:'';width:6px;height:6px;flex-shrink:0;border-radius:50%;background:var(--calendar-ink)}
+.calendar-undo button{color:var(--calendar-ink);font-size:.75rem}
+@media(max-width:850px){.day-agenda .calendar-undo{inset-block-end:82px}}
+.scenario-tabs button:not(:disabled):active,.scenario-tabs button{scale:1}
+.studio-preview-bottom{display:flex;align-items:center;justify-content:space-between;gap:14px}
+.studio-preview-controls{flex:0 0 auto;width:auto}
+.studio-preview-caption{flex:0 1 auto;display:block;margin:0;max-width:none;width:auto;white-space:nowrap;text-align:end}
+@media(max-width:400px){.studio-preview-bottom{gap:9px}.studio-preview-controls{gap:5px}.studio-preview-controls button{width:28px;height:30px;min-width:28px;padding:5px;display:grid;place-items:center}.studio-preview-controls button span{display:none}.studio-preview-caption{font-size:.5625rem;letter-spacing:-.01em}.studio-preview-controls button svg{width:14px;height:14px}}
