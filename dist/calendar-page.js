@@ -120,7 +120,7 @@ if(!standalone){
   const reduced=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
   function open(day,{created=null}={}){clearSaved();if(C.parseDay(day)){selectedDay=day;calendar.setSelected(day);}calendar.refresh();renderAgenda();if(created)showSaved(created);if(modal.open)return;closing=false;++modalSession;dismissCancellationNotice();modal.showModal();document.body.classList.add('calendar-open');$('#calendar-modal-title').focus({preventScroll:true});if(!reduced())modal.animate([{opacity:0,transform:'translateY(-28px)'},{opacity:1,transform:'translateY(0)'}],{duration:440,easing:'cubic-bezier(.16,.8,.2,1)'});}
   async function close(){if(closing)return;closing=true;++modalSession;dismissCancellationNotice();if(!reduced()){try{await modal.animate([{opacity:1,transform:'translateY(0)'},{opacity:0,transform:'translateY(-16px)'}],{duration:180,easing:'ease-in'}).finished;}catch{}}modal.close();document.body.classList.remove('calendar-open');closing=false;}
-  $('#my-meetings').addEventListener('click',event=>{event.preventDefault();open();});
+  [...document.querySelectorAll('#my-meetings,[data-open-meetings]')].forEach(link=>link.addEventListener('click',event=>{event.preventDefault();open();}));
   $('#close-meetings-modal').addEventListener('click',close);
   modal.addEventListener('cancel',event=>{event.preventDefault();close();});
   modal.addEventListener('close',dismissCancellationNotice);

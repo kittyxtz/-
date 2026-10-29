@@ -426,3 +426,5 @@ updateScenarioWave('work',false);
 document.fonts.ready.then(() => positionScenarioMarker(false));
 window.addEventListener('pagehide', stopDevices);
 refreshDevices();
+
+if(new URL(location.href).searchParams.has('help'))$('#help-dialog').showModal();

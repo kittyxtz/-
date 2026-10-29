@@ -270,3 +270,15 @@ body.calendar-open{overflow:hidden}
 @media(hover:hover){.calendar-notice-slot .calendar-undo:hover{translate:none;border-color:color-mix(in srgb,var(--color-accent) 12%,var(--color-border));box-shadow:0 4px 14px #1124450c}}
 .calendar-notice-slot .calendar-undo>button:not(.undo-dismiss){padding:5px 9px;border:1px solid transparent;scale:1;translate:none;color:var(--calendar-ink);transition:background-color 150ms ease,border-color 150ms ease}
 @media(hover:hover){.calendar-notice-slot .calendar-undo:hover{background:var(--color-surface)}.calendar-notice-slot .calendar-undo>button:not(.undo-dismiss):hover{background:color-mix(in srgb,var(--color-accent) 7%,var(--color-accent-soft));color:var(--calendar-ink);border-color:color-mix(in srgb,var(--color-accent) 14%,var(--color-border))}}
+.footer.site-footer{display:block;min-height:0;padding-block:30px 22px;font-size:.8125rem}
+.footer-main{display:flex;align-items:center;justify-content:space-between;gap:36px}
+.site-footer .brand{font-size:1.5rem;color:var(--color-text)}
+.site-footer .brand-mark{width:28px;height:28px}
+.footer-identity p{font-size:.8125rem;line-height:1.5;color:var(--color-secondary);margin-block-start:9px}
+.footer-nav{display:flex;align-items:center;gap:28px;flex-wrap:wrap}
+.footer-nav a,.site-footer .footer-nav button{display:inline-flex;align-items:center;min-height:36px;margin:0;padding:6px 0;background:transparent;font-size:.8125rem;font-weight:500;color:var(--color-secondary);text-decoration:none}
+.footer-base{border-block-start:1px solid var(--color-border);margin-block-start:26px;padding-block-start:17px}
+.footer-base p{font-size:.75rem;line-height:1.6;color:var(--color-secondary)}
+@media(hover:hover){.footer-nav a:hover,.site-footer .footer-nav button:hover{color:var(--calendar-ink)}}
+@media(prefers-reduced-motion:no-preference){.footer-nav a,.site-footer .footer-nav button{transition:color 160ms ease}}
+@media(max-width:760px){.footer.site-footer{padding-block:27px 24px}.footer-main{display:block}.footer-nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 20px;margin-block-start:23px}.footer-nav a,.site-footer .footer-nav button{justify-self:start;min-height:34px}.footer-base{margin-block-start:22px}.footer-base p{max-width:32ch}}

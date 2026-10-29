@@ -16,3 +16,5 @@
     }));
   });
 })();
+
+document.addEventListener('DOMContentLoaded',()=>{document.querySelectorAll('[data-copyright-year]').forEach(node=>{node.textContent=String(new Date().getFullYear());});});
