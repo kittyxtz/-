@@ -76,6 +76,7 @@
           const cell=element('div','month-cell');cell.setAttribute('role','gridcell');cell.setAttribute('aria-selected',String(key===this.selected));
           const button=element('button','month-day');button.type='button';button.dataset.day=key;button.tabIndex=key===this.focused?0:-1;button.disabled=!this.allowed(key);
           if(date.getMonth()!==this.month.getMonth())button.classList.add('outside-month');if(key===today){button.classList.add('is-today');button.setAttribute('aria-current','date');}if(key===this.selected)button.classList.add('is-selected');
+          if(key<today)button.classList.add('is-past-day');
           const full=new Intl.DateTimeFormat('ru-RU',{day:'numeric',month:'long',year:'numeric',weekday:'long'}).format(date);
           button.setAttribute('aria-label',`${full}${key===this.selected?', выбрано':''}${count?`, ${plural(count)}`:''}`);
           button.append(element('span','month-day-number',date.getDate()));

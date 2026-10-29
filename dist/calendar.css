@@ -255,3 +255,14 @@ body.calendar-open{overflow:hidden}
 .studio-preview-controls{flex:0 0 auto;width:auto}
 .studio-preview-caption{flex:0 1 auto;display:block;margin:0;max-width:none;width:auto;white-space:nowrap;text-align:end}
 @media(max-width:400px){.studio-preview-bottom{gap:9px}.studio-preview-controls{gap:5px}.studio-preview-controls button{width:28px;height:30px;min-width:28px;padding:5px;display:grid;place-items:center}.studio-preview-controls button span{display:none}.studio-preview-caption{font-size:.5625rem;letter-spacing:-.01em}.studio-preview-controls button svg{width:14px;height:14px}}
+.calendar-notice-slot{position:sticky;inset-block-end:0;z-index:8;display:flex;align-items:center;justify-content:center;min-height:44px;margin-block-start:12px;pointer-events:none}
+.calendar-notice-slot .calendar-undo{position:relative;inset:auto;transform:none;max-width:100%;margin:0;pointer-events:auto;box-shadow:0 4px 14px #1124450c}
+.calendar-notice-slot .calendar-undo>button:not(.undo-dismiss){padding:6px 10px;min-height:30px;border-radius:8px;background:var(--color-accent-soft);text-decoration:none}
+@media(hover:hover){.calendar-notice-slot .calendar-undo:hover{background:var(--color-accent-soft);border-color:var(--color-accent);box-shadow:0 7px 22px #315bd81c;translate:0 -2px}.calendar-notice-slot .calendar-undo>button:not(.undo-dismiss):hover{background:var(--color-accent);color:var(--color-on-accent)}.calendar-notice-slot .undo-dismiss:hover{background:var(--color-subtle)}}
+@media(prefers-reduced-motion:no-preference){.calendar-notice-slot .calendar-undo{transition:translate 160ms ease,box-shadow 160ms ease,background-color 160ms ease,border-color 160ms ease}.calendar-notice-slot .calendar-undo button{transition:background-color 150ms ease,color 150ms ease}}
+.month-calendar:not(.is-compact) .is-past-day .month-day-number{color:var(--color-secondary);opacity:.45;font-weight:400}
+.month-calendar:not(.is-compact) .is-past-day .month-day-events{opacity:.55}
+.month-calendar:not(.is-compact) .is-past-day.is-selected{background:var(--color-subtle);border-color:var(--color-input-border)}
+.month-calendar:not(.is-compact) .is-past-day.is-selected .month-day-number{background:var(--color-border);color:var(--color-text);opacity:.8}
+.calendar-notice-slot{position:absolute;inset-inline-end:18px;inset-block-end:18px;min-height:0;margin:0;width:auto;max-width:calc(100% - 36px);justify-content:flex-end}
+.calendar-main{position:relative}

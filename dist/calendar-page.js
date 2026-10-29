@@ -9,6 +9,7 @@ function read(key,fallback) { try { return JSON.parse(localStorage.getItem(key))
 function meetings() { const data=read('sozvon-meetings',[]);return (Array.isArray(data)?data:[]).filter(m=>m&&typeof m.title==='string'&&/^[a-z0-9]{2,12}-[a-z0-9]{2,12}-\d{3}$/i.test(m.code)&&Number.isFinite(Date.parse(m.date))).sort((a,b)=>Date.parse(a.date)-Date.parse(b.date)); }
 const requested=new URL(location.href).searchParams.get(standalone?'day':'calendar');
 let selectedDay=C.parseDay(requested)?requested:C.dayKey(new Date());
+let modalSession=0;
 const countDay=key=>meetings().filter(m=>C.dayKey(new Date(m.date))===key).length;
 const calendar=C.mount($('#meetings-calendar'),{selectedDate:selectedDay,getCount:countDay,onSelect:key=>{selectedDay=key;clearSaved();renderAgenda(true);}});
 function node(tag,cls,text) { const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e; }
@@ -61,7 +62,7 @@ $('#calendar-add-form').addEventListener('submit',event=>{
 function clearSaved(){document.querySelector('.calendar-success')?.remove();const subtitle=$('.calendar-page-heading p');if(subtitle){subtitle.classList.remove('is-saved');subtitle.textContent='Все планы на разговор — в одном месте.';subtitle.removeAttribute('role');}}
 function showSaved(code){
   const meeting=meetings().find(m=>m.code===code);if(!meeting)return;
-  undoBar.hidden=true;
+  dismissCancellationNotice();
   const subtitle=$('.calendar-page-heading p');subtitle.classList.add('is-saved');subtitle.setAttribute('role','status');subtitle.innerHTML='<svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path class="saved-check" d="m8 12 3 3 5-6"/></svg>';
   subtitle.append(node('span','',`Запланировано на ${new Intl.DateTimeFormat('ru-RU',{hour:'2-digit',minute:'2-digit'}).format(new Date(meeting.date))}`));
   $('#calendar-live').textContent=`Встреча «${meeting.title}» запланирована`;
@@ -72,24 +73,31 @@ function showSaved(code){
   celebration.addEventListener('click',()=>celebration.remove());$('#calendar-board').append(celebration);setTimeout(()=>celebration.remove(),1900);
   if(!matchMedia('(prefers-reduced-motion: reduce)').matches){subtitle.animate([{opacity:0,transform:'translateY(-6px)'},{opacity:1,transform:'translateY(0)'}],{duration:400,easing:'cubic-bezier(.2,.8,.2,1)'});const item=[...document.querySelectorAll('.agenda-meeting')].find(e=>e.dataset.code===code);item?.animate([{opacity:.3,transform:'translateY(10px)',backgroundColor:'rgba(80,135,230,.24)'},{opacity:1,transform:'translateY(0)',backgroundColor:'rgba(80,135,230,.15)',offset:.35},{opacity:1,transform:'translateY(0)',backgroundColor:'transparent'}],{duration:1500,easing:'cubic-bezier(.2,.8,.2,1)'});$('#meetings-calendar .month-day.is-selected')?.animate([{boxShadow:'inset 0 0 0 2px rgba(49,91,216,.6)'},{boxShadow:'inset 0 0 0 2px transparent'}],{duration:1500});}
 }
-const undoBar=node('div','calendar-undo');undoBar.hidden=true;undoBar.setAttribute('role','status');const undoText=node('span'),undoButton=node('button','','Вернуть');undoButton.type='button';undoBar.append(undoText,undoButton);$('#calendar-board').append(undoBar);
-const dismissUndo=node('button','undo-dismiss');dismissUndo.type='button';dismissUndo.setAttribute('aria-label','Скрыть уведомление');dismissUndo.innerHTML='<svg aria-hidden="true" viewBox="0 0 24 24"><path d="m8 8 8 8m-8 0 8-8"/></svg>';dismissUndo.addEventListener('click',()=>{undoBar.hidden=true;$('#agenda-add').focus({preventScroll:true});});undoBar.append(dismissUndo);
-let cancellationTimer=null,noticeVersion=0;
+const undoBar=node('div','calendar-undo');undoBar.hidden=true;undoBar.setAttribute('role','status');const undoText=node('span'),undoButton=node('button','','Вернуть');undoButton.type='button';undoBar.append(undoText,undoButton);
+const noticeSlot=node('div','calendar-notice-slot');noticeSlot.append(undoBar);($('.calendar-modal-content')||$('#calendar-main')).append(noticeSlot);
+const dismissUndo=node('button','undo-dismiss');dismissUndo.type='button';dismissUndo.setAttribute('aria-label','Скрыть уведомление');dismissUndo.innerHTML='<svg aria-hidden="true" viewBox="0 0 24 24"><path d="m8 8 8 8m-8 0 8-8"/></svg>';dismissUndo.addEventListener('click',()=>{dismissCancellationNotice();$('#agenda-add').focus({preventScroll:true});});undoBar.append(dismissUndo);
+let cancellationTimer=null,noticeVersion=0,noticeExit=null;
 let cancelled=read('sozvon-last-cancelled',null);if(cancelled&&typeof cancelled.title==='string'&&Number.isFinite(Date.parse(cancelled.date)))cancellationNotice('Встреча отменена',true);else cancelled=null;
 function cancellationNotice(text,canUndo=false){
-  clearTimeout(cancellationTimer);const version=++noticeVersion;undoText.textContent=text;undoButton.hidden=!canUndo;undoBar.hidden=false;
+  if(!standalone&&!$('#meetings-modal').open)return;
+  dismissCancellationNotice();undoText.textContent=text;undoButton.hidden=!canUndo;undoBar.hidden=false;scheduleNoticeHide();
+}
+function dismissCancellationNotice(){clearTimeout(cancellationTimer);++noticeVersion;noticeExit?.cancel();noticeExit=null;undoBar.hidden=true;}
+function scheduleNoticeHide(delay=2800){
+  clearTimeout(cancellationTimer);const version=noticeVersion;
   cancellationTimer=setTimeout(()=>{
     const hide=()=>{if(version!==noticeVersion)return;if(undoBar.contains(document.activeElement))$('#agenda-add').focus({preventScroll:true});undoBar.hidden=true;};
     if(matchMedia('(prefers-reduced-motion: reduce)').matches){hide();return;}
-    undoBar.animate([{opacity:1,transform:'translateY(0)'},{opacity:0,transform:'translateY(5px)'}],{duration:180,easing:'ease-in'}).finished.then(hide).catch(()=>{});
-  },5000);
+    noticeExit=undoBar.animate([{opacity:1,transform:'translateY(0)'},{opacity:0,transform:'translateY(4px)'}],{duration:120,easing:'ease-in'});noticeExit.finished.then(hide).catch(()=>{});
+  },delay);
 }
+undoBar.addEventListener('pointerenter',()=>clearTimeout(cancellationTimer));undoBar.addEventListener('pointerleave',()=>scheduleNoticeHide(900));
 async function cancelMeeting(meeting,item,button){
-  button.disabled=true;
+  button.disabled=true;const session=modalSession;
   try{localStorage.setItem('sozvon-last-cancelled',JSON.stringify(meeting));localStorage.setItem('sozvon-meetings',JSON.stringify(meetings().filter(m=>m.code!==meeting.code)));}catch{button.disabled=false;cancellationNotice('Не удалось отменить встречу. Попробуйте ещё раз.');return;}
   cancelled=meeting;
   if(!matchMedia('(prefers-reduced-motion: reduce)').matches){try{await item.animate([{opacity:1,transform:'translateX(0)'},{opacity:0,transform:'translateX(12px)'}],{duration:220,easing:'ease-out'}).finished;}catch{}}
-  clearSaved();calendar.refresh();renderAgenda(true);cancellationNotice('Встреча отменена',true);undoButton.focus({preventScroll:true});
+  clearSaved();calendar.refresh();renderAgenda(true);if(session===modalSession){cancellationNotice('Встреча отменена',true);if(!undoBar.hidden)undoButton.focus({preventScroll:true});}
 }
 undoButton.addEventListener('click',()=>{
   if(!cancelled)return;
@@ -104,17 +112,18 @@ function themeLabel(){$('#theme-toggle').setAttribute('aria-label',document.docu
 $('#theme-toggle').addEventListener('click',()=>{const root=document.documentElement;root.classList.add('theme-changing');const dark=root.dataset.theme!=='dark';root.dataset.theme=dark?'dark':'light';try{localStorage.setItem('sozvon-theme',dark?'dark':'light');}catch{}themeLabel();void root.offsetHeight;requestAnimationFrame(()=>requestAnimationFrame(()=>root.classList.remove('theme-changing')));});
 }
 const narrow=matchMedia('(max-width:850px)');const layout=$('.calendar-layout'),board=$('#calendar-board'),agenda=$('#day-agenda');
-function arrange(){const active=document.activeElement,restore=layout.contains(active);if(narrow.matches)layout.append(board,agenda);else layout.append(agenda,board);(narrow.matches?agenda:board).append(undoBar);if(restore)active.focus({preventScroll:true});}narrow.addEventListener('change',arrange);arrange();renderAgenda();
+function arrange(){const active=document.activeElement,restore=layout.contains(active);if(narrow.matches)layout.append(board,agenda);else layout.append(agenda,board);if(restore)active.focus({preventScroll:true});}narrow.addEventListener('change',arrange);arrange();renderAgenda();
 window.addEventListener('storage',event=>{if(event.key==='sozvon-meetings'){calendar.refresh();renderAgenda();}});
 
 if(!standalone){
   const modal=$('#meetings-modal');let closing=false;
   const reduced=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
-  function open(day,{created=null}={}){clearSaved();if(C.parseDay(day)){selectedDay=day;calendar.setSelected(day);}calendar.refresh();renderAgenda();if(created)showSaved(created);if(modal.open)return;closing=false;modal.showModal();document.body.classList.add('calendar-open');$('#calendar-modal-title').focus({preventScroll:true});if(!reduced())modal.animate([{opacity:0,transform:'translateY(-28px)'},{opacity:1,transform:'translateY(0)'}],{duration:440,easing:'cubic-bezier(.16,.8,.2,1)'});}
-  async function close(){if(closing)return;closing=true;if(!reduced()){try{await modal.animate([{opacity:1,transform:'translateY(0)'},{opacity:0,transform:'translateY(-16px)'}],{duration:180,easing:'ease-in'}).finished;}catch{}}modal.close();document.body.classList.remove('calendar-open');closing=false;}
+  function open(day,{created=null}={}){clearSaved();if(C.parseDay(day)){selectedDay=day;calendar.setSelected(day);}calendar.refresh();renderAgenda();if(created)showSaved(created);if(modal.open)return;closing=false;++modalSession;dismissCancellationNotice();modal.showModal();document.body.classList.add('calendar-open');$('#calendar-modal-title').focus({preventScroll:true});if(!reduced())modal.animate([{opacity:0,transform:'translateY(-28px)'},{opacity:1,transform:'translateY(0)'}],{duration:440,easing:'cubic-bezier(.16,.8,.2,1)'});}
+  async function close(){if(closing)return;closing=true;++modalSession;dismissCancellationNotice();if(!reduced()){try{await modal.animate([{opacity:1,transform:'translateY(0)'},{opacity:0,transform:'translateY(-16px)'}],{duration:180,easing:'ease-in'}).finished;}catch{}}modal.close();document.body.classList.remove('calendar-open');closing=false;}
   $('#my-meetings').addEventListener('click',event=>{event.preventDefault();open();});
   $('#close-meetings-modal').addEventListener('click',close);
   modal.addEventListener('cancel',event=>{event.preventDefault();close();});
+  modal.addEventListener('close',dismissCancellationNotice);
   modal.addEventListener('click',event=>{if(event.target!==modal)return;const r=modal.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)close();});
   window.SozvonMeetings={open,close};if(requested)open(selectedDay);
 }
