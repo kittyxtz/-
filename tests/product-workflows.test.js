@@ -24,6 +24,21 @@ test('workspace snapshot keeps actual binary attachments and drafts but removes 
   assert.equal(snapshot.drafts.test, 'Черновик');
   assert.equal(chats[0].messages[0].voice.url, 'blob:temporary');
 });
+test('photo albums retain every binary image together and safely degrade in the text fallback', () => {
+  const blob = new Blob(['photo'], { type: 'image/png' });
+  const files = [{ title: 'one.png', blob, url: 'blob:one' }, { title: 'two.png', blob, url: 'blob:two', asFile: true }];
+  const snapshot = packWorkspace([{ id: 'chat', title: 'Чат', messages: [{ id: 'album', text: 'Подпись', files }] }], {});
+  const message = snapshot.chats[0].messages[0];
+  assert.equal(snapshot.chats[0].messages.length, 1);
+  assert.equal(message.files.length, 2);
+  assert.equal(message.files[1].blob, blob);
+  assert.equal(message.files[1].url, undefined);
+  assert.equal(message.files[1].asFile, true);
+  const fallback = textWorkspace(snapshot).chats[0].messages[0];
+  assert.equal(fallback.text, 'Подпись');
+  assert.equal(fallback.files.every(file => file.unavailable && !file.blob && !file.url), true);
+  assert.equal(files[0].url, 'blob:one');
+});
 
 test('device and notification preferences recover safely from corrupt storage', () => {
   assert.deepEqual(normalizeDevicePreferences(null), { mic: 'default', camera: 'default', speaker: 'default' });

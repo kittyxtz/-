@@ -1,6 +1,6 @@
 import { useMemo, useRef, useState, useEffect } from 'react';
 import { Icon } from './Icons';
-import { messageSummary } from '../lib/chatMessages';
+import { messageAttachments, messageSummary } from '../lib/chatMessages';
 import { chatDateLabel, chatDay } from '../lib/chatDates';
 import { Popover } from './Primitives';
 import Calendar from './Calendar';
@@ -11,7 +11,7 @@ export default function ChatSearch({ chat, members = [], onClose, onResult }) {
   const input = useRef(null), calendarButton = useRef(null), peopleButton = useRef(null);
   useEffect(() => input.current?.focus(), []);
   const searching = Boolean(query.trim());
-  const results = useMemo(() => searching ? chat.messages.filter(message => `${messageSummary(message)} ${message.file?.title || ''}`.toLocaleLowerCase('ru-RU').includes(query.trim().toLocaleLowerCase('ru-RU')) && (!author || (author.self ? message.self : !message.self && (message.authorId === author.id || message.author === author.title.split(' ')[0]))) && (!day || message.day === day)).slice().reverse() : [], [chat.messages, query, author, day, searching]);
+  const results = useMemo(() => searching ? chat.messages.filter(message => `${messageSummary(message)} ${messageAttachments(message).map(file => file.title).join(' ')}`.toLocaleLowerCase('ru-RU').includes(query.trim().toLocaleLowerCase('ru-RU')) && (!author || (author.self ? message.self : !message.self && (message.authorId === author.id || message.author === author.title.split(' ')[0]))) && (!day || message.day === day)).slice().reverse() : [], [chat.messages, query, author, day, searching]);
   function finishFilter() { setFilter(null); input.current?.focus(); }
   return <div className="chat-search-panel" role="region" aria-label="Поиск в переписке" onKeyDown={event => { if (event.key === 'Escape' && !filter) { event.stopPropagation(); onClose(); } }}>
     <div className="chat-search-panel-input"><Icon name="search" /><input ref={input} type="search" aria-label="Текст сообщения" placeholder="Найти сообщение…" value={query} onChange={event => setQuery(event.target.value)} />

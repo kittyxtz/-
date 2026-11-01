@@ -21,5 +21,6 @@ import './styles/typography.css';
 import './styles/theme-presets.css';
 import './styles/product-polish.css';
 import './styles/mobile-refinement.css';
+import './styles/navigation-system.css';
 
 createRoot(document.getElementById('root')).render(<React.StrictMode><App /></React.StrictMode>);

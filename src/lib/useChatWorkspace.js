@@ -27,6 +27,7 @@ export async function readChatWorkspace() {
 export function packWorkspace(chats, drafts) {
   return { chats: chats.map(chat => ({ ...chat, messages: chat.messages.map(message => ({ ...message,
     ...(message.file?.blob ? { file: { ...message.file, url: undefined } } : {}),
+    ...(message.files ? { files: message.files.map(file => file.blob ? { ...file, url: undefined } : file) } : {}),
     ...(message.voice?.blob ? { voice: { ...message.voice, url: undefined } } : {}),
   })) })), drafts };
 }
@@ -34,6 +35,7 @@ export function textWorkspace(snapshot) {
   return { ...snapshot, chats: snapshot.chats.map(chat => ({ ...chat, messages: chat.messages.map(message => {
     const copy = { ...message };
     for (const field of ['file', 'voice']) if (message[field]?.blob) copy[field] = { ...message[field], blob: undefined, url: undefined, unavailable: true };
+    if (message.files) copy.files = message.files.map(file => file.blob ? { ...file, blob: undefined, url: undefined, unavailable: true } : file);
     return copy;
   }) })) };
 }
@@ -50,6 +52,10 @@ export default function useChatWorkspace(initial) {
         for (const field of ['file', 'voice']) if (message[field]?.blob instanceof Blob) {
           const url = URL.createObjectURL(message[field].blob); urls.current.add(url); copy[field] = { ...message[field], url };
         }
+        if (message.files) copy.files = message.files.map(file => {
+          if (!(file.blob instanceof Blob)) return file;
+          const url = URL.createObjectURL(file.blob); urls.current.add(url); return { ...file, url };
+        });
         return copy;
       }) })));
       setDrafts(snapshot.drafts && typeof snapshot.drafts === 'object' ? snapshot.drafts : {});

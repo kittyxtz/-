@@ -1,0 +1,140 @@
+/* Shared standards for navbar pages. Loaded after all page refinements. */
+:root {
+  --app-font: var(--font-sans);
+  --app-text: .875rem;
+  --app-control: .8125rem;
+  --app-caption: .75rem;
+  --app-input: 1rem;
+  --app-page-title: 1.75rem;
+  --app-section-title: 1.25rem;
+  --app-detail-title: 1rem;
+  --app-display-value: 1.5rem;
+  --app-regular: 400;
+  --app-medium: 500;
+  --app-semibold: 600;
+  --app-brand-weight: 650;
+  --app-leading: 1.5;
+  --app-heading-leading: 1.3;
+  --app-space-sm: 8px;
+  --app-space-md: 16px;
+  --app-space-lg: 24px;
+  --app-control-height: 44px;
+  --app-radius-control: 12px;
+  --app-radius-panel: 20px;
+}
+
+:is(#chats-main,#calendar-main,#profile-main,#meetings-modal,.is-own-profile) {
+  font-family: var(--app-font);
+  font-size: var(--app-text);
+  line-height: var(--app-leading);
+}
+
+/* Heading roles; mobile wordmarks retain their own brand scale and placement. */
+:is(#chats-main,#calendar-main,#profile-main,#meetings-modal) :is(.chats-page-heading h1,.calendar-page-heading h1,.settings-heading h1) {
+  margin-block: 0;
+  font-size: var(--app-page-title);
+  line-height: var(--app-heading-leading);
+  font-weight: var(--app-semibold);
+  letter-spacing: -.035em;
+}
+:is(#chats-main,#calendar-main,#profile-main,#meetings-modal) :is(.settings-view-heading h2,#meetings-calendar .month-title-button) {
+  font-size: var(--app-section-title);
+  line-height: var(--app-heading-leading);
+  font-weight: var(--app-semibold);
+  letter-spacing: -.025em;
+}
+:is(#chats-main,#calendar-main,#profile-main,#meetings-modal) :is(.day-agenda > h2,.calendar-page-heading h2,.calendar-add-dialog h2,.product-dialog > h2),
+.is-own-profile .chat-profile-hero h2,.is-own-profile .profile-overview-stats strong {
+  font-size: var(--app-display-value);
+  line-height: var(--app-heading-leading);
+  font-weight: var(--app-semibold);
+  letter-spacing: -.03em;
+}
+:is(#chats-main,#calendar-main,#profile-main,#meetings-modal) :is(.settings-group > h3,.settings-group-title h3,.agenda-empty h3,.product-empty h3,.chats-search-empty h3,.chat-empty-conversation h3,.chat-no-selection h2,.chat-conversation-identity h2) {
+  font-size: var(--app-detail-title);
+  line-height: var(--app-heading-leading);
+  font-weight: var(--app-semibold);
+  letter-spacing: -.015em;
+}
+
+/* Row titles and body copy keep the same rhythm in all sections. */
+:is(#chats-main,#calendar-main,#profile-main,#meetings-modal) :is(.agenda-meeting h3,.chat-file-copy strong,.settings-info-card h3,.settings-faq summary,.notification-example strong,.settings-profile-card h3,.settings-info-row h3,.settings-switch-row strong,.settings-device-row strong,.settings-theme-caption,.settings-system-theme strong,.mobile-settings-account strong,.mobile-settings-sections strong,.settings-sidebar nav a) {
+  font-size: var(--app-text);
+  line-height: var(--app-leading);
+  font-weight: var(--app-medium);
+  letter-spacing: 0;
+}
+:is(#chats-main,#calendar-main,#profile-main,#meetings-modal) :is(.chat-message-text,.settings-view-heading p,.settings-description,.settings-info-card p,.settings-faq p,.agenda-empty p,.product-empty p,.chats-search-empty p,.chat-empty-conversation p),
+.is-own-profile .chat-profile-bio {
+  font-size: var(--app-text);
+  line-height: var(--app-leading);
+  font-weight: var(--app-regular);
+  letter-spacing: 0;
+}
+:is(#chats-main,#calendar-main,#profile-main,#meetings-modal) :is(.settings-profile-card p,.settings-system-theme small,.settings-theme-description,.notification-example p,.notification-example small,.chat-file-copy small,.settings-info-row p,.settings-switch-row small,.settings-device-row p,.settings-footnote,.settings-sidebar-heading,.mobile-settings-account small,.mobile-settings-sections small,.mobile-settings-kicker,.agenda-weekday,.agenda-meeting-meta,.calendar-legend,.agenda-count,.chat-conversation-identity p,.chat-list-preview,.chat-list-top time,.chat-date-divider span,.chat-message-meta),
+.is-own-profile :is(.chat-profile-hero > p,.profile-overview-stats small) {
+  font-size: var(--app-caption);
+  line-height: var(--app-leading);
+  font-weight: var(--app-regular);
+  letter-spacing: 0;
+}
+.is-own-profile :is(.chat-profile-hero > p,.chat-profile-bio,.profile-overview-stats small) { color: var(--color-secondary); }
+:is(#chats-main,#calendar-main,#profile-main,#meetings-modal) :is(.field > label,.settings-profile-form .glass-field > label,.settings-avatar-colors legend,.settings-palette-label) {
+  font-size: var(--app-caption);
+  line-height: var(--app-leading);
+  font-weight: var(--app-medium);
+  letter-spacing: 0;
+}
+#profile-main .settings-avatar-colors label { font-size: var(--app-control); line-height: var(--app-leading); font-weight: var(--app-medium); }
+
+/* Text actions, filled buttons and inputs have consistent geometry. */
+:is(#chats-main,#calendar-main,#profile-main,#meetings-modal) :is(.product-button,.settings-secondary-button,.settings-profile-form .primary-button,.calendar-add-dialog .primary-button,.chats-search-empty button,.chat-no-selection button,.agenda-add) {
+  min-height: var(--app-control-height);
+  padding: 10px 16px;
+  gap: var(--app-space-sm);
+  border-radius: var(--app-radius-control);
+  font-size: var(--app-control);
+  line-height: var(--app-leading);
+  font-weight: var(--app-medium);
+  letter-spacing: 0;
+}
+:is(#chats-main,#calendar-main,#profile-main,#meetings-modal) :is(.product-button svg,.settings-secondary-button svg,.settings-profile-form .primary-button svg,.calendar-add-dialog .primary-button svg,.agenda-add svg) { width: 18px; height: 18px; }
+:is(#chats-main,#calendar-main,#profile-main,#meetings-modal) :is(.chat-filters button,.agenda-meeting-actions a,.agenda-meeting-actions button,.agenda-time,.settings-volume-heading,.settings-inline-link,.settings-profile-footer a) {
+  font-size: var(--app-control);
+  line-height: var(--app-leading);
+  font-weight: var(--app-medium);
+  letter-spacing: 0;
+}
+:is(#chats-main,#calendar-main,#profile-main,#meetings-modal) :is(.chat-search input,.chat-compose textarea,.chat-search-panel-input input,.settings-profile-form .input-shell > input,.settings-profile-form textarea,.product-select select) {
+  font-size: var(--app-input);
+  line-height: var(--app-leading);
+  font-weight: var(--app-regular);
+}
+#profile-main .settings-profile-form .field.glass-field .input-shell { border-radius: var(--app-radius-control); }
+#profile-main .settings-profile-form .field.glass-field .input-shell > input { min-height: 42px; padding-block: 9px; border-radius: calc(var(--app-radius-control) - 1px); }
+:is(#chats-main,#calendar-main,#profile-main,#meetings-modal) .product-select select { min-height: var(--app-control-height); padding-block: 9px; }
+:is(#calendar-main,#meetings-modal) :is(.calendar-board,.day-agenda),#profile-main .settings-shell { border-radius: var(--app-radius-panel); }
+:is(#calendar-main,#meetings-modal) :is(.calendar-board,.day-agenda),#profile-main .settings-content { padding: var(--app-space-lg); }
+:is(#chats-main,#calendar-main,#profile-main,#meetings-modal) :is(.settings-view-heading,.agenda-heading) { margin-bottom: var(--app-space-lg); }
+#chats-main { --chat-copy-size: var(--app-text); --chat-label-size: var(--app-control); --chat-caption-size: var(--app-caption); }
+#chats-main .chats-shell { --chat-muted: var(--color-secondary); }
+.is-own-profile .chat-profile-bio { margin-top: var(--app-space-md); }
+.is-own-profile .profile-overview-stats { margin-top: var(--app-space-lg); }
+:is(#calendar-main,#meetings-modal) #meetings-calendar .month-day-number { font-size: var(--app-text); line-height: var(--app-leading); }
+.product-header:has(.mobile-page-title) .brand,.mobile-page-title { font-weight: var(--app-brand-weight); }
+.product-header .product-navigation a { font-size: var(--app-control); line-height: var(--app-leading); font-weight: var(--app-medium); }
+
+@media(min-width:761px) {
+  #chats-main .chats-shell { border-radius: var(--app-radius-panel); }
+  .is-own-profile { border-radius: var(--app-radius-panel); }
+  :is(#chats-main,#calendar-main,#profile-main) > :is(.chats-page-heading,.calendar-page-heading,.settings-heading) { margin-block: 0 var(--app-space-md); }
+}
+@media(max-width:760px) {
+  #calendar-main { padding-inline: var(--app-space-md); }
+  #chats-main .chat-list { margin-inline: 0; }
+  #chats-main .chat-list-item { padding-inline: var(--app-space-md); }
+  :is(#calendar-main,#meetings-modal) :is(.calendar-board,.day-agenda) { padding: var(--app-space-md); }
+  #profile-main .settings-content { padding: var(--app-space-md) 0; }
+  #profile-main .settings-profile-form .profile-save-row > button { padding-inline: 10px; }
+  :is(#chats-main,#calendar-main,#profile-main,#meetings-modal) :is(.settings-view-heading,.agenda-heading) { margin-bottom: var(--app-space-md); }
+}

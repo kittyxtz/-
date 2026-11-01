@@ -6,13 +6,14 @@ import ChatAvatar from './ChatAvatar';
 import VoiceMessage from './VoiceMessage';
 import { contactPresenceLabel } from '../lib/chatPresence';
 import useHorizontalPager from '../lib/useHorizontalPager';
+import { messageAttachments } from '../lib/chatMessages';
 
 export function ChatMaterials({ chat, members = [], onPerson, group = false }) {
   const [tab, setTab] = useState(group ? 'people' : 'media'), [preview, setPreview] = useState(null);
   const id = useId(), minimumHeight = useRef(0);
   const [panelHeight, setPanelHeight] = useState(null);
   const messages = chat?.messages || [];
-  const files = messages.filter(message => message.file).map(message => ({ ...message.file, id: message.id, author: message.self ? 'Вы' : message.author }));
+  const files = messages.flatMap(message => messageAttachments(message).map((file, index) => ({ ...file, id: `${message.id}-${index}`, author: message.self ? 'Вы' : message.author })));
   const gif = file => file.type === 'image/gif' || /\.gif$/i.test(file.title);
   const media = files.filter(file => (isImageFile(file) || file.type?.startsWith('video/')) && !gif(file));
   const gifs = files.filter(gif);

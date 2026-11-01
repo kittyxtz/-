@@ -14,6 +14,7 @@ export function Header({ page, name, tone, openMeetings }) {
   const navigation = !['auth', 'guest', 'meeting', 'home'].includes(page);
   const { navigateTab, navigationTarget, authenticated } = useApp();
   const active = navigationTarget || (profileOpen ? 'self' : page);
+  const mobileTitle = profileOpen ? null : ({ chats: 'Чаты', meetings: 'Мои встречи', profile: 'Настройки' })[page];
   const index = ({ chats: 0, meetings: 1, profile: 2, self: 3 })[active] ?? 0;
   function navigate(event, href) {
     if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
@@ -22,6 +23,7 @@ export function Header({ page, name, tone, openMeetings }) {
     event.preventDefault(); navigateTab(href);
   }
   return <><header className="header page-width product-header"><Brand /><div className="header-actions">
+    {mobileTitle && <h1 className="mobile-page-title">{mobileTitle}</h1>}
     {navigation && <nav className="product-navigation" style={{ '--nav-index': Math.min(2,index) }} aria-label="Основная навигация"><span className="desktop-nav-indicator" aria-hidden="true" />{links.map(link => <a key={link.id} href={link.href} aria-current={active === link.id ? 'page' : undefined} onClick={event => navigate(event, link.href)}><Icon name={link.icon} /><span>{link.label}</span></a>)}</nav>}
     {page === 'home' && <a href={authenticated ? 'chats.html' : 'auth.html#login'} className="profile-link profile-avatar-only" aria-label={authenticated ? 'Открыть чаты' : 'Войти в аккаунт'}><span className="profile-avatar" id="header-avatar" data-tone={tone}>{authenticated ? (name.trim() || 'Я').slice(0,1).toUpperCase() : <Icon name="person" />}</span></a>}
     {['auth', 'guest'].includes(page) && <a className="product-header-back" href="./"><Icon name="arrow" />На главную</a>}
