@@ -1,0 +1,25 @@
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+import App from './App';
+import './styles/styles.css';
+import './styles/workspace.css';
+import './styles/calendar.css';
+import './styles/calendar-controls.css';
+import './styles/react.css';
+import './styles/fields.css';
+import './styles/clock.css';
+import './styles/refinements.css';
+import './styles/theme.css';
+import './styles/secondary-actions.css';
+import './styles/glass-panel.css';
+import './styles/settings.css';
+import './styles/auth.css';
+import './styles/guest.css';
+import './styles/chats.css';
+import './styles/chat-composer.css';
+import './styles/typography.css';
+import './styles/theme-presets.css';
+import './styles/product-polish.css';
+import './styles/mobile-refinement.css';
+
+createRoot(document.getElementById('root')).render(<React.StrictMode><App /></React.StrictMode>);

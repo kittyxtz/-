@@ -1,0 +1,9 @@
+Use case: stylized-concept.
+Asset type: original 3D hero illustration for a refined video meeting website, isolated reusable web asset.
+Primary request: create a NEW sculptural ring made from a single wide translucent ribbon, twisted and softly folded into one completely closed circular loop. It must be a fresh original composition, with an open central hole and no loose ends or trailing ribbon. The ring feels light, airy, calm and tactile, like pearlescent organza merged with very thin frosted glass. Fine flowing folds, soft layered edges, delicate internal striations and subtle refraction. Organic asymmetric thickness; this is not a geometrically perfect smooth torus and not jewelry.
+Composition: one ring only, almost upright, slightly tilted in three-quarter perspective, centered on the canvas with the full silhouette visible and generous transparent margins. The open hole remains clearly visible. Square 1024 x 1024 composition suitable for placing in the lower half of a vertical website illustration panel.
+Lighting: high-end soft studio CGI, broad diffused light from upper left, clean pale highlights and gentle self-shadowing inside the folds. Airy white and silver material with only the faintest icy blue pearlescent reflections. Restrained, elegant, detailed, realistic material rendering.
+Background: genuinely transparent alpha, clean isolated object. No background color, no checkerboard drawn into the image, no ground, no pedestal, no surrounding objects, no cast shadow outside the ring.
+Avoid: metallic chrome, gold, plastic, rubber, hard jewelry, neon, saturated blue, text, lettering, numbers, logos, watermarks, frame, existing website artwork, long ribbon tails, infinity loops, multiple disconnected rings, cropping.
+
+Generated with the built-in image_gen tool. Original alpha PNG preserved; WebP is an encoding-only web optimization with alpha preserved.

@@ -1,0 +1,197 @@
+/* Presets keep the existing light/dark component states and repoint their colors. */
+:root[data-theme-preset=sage] {
+  --color-bg: #f2f5f0;
+  --color-surface: #fcfdfb;
+  --color-subtle: #e8eee5;
+  --color-border: #d2ddce;
+  --color-input-border: #7a8b75;
+  --color-text: #25362b;
+  --color-secondary: #576952;
+  --color-accent: #386249;
+  --color-accent-hover: #2d513b;
+  --color-accent-soft: #e1ecdd;
+  --color-focus: #386249;
+  --calendar-ink: #386249;
+  --field-glass: linear-gradient(130deg,#fcfdfb,#edf3e9);
+  --field-glint: #fcfdfbcc;
+  --field-edge: #6a8164;
+  --field-label: #425d3d;
+  --field-icon: #526e4a;
+  --field-placeholder: #576952;
+  --icon-surface: #e8eee5;
+  --icon-ink: #425d3d;
+  --icon-edge: #d2ddce;
+}
+:root[data-theme-preset=linen] {
+  --color-bg: #f4efe5;
+  --color-surface: #fffaf2;
+  --color-subtle: #eee5d8;
+  --color-border: #dcd0bf;
+  --color-input-border: #9b8772;
+  --color-text: #3c2d24;
+  --color-secondary: #79624e;
+  --color-accent: #a54932;
+  --color-accent-hover: #8e3d2a;
+  --color-accent-soft: #f4dfd3;
+  --color-focus: #a54932;
+  --calendar-ink: #9a412d;
+  --field-glass: linear-gradient(130deg,#fffaf2,#eee5d8);
+  --field-glint: #dcd0bf;
+  --field-edge: #a28a72;
+  --field-label: #71523c;
+  --field-icon: #88634a;
+  --field-placeholder: #79624e;
+  --icon-surface: #eee5d8;
+  --icon-ink: #71523c;
+  --icon-edge: #dcd0bf;
+  --theme-hero: #e9ddca;
+}
+:root[data-theme-preset=olive] {
+  --color-accent: #b4c66f;
+  --color-accent-hover: #c2d47b;
+  --color-on-accent: #171c0c;
+  --color-accent-soft: #262b19;
+  --color-focus: #c6d68a;
+  --calendar-ink: #c6d68a;
+}
+:root[data-theme-preset=ember] {
+  --color-accent: #b4561d;
+  --color-accent-hover: #c26125;
+  --color-accent-soft: #332315;
+  --color-focus: #efb16c;
+  --calendar-ink: #f0b16e;
+}
+:root[data-theme-preset=porcelain] {
+  --color-bg: #eff3f6;
+  --color-surface: #fbfdff;
+  --color-subtle: #e6edf3;
+  --color-border: #cdd9e2;
+  --color-input-border: #7e93a4;
+  --color-text: #273848;
+  --color-secondary: #586c7c;
+  --color-accent: #416d91;
+  --color-accent-hover: #355c7e;
+  --color-accent-soft: #dfeaf3;
+  --color-focus: #416d91;
+  --calendar-ink: #355f83;
+  --field-glass: linear-gradient(130deg,#fbfdff,#e6edf3);
+  --field-glint: #fbfdffcc;
+  --field-edge: #718b9f;
+  --field-label: #46627a;
+  --field-icon: #52708a;
+  --field-placeholder: #586c7c;
+  --icon-surface: #e6edf3;
+  --icon-ink: #46627a;
+  --icon-edge: #cdd9e2;
+  --theme-hero: #dfe8ef;
+}
+
+/* Light palettes tint surfaces; dark presets inherit the neutral dark theme. */
+:root[data-theme-preset=sage] { --theme-hero: #e5eee0; }
+:root:is([data-theme-preset=sage],[data-theme-preset=linen],[data-theme-preset=porcelain]) {
+  & .sky-background { background: radial-gradient(ellipse at 100% 5%,color-mix(in srgb,var(--color-accent) 10%,transparent),transparent 60%),var(--color-bg); }
+  & .sky-ring { border-color: var(--color-border); }
+  & .sky-star { color: var(--calendar-ink); }
+  & .hero { background: var(--theme-hero); }
+  & .hero-art { color: var(--color-text); }
+  & :is(.hero-description,.art-footer) { color: var(--color-secondary); }
+  & :is(.meeting-panel,.auth-card,.auth-story,.guest-card,.chat-sidebar,.chat-conversation,.settings-shell) { background: var(--color-surface); border-color: var(--color-border); }
+  & .field.glass-field .input-shell { background: var(--field-glass); }
+  & .settings-sidebar nav a[aria-current=page] { background: var(--color-accent-soft); color: var(--calendar-ink); }
+}
+:root[data-theme-preset=linen] {
+  & .hero-panorama .air-image, & .hero-mobile-art { filter: sepia(.55) saturate(.6); }
+  & .hero-art::after { background: linear-gradient(100deg,#e9ddca60,transparent 85%); }
+}
+
+/* Miniature interfaces show the actual background, text and action colors. */
+.settings-theme-preview { --preview-bg: #eef1f8; --preview-surface: #fff; --preview-border: #cbd2df; --preview-accent: #315bd8; --preview-text: #626e81; position: relative; display: block; overflow: hidden; background: var(--preview-bg); border-color: var(--preview-border); }
+.settings-theme-preview i { position: absolute; display: block; background: var(--preview-surface); border: 1px solid var(--preview-border); border-radius: 3px; }
+.settings-theme-preview i:first-child { inset: 12px auto 12px 12px; width: 22%; }
+.settings-theme-preview i:nth-child(2) { inset: 15px 25% auto calc(22% + 22px); height: 5px; border: 0; background: var(--preview-text); opacity: .65; }
+.settings-theme-preview i:nth-child(3) { inset: 34px 12px 12px calc(22% + 22px); background: var(--preview-surface); }
+.settings-theme-preview b { position: absolute; inset: 48px 29% auto calc(22% + 33px); height: 3px; background: var(--preview-text); opacity: .45; box-shadow: 0 8px 0 var(--preview-text); }
+.settings-theme-preview em { position: absolute; inset: auto 24px 24px auto; width: 24%; height: 14px; border-radius: 3px; background: var(--preview-accent); }
+.settings-theme-preview[data-preset=dark] { --preview-bg: #101010; --preview-surface: #202020; --preview-border: #353535; --preview-accent: #365fca; --preview-text: #b0b0b0; }
+.settings-theme-preview[data-preset=sage] { --preview-bg: #f2f5f0; --preview-surface: #fcfdfb; --preview-border: #d2ddce; --preview-accent: #386249; --preview-text: #576952; }
+.settings-theme-preview[data-preset=linen] { --preview-bg: #f4efe5; --preview-surface: #fffaf2; --preview-border: #dcd0bf; --preview-accent: #a54932; --preview-text: #79624e; }
+.settings-theme-preview[data-preset=olive] { --preview-bg: #101010; --preview-surface: #202020; --preview-border: #353535; --preview-accent: #b4c66f; --preview-text: #b0b0b0; }
+.settings-theme-preview[data-preset=ember] { --preview-bg: #101010; --preview-surface: #202020; --preview-border: #353535; --preview-accent: #b4561d; --preview-text: #b0b0b0; }
+@media (max-width: 480px) {
+  .settings-theme-preview i:first-child { inset: 8px auto 8px 8px; width: 18%; }
+  .settings-theme-preview i:nth-child(2) { inset: 12px 18% auto calc(18% + 16px); height: 4px; }
+  .settings-theme-preview i:nth-child(3) { inset: 27px 8px 8px calc(18% + 16px); }
+  .settings-theme-preview b { inset: 38px 20% auto calc(18% + 24px); height: 2px; }
+  .settings-theme-preview em { inset: auto 16px 17px auto; width: 26%; height: 11px; }
+  .settings-theme-description { font-size: .75rem; }
+}
+@media (forced-colors: active) {
+  .settings-theme-preview { forced-color-adjust: none; }
+}
+.settings-theme-preview[data-preset=oled] { --preview-bg: #000; --preview-surface: #000; --preview-border: #555; --preview-accent: #bcbcbc; --preview-text: #aaa; }
+.settings-theme-preview[data-preset=porcelain] { --preview-bg: #eff3f6; --preview-surface: #fbfdff; --preview-border: #cdd9e2; --preview-accent: #416d91; --preview-text: #586c7c; }
+
+/* OLED mode uses true black surfaces, muted text and grey structural edges. */
+:root[data-theme=dark][data-theme-preset=oled] {
+  --color-bg: #000000;
+  --color-surface: #000000;
+  --color-subtle: #000000;
+  --color-border: #3b3b3b;
+  --color-input-border: #777777;
+  --color-text: #dedede;
+  --color-secondary: #aaaaaa;
+  --color-accent: #bcbcbc;
+  --color-accent-hover: #cccccc;
+  --color-accent-soft: #000000;
+  --color-on-accent: #000000;
+  --color-focus: #c4c4c4;
+  --calendar-ink: #c4c4c4;
+  --field-glass: #000000;
+  --field-glint: #3b3b3b;
+  --field-edge: #777777;
+  --field-label: #bcbcbc;
+  --field-icon: #aaaaaa;
+  --field-placeholder: #999999;
+  --icon-surface: #000000;
+  --icon-ink: #bcbcbc;
+  --icon-edge: #555555;
+  & :is(.sky-background,.hero,.hero-art,.meeting-panel,.auth-card,.auth-story,.guest-card,.settings-shell,.settings-sidebar,.settings-info-card,.day-agenda,.clock-face,.profile-preview,.preview,.self-tile,.empty-tile,.device-preview-window,.device-preview-stage,.scenario-panel,.landing-invitation,.lobby-dialog,.lobby-presence,.small-dialog,.calendar-add-dialog,.meetings-modal,.date-picker-dialog,.time-picker-dialog) {
+    background: #000;
+    border-color: var(--color-border);
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  & :is(.sky-halo,.sky-ring,.sky-background > svg,.sky-star,.hero-panorama,.hero-mobile-art,.auth-story-art,.scenario-sphere,.scenario-star) { display: none; }
+  & .chats-shell { --chat-surface: #000; --chat-hover: #000; --chat-selected: #000; --chat-bubble: #000; --chat-self: #000; --chat-edge: #555; --chat-muted: #aaa; background: #000; box-shadow: none; border-color: var(--color-border); }
+  & :is(.chats-sidebar,.chat-main,.chat-conversation,.chat-header,.chat-compose,.chat-user-panel,.chat-message-bubble,.chat-file) { background: #000; box-shadow: none; border-color: var(--color-border); }
+  & :is(.profile-avatar,.avatar,.studio-avatar,.chat-avatar,.chat-message-avatar)[data-tone] { background: #000; color: #bcbcbc; border-color: #555; box-shadow: none; }
+  & .field.glass-field :is(.input-shell,.copy-control,.date-field-button) { background: #000; box-shadow: none; border-color: var(--color-input-border); }
+  & :is(.primary-button,.auth-submit,.schedule-button,.device-button,.auth-guest-link,.settings-secondary-button,.settings-theme-choice,.settings-avatar-colors label,.dialog-close,.meeting-emblem,.dialog-emblem,.browser-icon,.nav-calendar-icon,.schedule-symbol) { background: #000; color: var(--color-text); border-color: #777; box-shadow: none; }
+  & .primary-button .button-tail { color: inherit; background: #000; border-color: #777; }
+  & .meeting-panel::before, & .hero-art::after, & .auth-story::after, & .auth-submit::before, & .landing-invitation::after, & .profile-preview::before, & .profile-preview::after { display: none; }
+  & .settings-sidebar nav a[aria-current=page], & .chat-list-item.is-selected { background: #000; border-color: #777; color: var(--color-text); }
+  & .settings-theme-choice[aria-pressed=true] { border-color: var(--color-focus); }
+  & .settings-avatar-colors .color-swatch { filter: grayscale(1); }
+}
+.settings-theme-preview[data-preset=oled] em { background: #000; border: 1px solid #aaa; }
+
+.settings-theme-preview[data-preset=iris] { --preview-bg: #101010; --preview-surface: #202020; --preview-border: #353535; --preview-accent: #7756bc; --preview-text: #b0b0b0; }
+:root[data-theme-preset=iris] { --color-accent: #7756bc; --color-accent-hover: #8462cc; --color-accent-soft: #292038; --color-focus: #bea6ef; --calendar-ink: #c4adf1; }
+/* Preserve the existing geometry. OLED only changes paint, never border width. */
+:root[data-theme=dark][data-theme-preset=oled] {
+  & .settings-sidebar { border-start-start-radius: 16px; border-end-start-radius: 16px; }
+  & .settings-mobile-nav { border-start-start-radius: 12px; border-start-end-radius: 12px; }
+  & :is(.meeting-panel,.auth-card,.settings-theme-choice,.primary-button,.input-shell) { background-clip: padding-box; }
+}
+:root[data-theme-preset=monet-system] {
+  & :is(.sky-background,.hero,.hero-art,.meeting-panel,.auth-card,.auth-story,.guest-card,.settings-shell,.settings-sidebar,.settings-info-card,.day-agenda,.clock-face,.profile-preview,.device-preview-window,.scenario-panel,.landing-invitation,.lobby-dialog,.lobby-presence,.small-dialog) { background: var(--color-surface); border-color: var(--color-border); box-shadow: none; }
+  & .sky-background { background: var(--color-bg); }
+  & .sky-ring { border-color: var(--color-border); }
+  & .field.glass-field :is(.input-shell,.copy-control,.date-field-button) { background: var(--field-glass); box-shadow: none; border-color: var(--color-input-border); }
+  & :is(.hero-description,.art-footer) { color: var(--color-secondary); }
+  & .settings-sidebar nav a[aria-current=page] { background: var(--color-accent-soft); color: var(--calendar-ink); }
+  & .primary-button { background: var(--color-accent); color: var(--color-on-accent); }
+  & .meeting-panel::before { display: none; }
+  & .chats-shell { --chat-surface: var(--color-surface); --chat-hover: var(--color-subtle); --chat-selected: var(--color-accent-soft); --chat-bubble: var(--color-surface); --chat-self: var(--color-accent-soft); --chat-edge: var(--color-border); --chat-muted: var(--color-secondary); background: var(--color-surface); }
+}

@@ -1,0 +1,115 @@
+@font-face {
+  font-family: 'Onest';
+  src: url('/assets/onest-variable.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+}
+:root {
+  --font-sans: 'Onest', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --text-display: clamp(3.75rem, 5.65vw, 5.15rem);
+  --text-heading: clamp(2rem, 3.05vw, 2.6rem);
+  --text-body: .875rem;
+  --text-small: .8125rem;
+  --text-caption: .75rem;
+  --leading-body: 1.5;
+  font-family: var(--font-sans);
+  font-kerning: normal;
+  font-optical-sizing: auto;
+  -moz-osx-font-smoothing: grayscale;
+}
+button, input, select, textarea { font-family: inherit; }
+a { text-underline-position: from-font; text-decoration-thickness: from-font; }
+button, input, select, textarea { letter-spacing: 0; }
+p { max-inline-size: 75ch; }
+.brand { font-weight: 650; letter-spacing: -.065em; }
+.hero-art h1 { font-size: var(--text-display); line-height: 1.1; font-weight: 450; letter-spacing: -.04em; }
+.hero-description { font-size: .9375rem; line-height: 1.65; font-weight: 400; }
+.hero-art .eyebrow { font-size: .6875rem; line-height: 1.5; letter-spacing: 0; }
+.art-footer { font-size: .6875rem; line-height: 1.6; }
+.scenario-intro h2, .device-section .studio-copy h2 { font-size: var(--text-heading); font-weight: 450; line-height: 1.2; letter-spacing: -.035em; }
+.scenario-story h3 { font-weight: 450; line-height: 1.2; letter-spacing: -.03em; }
+.scenario-story p, .scenario-intro > p, .device-section .studio-copy p { line-height: 1.65; }
+.form-heading h2, .schedule-panel .form-heading h2 { font-size: clamp(1.4rem, 2.3vw, 1.8rem); font-weight: 500; line-height: 1.25; letter-spacing: -.035em; }
+.form-heading > p, .schedule-panel .form-heading > p { font-size: .8125rem; line-height: 1.6; }
+.section-kicker { font-size: var(--text-caption); text-transform: uppercase; letter-spacing: .07em; font-weight: 500; line-height: 1.5; }
+.glass-field > label { font-size: .75rem; font-weight: 500; line-height: 1.25; letter-spacing: 0; }
+.field.glass-field .input-shell > input, .meeting-panel .field.glass-field .input-shell > input { font-size: 1rem; line-height: 1.625; }
+.field.glass-field .date-field-button { line-height: 1.625; }
+.field.glass-field .copy-control input { line-height: 1.625; }
+.clock-digital [role=tab] > span, .clock-digit-input input, .agenda-time, #call-timer { font-variant-numeric: tabular-nums; }
+.profile-heading h1, .calendar-page-heading h1, .calendar-page-heading h2 { font-weight: 500; letter-spacing: -.035em; }
+.landing-invitation h2 { font-weight: 450; line-height: 1.25; letter-spacing: -.03em; }
+
+/* One compact reading scale across forms, settings, meetings and chats. */
+.field-error, .device-error, .chat-compose-error, .save-status, .settings-status { font-size: var(--text-small); line-height: 1.5; overflow-wrap: anywhere; }
+.prototype-note, .settings-footnote, .settings-device-row p, .settings-mobile-nav > label,
+.lobby-presence-heading, .chat-current-user small, .chat-message-annotation,
+.chat-pinned-message strong, .chat-profile-contact-list dt, .chat-identity-dialog .chat-members-list small,
+.chat-profile-section h3, .chat-profile-badge, .calendar-legend, .agenda-count,
+.month-weekdays > span, .month-calendar.is-compact .month-weekdays > span, .clock-hint,
+.call-status, .tile-device-state { font-size: var(--text-caption); line-height: 1.5; }
+.lobby-person-name, .settings-sidebar nav a, .settings-inline-link, .settings-description,
+.settings-info-row p, .settings-switch-row small, .settings-volume-heading,
+.auth-mode-switch button, .auth-password-note, .auth-guest-link, .guest-auth-link { font-size: var(--text-small); line-height: 1.5; }
+.settings-info-row h3, .settings-switch-row strong, .settings-device-row strong,
+.chat-profile-contact-list dd, .chat-profile-bio { font-size: var(--text-body); line-height: 1.5; }
+.chat-file strong { font-size: var(--text-caption); line-height: 1.5; }
+.settings-info-card p, .settings-faq p, .small-dialog details p { font-size: var(--text-body); line-height: 1.6; }
+.settings-theme-choice > span:last-child, .settings-secondary-button, .settings-profile-form .primary-button,
+.guest-card .auth-guest-link, .chat-profile-actions > :is(button,a) { font-size: var(--text-small); line-height: 1.5; }
+.settings-profile-form .profile-save-row { flex-wrap: wrap; }
+.settings-volume-heading output, .chat-unread, .agenda-count, .month-title, .month-day-number,
+.month-choice-label, .chat-recording-status time, .call-status time, .clock-number { font-variant-numeric: tabular-nums; }
+.settings-volume-heading output, .chat-message-meta, .chat-date-divider span { white-space: nowrap; }
+.chat-profile-contact-list dd bdi { unicode-bidi: isolate; }
+.chat-message-text { letter-spacing: 0; text-wrap: wrap; }
+.chat-reply-quote span { text-wrap: pretty; }
+.chat-profile-hero h2, .chat-group-trigger { text-wrap: pretty; }
+.lobby-presence .chat-avatar { font-size: var(--text-caption); }
+.lobby-content > .prototype-note { max-inline-size: 48ch; }
+.agenda-heading .section-kicker { font-size: var(--text-caption); }
+.agenda-meeting-actions a, .agenda-meeting-actions button { font-size: var(--text-caption); line-height: 1.5; }
+.month-calendar.is-compact .month-today { font-size: var(--text-caption); }
+.month-calendar .month-today, .meetings-modal .month-today, .is-empty .agenda-count,
+.settings-avatar-colors label, .device-section .studio-copy .section-kicker,
+.device-window-bar .device-private, .device-preview-status, .device-window-tools button { font-size: var(--text-caption); line-height: 1.5; }
+.scenario-tabs { --scenario-digit-size: .75rem; }
+.clock-digital [role=tab] > span { line-height: 1.15; }
+.clock-colon { line-height: 1.4; }
+.radial-time-picker .clock-digital .clock-digit-input input { line-height: 1.2; }
+
+@media (min-width: 761px) {
+  .month-day { grid-template-rows: 27px minmax(16px,auto); }
+  .month-day-events { font-size: var(--text-caption); line-height: 1.25; height: auto; }
+}
+@media (max-width: 760px) {
+  :root input:not([type=hidden],[type=checkbox],[type=radio],[type=range]):not(.clock-digit-input input),
+  :root select, :root textarea { font-size: 1rem; }
+  .hero-art h1 { font-size: clamp(3rem, 12.5vw, 4rem); line-height: 1.1; }
+  .scenario-intro h2, .device-section .studio-copy h2 { font-size: 2rem; }
+  .scenario-story h3 { font-size: 1.8rem; }
+  .form-heading h2, .schedule-panel .form-heading h2 { font-size: 1.5rem; }
+}
+@media (max-width: 480px) {
+  .header.page-width { padding-inline: 16px; gap: 8px; grid-template-columns: auto 1fr auto; }
+  .header .brand { gap: 5px; font-size: 1.3rem; }
+  .header .brand-mark, .header .brand-mark svg { width: 25px; height: 25px; }
+  .header-actions { gap: 6px; }
+  .header .theme-button { width: 30px; height: 32px; }
+  .header .profile-avatar { width: 28px; height: 28px; }
+  .header .my-meetings { padding-inline: 4px 7px; gap: 5px; font-size: .625rem; }
+  .header .my-meetings { white-space: nowrap; }
+  .field.glass-field .copy-control input { font-size: 1rem; }
+}
+@media (max-width: 360px) {
+  .device-window-tools button { flex-direction: column; gap: 4px; }
+  .header.page-width { gap: 6px; }
+  .header .brand { font-size: 1.1875rem; gap: 4px; }
+  .header .brand-mark, .header .brand-mark svg { width: 23px; height: 23px; }
+  .header-actions { gap: 4px; }
+  .header .theme-button { width: 28px; }
+  .header .profile-link { padding: 2px; }
+  .header .my-meetings { padding-inline: 4px; }
+  .header .nav-calendar-icon { width: 20px; height: 20px; }
+}

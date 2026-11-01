@@ -1,0 +1,61 @@
+/* Both ways to reveal meeting options share one quiet glass control. */
+:root .meeting-panel .meeting-secondary-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  width: 176px;
+  min-height: 42px;
+  height: 42px;
+  margin: 0;
+  padding: 5px 16px 5px 6px;
+  border: 1px solid #ffffffa6;
+  border-radius: 999px;
+  background: #ffffff66;
+  box-shadow: inset 0 1px 0 #ffffff7a, 0 3px 12px #31578806;
+  color: var(--color-secondary);
+  font-size: .75rem;
+  font-weight: 550;
+  white-space: nowrap;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+:root .meeting-panel .meeting-secondary-action > span:last-child { flex: 1; text-align: center; }
+:root .meeting-panel .meeting-secondary-action > .meeting-secondary-icon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 29px;
+  width: 29px;
+  height: 29px;
+  border: 1px solid #ffffff80;
+  border-radius: 50%;
+  background: #f2f6ffba;
+  color: #3e6191;
+  box-shadow: none;
+}
+:root .meeting-panel .meeting-secondary-icon svg { width: 17px; height: 17px; }
+:root[data-theme=dark] .meeting-panel .meeting-secondary-action {
+  background: #ffffff06;
+  border-color: #ffffff20;
+  box-shadow: inset 0 1px 0 #ffffff08;
+  color: var(--color-secondary);
+}
+:root[data-theme=dark] .meeting-panel .meeting-secondary-action > .meeting-secondary-icon {
+  background: var(--icon-surface);
+  border-color: var(--icon-edge);
+  color: var(--icon-ink);
+  box-shadow: none;
+}
+@media (hover: hover) {
+  :root .meeting-panel .meeting-secondary-action:hover { background: #ffffff85; border-color: #ffffffa6; color: var(--color-secondary); }
+  :root .meeting-panel .meeting-secondary-action:hover > .meeting-secondary-icon { background: #f2f6ffba; border-color: #ffffff80; color: #3e6191; }
+  :root[data-theme=dark] .meeting-panel .meeting-secondary-action:hover { background: #ffffff0c; border-color: #ffffff20; color: var(--color-secondary); }
+  :root[data-theme=dark] .meeting-panel .meeting-secondary-action:hover > .meeting-secondary-icon { background: var(--icon-surface); border-color: var(--icon-edge); color: var(--icon-ink); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  :root .meeting-panel .meeting-secondary-action { transition: background-color 150ms var(--ease), border-color 150ms var(--ease), color 150ms var(--ease), box-shadow 150ms var(--ease); }
+}
+@media (forced-colors: active) {
+  :root .meeting-panel .meeting-secondary-action,
+  :root[data-theme=dark] .meeting-panel .meeting-secondary-action { background: ButtonFace; border-color: ButtonText; color: ButtonText; box-shadow: none; }
+}

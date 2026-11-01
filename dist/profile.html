@@ -1,46 +1,13 @@
 <!doctype html>
-<html lang="ru">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <script src="ui.js?v=20261029-5"></script>
-  <meta name="theme-color" content="#f8f9fc">
-  <title>Ваш профиль — Созвон</title>
-  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="workspace.css">
-  <link rel="stylesheet" href="calendar.css?v=20261029-5">
-  <script>try{if(localStorage.getItem('sozvon-theme')==='dark')document.documentElement.dataset.theme='dark'}catch{}</script>
-  <script src="calendar.js?v=20261029-5" defer></script>
-  <script src="calendar-page.js?v=20261029-5" defer></script>
-  <script src="time-picker.js" defer></script>
-  <script src="profile.js" defer></script>
-</head>
-<body class="profile-page">
-  <a class="skip" href="#profile-main">Перейти к профилю</a>
-  <div class="sky-background" aria-hidden="true"><span class="sky-halo"></span><span class="sky-ring ring-a"></span><span class="sky-ring ring-b"></span><svg viewBox="0 0 1440 1000" preserveAspectRatio="none"><path d="M-120 740C100 300 350 1100 780 660S1180 220 1560 390"/><path d="M-120 765C100 325 350 1125 780 685S1180 245 1560 415"/></svg><span class="sky-star">✳</span></div>
-  <svg class="svg-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><symbol id="i-air" viewBox="0 0 32 32"><path d="M4 11h16a4.5 4.5 0 1 0-4.5-4.5M4 17h21a4.5 4.5 0 1 1-4.5 4.5M4 24h8M8 5h3"/></symbol><symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="16" rx="4" fill="currentColor" opacity=".1" stroke="none"/><rect x="3.5" y="5" width="17" height="16" rx="4"/><path d="M7.5 3v4m9-4v4m-13 4h17"/><circle cx="8" cy="15" r=".8" fill="currentColor" stroke="none"/><circle cx="12" cy="15" r=".8" fill="currentColor" stroke="none"/><circle cx="16" cy="15" r=".8" fill="currentColor" stroke="none"/></symbol><symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4.5 12h15m-5.5-5.5L19.5 12 14 17.5"/></symbol><symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4" fill="currentColor" opacity=".12" stroke="none"/><circle cx="12" cy="12" r="4"/><path d="M12 2v1.5m0 17V22M2 12h1.5m17 0H22M4.9 4.9 6 6m12 12 1.1 1.1M4.9 19.1 6 18M18 6l1.1-1.1"/></symbol><symbol id="i-moon" viewBox="0 0 24 24"><path d="M20.8 13.4A8.9 8.9 0 0 1 10.6 3.2a9 9 0 1 0 10.2 10.2Z" fill="currentColor" opacity=".1" stroke="none"/><path d="M20.8 13.4A8.9 8.9 0 0 1 10.6 3.2a9 9 0 1 0 10.2 10.2Z"/></symbol></svg>
-  <header class="header page-width">
-    <a class="brand" href="./" aria-label="Созвон — главная"><span class="brand-mark"><svg aria-hidden="true"><use href="#i-air"/></svg></span><span>созвон<span class="brand-dot">.</span></span></a>
-    <nav class="header-center" aria-label="Основная навигация"><a class="my-meetings calendar-nav-link" id="my-meetings" href="meetings.html" aria-haspopup="dialog" aria-controls="meetings-modal"><span class="nav-calendar-icon"><svg aria-hidden="true"><use href="#i-calendar"/></svg></span><span>Мои встречи</span></a></nav>
-    <div class="header-actions"><button class="icon-button theme-button" id="theme-toggle" aria-label="Включить тёмную тему"><svg aria-hidden="true" class="moon"><use href="#i-moon"/></svg><svg aria-hidden="true" class="sun"><use href="#i-sun"/></svg></button><a class="profile-link" href="profile.html" aria-label="Открыть профиль" aria-current="page"><span class="profile-avatar" id="header-avatar">Я</span><span>Профиль</span></a></div>
-  </header>
-  <main class="profile-main" id="profile-main">
-    <a class="back-link" href="./"><svg aria-hidden="true"><use href="#i-arrow"/></svg>К встречам</a>
-    <div class="profile-heading"><h1>Ваш профиль</h1><p>Пара деталей, чтобы узнавать друг друга.</p></div>
-    <div class="profile-grid">
-      <section class="profile-preview" aria-label="Предпросмотр профиля"><span class="profile-avatar profile-large-avatar" id="profile-avatar">Я</span><h2 id="preview-name">Ваше имя</h2><p id="preview-bio">Рады быть рядом</p><small>Так будет выглядеть ваш профиль</small></section>
-      <section class="profile-panel" aria-labelledby="profile-details-title"><h2 id="profile-details-title">Личные данные</h2>
-        <form id="profile-form" novalidate>
-          <div class="field"><label for="profile-name">Имя</label><input id="profile-name" name="name" autocomplete="nickname" placeholder="Как вас представить?" maxlength="60" aria-describedby="profile-error"><span class="field-error" id="profile-error" hidden></span></div>
-          <div class="field"><label for="profile-bio">Пару слов о себе</label><input id="profile-bio" name="bio" placeholder="Например, дизайнер и любитель хороших разговоров" maxlength="100"><small>Необязательно. Короткая подпись для вашего профиля.</small></div>
-          <fieldset class="avatar-colors"><legend>Цвет аватара</legend><label><input type="radio" name="avatarColor" value="blue" checked><span class="color-swatch" aria-hidden="true"></span>Небо</label><label><input type="radio" name="avatarColor" value="mint"><span class="color-swatch mint" aria-hidden="true"></span>Мята</label><label><input type="radio" name="avatarColor" value="lavender"><span class="color-swatch lavender" aria-hidden="true"></span>Сирень</label></fieldset>
-          <div class="profile-save-row"><button type="submit" class="primary-button">Сохранить изменения</button><span class="save-status" id="profile-status" role="status"></span></div>
-        </form>
-        <p class="profile-storage-note">Профиль сохраняется в этом браузере на вашем устройстве.</p>
-      </section>
-    </div>
-  </main>
-<footer class="footer site-footer page-width"><div class="footer-main"><div class="footer-identity"><a class="brand" href="./" aria-label="Созвон — главная"><span class="brand-mark"><svg aria-hidden="true"><use href="#i-air"/></svg></span><span>созвон<span class="brand-dot">.</span></span></a><p>Время быть на связи.</p></div><nav class="footer-nav" aria-label="Навигация внизу страницы"><a href="./#main">Начать встречу</a><a href="meetings.html" data-open-meetings aria-haspopup="dialog" aria-controls="meetings-modal">Мои встречи</a><a href="profile.html">Профиль</a><a href="./?help=1">Помощь</a></nav></div><div class="footer-base"><p>© <span data-copyright-year>2026</span> Созвон. Все права защищены.</p></div></footer>
-</body>
-</html>
+<html lang="ru"><head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#f8f9fc" />
+<meta name="description" content="Созвон — профиль, устройства и оформление." />
+<title>Настройки — Созвон</title>
+<link rel="icon" type="image/svg+xml" href="./assets/favicon.svg" />
+<link rel="preload" href="./assets/onest-variable.woff2" as="font" type="font/woff2" crossorigin />
+<script src="./theme-init.js"></script>
+  <script type="module" crossorigin src="./assets/main-Bdpe7TLM.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/main-Ca7kW2IZ.css">
+</head><body><div id="root"></div></body></html>

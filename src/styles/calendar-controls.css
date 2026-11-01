@@ -1,0 +1,30 @@
+/* Past periods remain available when browsing meeting history. */
+#meetings-calendar .month-choice.is-past-period .month-choice-label { color: var(--color-secondary); opacity: .45; font-weight: 400; }
+#meetings-calendar .month-choice.is-past-period[aria-pressed=true] { background: var(--color-subtle); border-color: var(--color-input-border); }
+#meetings-calendar .month-choice.is-past-period[aria-pressed=true] .month-choice-label { color: var(--color-text); opacity: .8; }
+.month-calendar:not(.is-compact) .month-toolbar { flex-wrap: wrap; row-gap: 10px; }
+.month-calendar:not(.is-compact) .month-nav { margin-inline-start: auto; }
+/* A number is selected immediately; there is no wheel or confirmation step. */
+.time-picker-dialog[popover] { padding: 18px; border-radius: 22px; }
+.time-part-switch { display: flex; align-items: center; justify-content: center; gap: 14px; margin-block: 16px 20px; }
+.time-part-switch [role=tab] { display: grid; gap: 3px; min-width: 80px; padding: 8px 16px; border: 1px solid transparent; border-radius: 15px; background: var(--color-bg); color: var(--color-secondary); font-size: .6875rem; }
+.time-part-switch [role=tab][aria-selected=true] { background: var(--color-accent-soft); border-color: var(--color-focus); color: var(--calendar-ink); }
+.time-part-value { font-size: 1.75rem; line-height: 1.2; font-weight: 550; font-variant-numeric: tabular-nums; }
+.time-part-colon { font-size: 1.5rem; color: var(--color-secondary); }
+.time-number-grid { display: grid; gap: 4px; }
+.time-hour-grid { grid-template-columns: repeat(6,minmax(0,1fr)); }
+.time-minute-grid { grid-template-columns: repeat(10,minmax(0,1fr)); }
+.time-number-grid button { min-width: 0; min-height: 36px; padding: 6px 0; border: 1px solid transparent; border-radius: 9px; background: var(--color-bg); color: var(--color-text); font-size: .8125rem; font-variant-numeric: tabular-nums; }
+.time-number-grid button[aria-checked=true] { background: var(--color-accent); color: var(--color-on-accent); border-color: var(--color-focus); font-weight: 600; }
+.time-number-grid button:disabled { opacity: .3; cursor: default; }
+.time-number-grid button:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 1px; }
+.time-selection-hint { margin-block-start: 14px; color: var(--color-secondary); font-size: .6875rem; line-height: 1.5; text-align: center; }
+
+@media (hover:hover) {
+  .time-number-grid button:not(:disabled):not([aria-checked=true]):hover { background: var(--color-accent-soft); color: var(--calendar-ink); }
+}
+@media (max-width:480px) {
+  .time-picker-dialog[popover] { padding: 14px; }
+  .time-number-grid { gap: 2px; }
+  .time-minute-grid button { font-size: .75rem; }
+}

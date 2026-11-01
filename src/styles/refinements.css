@@ -1,0 +1,65 @@
+/* One spacing rhythm between every visible control, including the disclosure. */
+#meeting-form { --meeting-gap: 18px; row-gap: var(--meeting-gap); }
+.field.glass-field, .meeting-panel .field.glass-field { row-gap: 0; }
+.meeting-options .title-reveal > .glass-field { margin: 0; padding-block: var(--meeting-gap, 18px) 0; }
+.meeting-options .title-reveal > .glass-field > label { inset-block-start: calc(var(--meeting-gap, 18px) + 9px); }
+.meeting-options .title-toggle { margin: 0; }
+.title-reveal-stage { display: grid; grid-template-rows: 0fr; opacity: 0; }
+.meeting-options[data-expanded=true] .title-reveal-stage { grid-template-rows: 1fr; opacity: 1; }
+.title-toggle-label { display: grid; }
+.title-toggle-label > span { grid-area: 1 / 1; }
+.title-toggle-label > span:last-child { opacity: 0; }
+.meeting-options[data-expanded=true] .title-toggle-label > span:first-child { opacity: 0; }
+.meeting-options[data-expanded=true] .title-toggle-label > span:last-child { opacity: 1; }
+:root .meeting-panel .title-toggle:active { scale: 1; }
+.meeting-panel > .mode-switch { opacity: 1; visibility: visible; transform: translateY(0); }
+.meeting-panel[data-view=schedule] > .mode-switch { opacity: 0; visibility: hidden; transform: translateY(-6px); }
+.clock-face-panel { position: relative; height: 196px; opacity: 1; overflow: clip; }
+.pixel-clock[data-input-mode=keyboard] .clock-face-panel { height: 0; opacity: 0; pointer-events: none; }
+.clock-hand-rotor, .clock-reach { transform-origin: 140px 140px; }
+
+/* Create, join and planning share the same heading and action geometry. */
+.meeting-view-stack > :is(#meeting-form-panel, #schedule-panel) > .form-heading { display: grid; justify-items: start; gap: 0; margin: 0 0 25px; }
+.meeting-view-stack .form-heading .meeting-emblem { width: 40px; height: 40px; margin: 0 0 18px; border-radius: 14px; }
+.meeting-view-stack .form-heading .meeting-emblem svg { width: 22px; height: 22px; }
+.meeting-view-stack .form-heading h2 { margin: 0; }
+.meeting-view-stack .form-heading h2:focus { outline: none; }
+.meeting-view-stack .form-heading > p { margin: 10px 0 0; font-size: .8125rem; line-height: 1.6; }
+.meeting-panel .meeting-primary-action { display: flex; align-items: center; justify-content: space-between; gap: 14px; min-height: 54px; padding: 10px 12px 10px 18px; margin-block-start: 2px; }
+.meeting-primary-action .primary-action-label { flex: 1; text-align: start; }
+.meeting-primary-action .button-tail { flex: 0 0 30px; width: 30px; height: 30px; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .meeting-panel > .mode-switch { transition: opacity 300ms ease-in-out, transform 320ms var(--ease), visibility 0s; }
+  .meeting-panel[data-view=schedule] > .mode-switch { transition: opacity 300ms ease-in-out, transform 320ms var(--ease), visibility 0s 320ms; }
+  .clock-hand-rotor, .clock-reach, .clock-selection { transition: transform 230ms cubic-bezier(.2,.8,.2,1); }
+  .clock-face.is-dragging .clock-hand-rotor, .clock-face.is-dragging .clock-reach, .clock-face.is-dragging .clock-selection { transition: none; }
+  .clock-face-panel { transition: height 260ms cubic-bezier(.2,.8,.2,1), opacity 160ms var(--ease); }
+  .hero { animation: hero-arrive 650ms cubic-bezier(.16,.8,.2,1) both; }
+  .field .input-shell, .field .date-field-button, .field .copy-control { transition: border-color 240ms var(--ease), box-shadow 280ms var(--ease), background-color 240ms var(--ease); }
+  .field .input-shell > svg, .glass-field > label { transition: color 220ms var(--ease); }
+  .meeting-options .title-toggle { transition: border-color 220ms var(--ease), box-shadow 260ms var(--ease), color 200ms var(--ease); }
+  .title-reveal-stage { transition: grid-template-rows 220ms var(--ease), opacity 180ms var(--ease); }
+  .title-toggle-label > span { transition: opacity 150ms var(--ease); }
+  .primary-button { transition: background-color 200ms var(--ease), box-shadow 260ms var(--ease), border-color 220ms var(--ease); }
+  .button-tail { transition: background-color 220ms var(--ease), border-color 220ms var(--ease); }
+  .button-tail svg { transition: transform 260ms var(--ease); }
+  .profile-link, .my-meetings, .device-window-tools button, .studio-cta { transition: color 180ms var(--ease), background-color 220ms var(--ease), border-color 220ms var(--ease), box-shadow 260ms var(--ease); }
+  .device-preview-window { transition: transform 400ms cubic-bezier(.2,.8,.2,1), box-shadow 400ms var(--ease); }
+  .lobby-dialog[open], .small-dialog[open], .calendar-add-dialog[open] { animation: dialog-arrive 260ms cubic-bezier(.16,.8,.2,1) both; }
+  .date-picker-dialog:popover-open, .radial-time-picker:popover-open { animation: picker-arrive 180ms cubic-bezier(.2,.8,.2,1); }
+  .save-status, .field-error-slot.is-ready { transition: opacity 180ms var(--ease), height 260ms var(--ease), margin-block-start 260ms var(--ease); }
+  @keyframes hero-arrive { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes dialog-arrive { from { opacity: 0; transform: translateY(10px) scale(.99); } to { opacity: 1; transform: translateY(0) scale(1); } }
+  @keyframes picker-arrive { from { opacity: 0; transform: translateY(5px) scale(.985); } to { opacity: 1; transform: translateY(0) scale(1); } }
+}
+@media (hover: hover) {
+  .primary-button:not(:disabled):hover .button-tail { background: #ffffff27; border-color: #ffffff70; }
+  .primary-button:not(:disabled):hover .button-tail svg { transform: translateX(2px); }
+  .device-preview-window:hover { transform: translateY(-3px); box-shadow: 0 16px 42px #24477712, inset 0 1px 0 #ffffffa0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .meeting-panel > .mode-switch { transform: none; }
+  .hero, .lobby-dialog[open], .small-dialog[open], .calendar-add-dialog[open], .date-picker-dialog:popover-open, .radial-time-picker:popover-open { animation: none; }
+  .device-preview-window:hover, .primary-button:not(:disabled):hover .button-tail svg { transform: none; }
+}

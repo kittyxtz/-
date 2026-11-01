@@ -1,0 +1,49 @@
+/* Frosted controls belong to the glass panel; labels live inside each surface. */
+:root{--field-glass:linear-gradient(130deg,#ffffffad 0%,#eef5ff61 100%);--field-glint:#ffffffbf;--field-edge:#5f7597;--field-label:#405b7f;--field-icon:#5778a6;--field-placeholder:#435c7e}
+[data-theme=dark]{--field-glass:linear-gradient(130deg,#b9d3ff12 0%,#10233c61 100%);--field-glint:#c7dcff2b;--field-edge:#8ea4c4;--field-label:#b4c9e6;--field-icon:#a8c8f5;--field-placeholder:#b0c3df}
+.field.glass-field{position:relative;display:grid;gap:8px}
+.glass-field>label{position:absolute;z-index:2;inset-block-start:9px;inset-inline-start:44px;max-width:calc(100% - 60px);overflow:hidden;white-space:nowrap;text-overflow:ellipsis;color:var(--field-label);font-size:.625rem;font-weight:500;letter-spacing:.035em;line-height:1.4}
+.field.glass-field .input-shell,[data-theme=dark] .field.glass-field .input-shell,.field.glass-field .copy-control,.field.glass-field .date-field-button,[data-theme=dark] .field.glass-field .date-field-button{position:relative;width:100%;min-height:64px;border:1px solid color-mix(in srgb,var(--field-edge) 60%,var(--field-glint));border-radius:18px;background:var(--field-glass);box-shadow:inset 0 1px 0 #ffffffb0,inset 0 -1px 0 #e4efff80,0 4px 18px #23457507;backdrop-filter:blur(12px) saturate(1.12);-webkit-backdrop-filter:blur(12px) saturate(1.12)}
+.field.glass-field .input-shell>svg,.field.glass-field .date-field-button>svg{position:absolute;inset-inline-start:15px;inset-block-start:29px;width:18px;height:18px;padding:0;border:0;border-radius:0;background:transparent;color:var(--field-icon);pointer-events:none;stroke-width:1.65}
+.field.glass-field .input-shell>input,.meeting-panel .field.glass-field .input-shell>input{display:block;width:100%;min-height:62px;border:0;border-radius:17px;padding:25px 16px 11px 43px;background:transparent;color:var(--color-text);box-shadow:none;font-size:1rem;font-weight:450;line-height:1.625}
+.field.glass-field .input-shell>input::placeholder,.meeting-panel .field.glass-field .input-shell>input::placeholder{color:var(--field-placeholder);opacity:1;font-size:.875rem;font-weight:400}
+.field.glass-field .date-field-button{display:flex;align-items:center;gap:0;padding:25px 36px 11px 43px;color:var(--color-text);font-size:1rem;font-weight:450;line-height:1.625;text-align:start}
+.glass-field .date-field-button>span{min-width:0;white-space:nowrap;font-variant-numeric:tabular-nums}
+.glass-field .date-field-button::after{content:'';position:absolute;inset-inline-end:17px;inset-block-start:35px;width:6px;height:6px;border-inline-end:1.5px solid var(--field-icon);border-block-end:1.5px solid var(--field-icon);transform:rotate(45deg)}
+.glass-field .date-field-button[aria-expanded=true]::after{transform:rotate(225deg)}
+.field.glass-field .copy-control{display:flex;align-items:center;padding-inline-end:9px;overflow:hidden}
+.glass-field.share-field>label{inset-inline-start:17px}
+.field.glass-field .copy-control input,.field.glass-field .copy-control input:focus-visible{min-height:62px;border:0;border-radius:17px;padding:25px 12px 11px 16px;background:transparent;color:var(--color-text);box-shadow:none;outline:none;font-size:.8125rem;line-height:1.6}
+.glass-field .copy-control .icon-button{width:36px;height:36px;border-radius:12px;background:#a4c4f329;color:var(--field-icon)}
+.field.glass-field:focus-within>label{color:var(--calendar-ink)}
+.field.glass-field .input-shell:focus-within,[data-theme=dark] .field.glass-field .input-shell:focus-within,.field.glass-field .copy-control:focus-within,.field.glass-field .date-field-button:focus-visible,.field.glass-field .date-field-button[aria-expanded=true]{border-color:var(--color-focus);background:var(--field-glass);outline:none;box-shadow:inset 0 1px 0 #ffffffb0,inset 0 -1px 0 #e4efff80,0 4px 18px #23457507}
+.glass-field .input-shell:focus-within>svg{color:var(--calendar-ink)}
+.field.glass-field .input-shell:has([aria-invalid=true]),.field.glass-field .date-field-button[aria-invalid=true]{border-color:var(--color-danger);box-shadow:inset 0 1px 0 #ffffffb0,inset 0 -1px 0 #e4efff80,0 4px 18px #23457507}
+.glass-field .input-shell:has([aria-invalid=true])>svg{color:var(--color-danger)}
+@media(hover:hover){.field.glass-field .input-shell:not(:focus-within):not(:has([aria-invalid=true])):hover,.field.glass-field .date-field-button:not(:focus-visible):not([aria-expanded=true]):not([aria-invalid=true]):hover{border-block-end-color:var(--calendar-ink);background:var(--field-glass);box-shadow:inset 0 1px 0 #ffffffb0,inset 0 -1px 0 #e4efff80,0 4px 18px #23457509}.glass-field .copy-control .icon-button:hover{background:var(--color-accent-soft);color:var(--calendar-ink)}}
+@media(prefers-reduced-motion:no-preference){.glass-field>label{transition:color 150ms var(--ease)}.glass-field .date-field-button::after{transition:transform 150ms var(--ease)}.glass-field .copy-control{transition:border-color 150ms var(--ease),box-shadow 150ms var(--ease)}}
+@media(max-width:480px){.planning-date-row{grid-template-columns:minmax(0,1.18fr) minmax(0,1fr)}.planning-date-row .glass-field>label{inset-inline-start:14px;max-width:calc(100% - 28px)}.planning-date-row .field.glass-field .date-field-button{padding-inline:14px 29px;font-size:.9375rem}.planning-date-row .field.glass-field .date-field-button>svg{display:none}.planning-date-row .glass-field .date-field-button::after{inset-inline-end:13px;width:5px;height:5px}}
+@media(prefers-reduced-transparency:reduce){:root{--field-glass:#f1f6ff}[data-theme=dark]{--field-glass:#1b2e47}.glass-field .input-shell,.glass-field .date-field-button,.glass-field .copy-control{backdrop-filter:none;-webkit-backdrop-filter:none}}
+@media(forced-colors:active){.field.glass-field .input-shell,.field.glass-field .date-field-button,.field.glass-field .copy-control{border-color:CanvasText}.field.glass-field .input-shell:focus-within,.field.glass-field .date-field-button:focus-visible,.field.glass-field .copy-control:focus-within{outline:2px solid Highlight;outline-offset:2px}}
+
+/* Secondary disclosure and primary action share the panel's glass finish. */
+.meeting-options .title-toggle{gap:8px;min-height:36px;padding:5px 12px 5px 5px;border:1px solid var(--field-glint);border-radius:999px;background:var(--field-glass);box-shadow:inset 0 1px 0 #ffffff80,0 2px 8px #31578805;color:var(--field-label);font-size:.75rem;font-weight:500;backdrop-filter:blur(8px)}
+.meeting-options .title-toggle-icon{display:grid;place-items:center;flex-shrink:0;width:24px;height:24px;border:1px solid #ffffff80;border-radius:50%;background:#afcdf32b;color:var(--field-icon);box-shadow:inset 0 1px 0 #ffffff60}
+.meeting-options .title-toggle-icon svg{width:16px;height:16px}
+.meeting-options .title-reveal>.glass-field>label{inset-block-start:22px}
+.meeting-options[data-expanded=true] .title-toggle{color:var(--calendar-ink)}
+.primary-button,.meeting-panel .primary-button{min-height:54px;border:1px solid #ffffff5e;border-radius:16px;background:linear-gradient(135deg,color-mix(in srgb,var(--color-accent) 94%,#96bbff),var(--color-accent));box-shadow:inset 0 1px 0 #ffffff45,inset 0 -1px 0 #18377d24,0 5px 16px #315bd822;color:var(--color-on-accent);font-weight:550}
+#meeting-form .primary-button{justify-content:space-between;padding:10px 12px 10px 18px;gap:14px}
+#meeting-form .primary-button #submit-label{flex:1;text-align:start}
+.button-tail{display:grid;place-items:center;flex-shrink:0;width:30px;height:30px;border:1px solid #ffffff3d;border-radius:10px;background:#ffffff17;box-shadow:inset 0 1px 0 #ffffff29}
+.button-tail svg{width:17px;height:17px;stroke-width:1.8}
+[data-theme=dark] .meeting-options .title-toggle{box-shadow:inset 0 1px 0 #ffffff10;background:var(--field-glass)}
+[data-theme=dark] .meeting-options .title-toggle-icon{border-color:#c7dcff24;background:#b8d3ff0d;box-shadow:none}
+@media(hover:hover){.meeting-options .title-toggle:hover{border-color:var(--field-edge);background:var(--field-glass);color:var(--calendar-ink)}.meeting-options .title-toggle:hover .title-toggle-icon{border:1px solid var(--field-glint);background:#afcdf342}.primary-button:not(:disabled):hover{background:linear-gradient(135deg,color-mix(in srgb,var(--color-accent) 96%,#96bbff),color-mix(in srgb,var(--color-accent) 92%,#18366f));box-shadow:inset 0 1px 0 #ffffff50,inset 0 -1px 0 #18377d24,0 6px 20px #315bd82a}}
+
+/* The focus halo fades independently; its shadow layers never change type. */
+.field.glass-field .input-shell::before,.field.glass-field .copy-control::before,.field.glass-field .date-field-button::before{content:'';position:absolute;inset:-1px;border-radius:inherit;pointer-events:none;box-shadow:0 0 0 3px currentColor;color:color-mix(in srgb,var(--color-focus) 16%,transparent);opacity:0}
+.field.glass-field .input-shell:focus-within::before,.field.glass-field .copy-control:focus-within::before,.field.glass-field .date-field-button:focus-visible::before,.field.glass-field .date-field-button[aria-expanded=true]::before{opacity:1}
+.field.glass-field .input-shell:has([aria-invalid=true])::before,.field.glass-field .date-field-button[aria-invalid=true]::before{color:color-mix(in srgb,var(--color-danger) 14%,transparent);opacity:1}
+.field.glass-field .copy-control{overflow:visible}
+@media(prefers-reduced-motion:no-preference){.field.glass-field .input-shell::before,.field.glass-field .copy-control::before,.field.glass-field .date-field-button::before{transition:opacity 320ms ease-in-out,color 220ms var(--ease)}}

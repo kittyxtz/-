@@ -1,0 +1,71 @@
+.time-picker-dialog.radial-time-picker[popover]{padding:20px;border-radius:28px;border-color:var(--field-glint);background:color-mix(in srgb,var(--color-surface) 91%,transparent);box-shadow:0 20px 65px #15355b26,inset 0 1px 0 #ffffff80;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+.pixel-clock{color:var(--color-text)}
+.pixel-clock .date-picker-heading{margin-block-end:20px}
+.pixel-clock .date-picker-heading h2{font-size:.9375rem;font-weight:500}
+.clock-digital{display:flex;justify-content:center;align-items:flex-start;gap:10px;margin-block:0 24px}
+.clock-digital-unit{display:flex;align-items:flex-start;gap:10px;min-width:0}
+.clock-digital [role=tab]{display:grid;gap:2px;justify-items:center;min-width:94px;padding:12px 14px 10px;border:1px solid transparent;border-radius:17px;background:var(--color-subtle);color:var(--color-secondary)}
+.clock-digital [role=tab][aria-selected=true]{background:var(--color-accent-soft);border-color:color-mix(in srgb,var(--color-accent) 25%,transparent);color:var(--calendar-ink)}
+.clock-digital [role=tab]>span{font-size:2.75rem;font-weight:450;line-height:1.05;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.clock-digital [role=tab]>small{font-size:.625rem;line-height:1.4;font-weight:400}
+.clock-colon{padding-block-start:9px;font-size:2.4rem;line-height:1.2;color:var(--color-secondary);font-weight:400}
+.clock-face{position:relative;width:min(100%,280px);aspect-ratio:1;margin-inline:auto;border-radius:50%;background:linear-gradient(145deg,color-mix(in srgb,var(--color-accent-soft) 75%,var(--color-surface)),var(--color-subtle));touch-action:none;user-select:none;-webkit-user-select:none}
+.clock-hand{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;stroke:var(--color-accent);stroke-width:2}
+.clock-center,.clock-selection{fill:var(--color-accent);stroke:none}
+.clock-face .clock-number{position:absolute;display:grid;place-items:center;width:36px;height:36px;min-height:0;padding:0;transform:translate(-50%,-50%);border:0;border-radius:50%;background:transparent;box-shadow:none;color:var(--color-text);font-size:.9375rem;font-weight:450;line-height:1;font-variant-numeric:tabular-nums;z-index:1}
+.clock-face .clock-number-inner{width:32px;height:32px;font-size:.8125rem}
+.clock-face .clock-number[aria-checked=true]{color:var(--color-on-accent)}
+.clock-face .clock-number:disabled{color:var(--color-secondary);opacity:.35;cursor:default}
+.clock-face .clock-number:focus-visible{outline:2px solid var(--color-focus);outline-offset:2px}
+.clock-hint{min-height:34px;margin-block:17px 10px;color:var(--color-secondary);font-size:.6875rem;font-weight:400;line-height:1.5;text-align:center}
+.clock-hint.clock-error{color:var(--color-danger)}
+.clock-actions{display:flex;align-items:center;justify-content:flex-end;gap:8px}
+.clock-actions .clock-input-toggle{margin-inline-end:auto;width:40px;height:40px;border-radius:12px;color:var(--field-icon)}
+.clock-cancel,.clock-confirm{min-height:40px;padding:9px 17px;border-radius:12px;font-size:.8125rem;font-weight:500}
+.clock-cancel{background:transparent;color:var(--calendar-ink)}
+.clock-confirm{background:var(--color-accent);color:var(--color-on-accent)}
+.clock-confirm:disabled{opacity:.4;cursor:default}
+.clock-digit-input{display:grid;gap:7px;justify-items:center;color:var(--color-secondary);font-size:.6875rem;font-weight:400}
+.radial-time-picker .clock-digital .clock-digit-input input{width:94px;min-height:82px;padding:10px 8px;border:1px solid var(--field-edge);border-radius:17px;background:var(--field-glass);color:var(--color-text);font-size:2.75rem;line-height:1.1;letter-spacing:-.04em;text-align:center;font-variant-numeric:tabular-nums;caret-color:var(--color-accent)}
+.clock-digit-input input:focus-visible{outline:2px solid var(--color-focus);outline-offset:2px}
+@media(hover:hover){.clock-face .clock-number:not(:disabled):not([aria-checked=true]):hover{background:color-mix(in srgb,var(--color-accent) 10%,transparent)}.clock-cancel:hover,.clock-input-toggle:hover{background:var(--color-accent-soft)}.clock-confirm:not(:disabled):hover{background:var(--color-accent-hover)}}
+@media(prefers-reduced-motion:no-preference){.clock-digital [role=tab]{transition:background-color 150ms var(--ease),color 150ms var(--ease),border-color 150ms var(--ease)}}
+@media(max-width:380px){.time-picker-dialog.radial-time-picker[popover]{padding:16px;border-radius:24px}.clock-digital{margin-block-end:20px}.clock-digital [role=tab]{min-width:88px;padding-inline:12px}.radial-time-picker .clock-digital .clock-digit-input input{width:88px}.clock-hint{margin-block-start:14px}}
+@media(forced-colors:active){.clock-face{outline:1px solid CanvasText}.clock-hand{stroke:Highlight}.clock-center,.clock-selection{fill:Highlight}.clock-face .clock-number[aria-checked=true]{color:HighlightText}.clock-confirm{border:1px solid ButtonText}}
+
+/* Compact dial: no captions beneath the time blocks or face. */
+.time-picker-dialog.radial-time-picker[popover]{padding:16px;border-radius:24px}
+.pixel-clock .date-picker-heading{margin-block-end:12px}
+.pixel-clock .date-picker-heading .icon-button{width:28px;height:28px}
+.pixel-clock .date-picker-heading h2{font-size:.8125rem}
+.clock-digital{gap:8px;margin-block:0 16px}
+.clock-digital-unit{gap:8px}
+.clock-digital [role=tab]{min-width:76px;min-height:60px;padding:9px 12px;border-radius:14px}
+.clock-digital [role=tab]>span{font-size:2.25rem;line-height:40px}
+.clock-colon{padding-block-start:7px;font-size:2rem;line-height:44px}
+.clock-face{width:min(100%,224px)}
+.clock-face .clock-number{width:32px;height:32px;font-size:.875rem}
+.clock-face .clock-number-inner{width:26px;height:26px;font-size:.75rem}
+.clock-actions{gap:5px;margin-block-start:16px}
+.clock-actions .clock-input-toggle{width:36px;height:36px;border-radius:10px}
+.clock-cancel,.clock-confirm{min-height:36px;padding:7px 13px;border-radius:11px;font-size:.75rem}
+.radial-time-picker .clock-digital .clock-digit-input input{width:76px;min-height:60px;padding:7px 8px;border-radius:14px;font-size:2.25rem;line-height:44px}
+.clock-hint{min-height:0;margin-block:12px 0;font-size:.6875rem}
+
+/* Smallest practical 24-hour dial, with a quiet digital readout. */
+.time-picker-dialog.radial-time-picker[popover]{padding:14px;border-radius:22px}
+.pixel-clock .date-picker-heading{margin-block-end:10px}
+.pixel-clock .date-picker-heading .icon-button{width:24px;height:24px}
+.pixel-clock .date-picker-heading h2{font-size:.75rem}
+.clock-digital{gap:6px;margin-block:0 12px}
+.clock-digital-unit{gap:6px}
+.clock-digital [role=tab]{min-width:62px;min-height:46px;padding:7px 10px;border-radius:12px}
+.clock-digital [role=tab]>span{font-size:1.65rem;line-height:30px}
+.clock-colon{padding-block-start:6px;font-size:1.4rem;line-height:32px}
+.clock-face{width:min(100%,196px)}
+.clock-face .clock-number{width:28px;height:28px;font-size:.8125rem}
+.clock-face .clock-number-inner{width:24px;height:24px;font-size:.75rem}
+.clock-actions{gap:4px;margin-block-start:12px}
+.clock-actions .clock-input-toggle{width:32px;height:32px;border-radius:10px}
+.clock-cancel,.clock-confirm{min-height:32px;padding:6px 11px;font-size:.75rem}
+.radial-time-picker .clock-digital .clock-digit-input input{width:62px;min-height:46px;padding:6px 7px;border-radius:12px;font-size:1.65rem;line-height:32px}
